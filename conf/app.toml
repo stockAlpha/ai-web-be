@@ -27,7 +27,29 @@ maxHourAge    = 168                    # 默认日志保留168小时（7天）
 maxHourRotate = 1                      # 默认日志按小时切分
 level = "info"
 
+[mysql]
+auth = "root"
+password = "1234"
+addr = "localhost:3306"
+database = "hecz_test"
+charset = "utf8mb4"
+parseTime = true
+loc = "Local"
+timeout = "5000ms"
+readTimeout = "200ms"
+writeTimeout = "200ms"
+#conn_max_lifetime millsecond
+conn_max_lifetime = 60 #s
+max_idle_conns = 20
+max_open_conns = 200
+#log
+log_mode = 4
 
+[mail]
+from = "stockalpha888888@163.com"
+password = "VKJQLUCIOOZIFNUW"
+smtpServer = "smtp.163.com"
+smtpPort = "25"
 
-
-
+[jwt]
+sign = "your-secret-key"

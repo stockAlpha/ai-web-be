@@ -7,9 +7,11 @@ import (
 	"os"
 	"runtime"
 	"runtime/debug"
+	"stock-web-be/dao/db"
 	"stock-web-be/gocommon/conf"
 	"stock-web-be/gocommon/consts"
 	"stock-web-be/gocommon/tlog"
+	"stock-web-be/logic/stockapi/notify"
 	"strconv"
 )
 
@@ -19,9 +21,13 @@ import (
 
 func Init() {
 	conf.Init("")
+	//logic类init start
+	notify.Init()
+	//logic类init end
 	tlog.Init()
 	initGOProcs()
 	initPProf()
+	db.InitDB()
 }
 
 func initPProf() {
