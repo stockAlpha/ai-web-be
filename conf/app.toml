@@ -28,10 +28,10 @@ maxHourRotate = 1                      # 默认日志按小时切分
 level = "info"
 
 [mysql]
-auth = "root"
-password = "1234"
+auth = "stock"
+password = "stock"
 addr = "localhost:3306"
-database = "hecz_test"
+database = "stock"
 charset = "utf8mb4"
 parseTime = true
 loc = "Local"
@@ -46,10 +46,10 @@ max_open_conns = 200
 log_mode = 4
 
 [mail]
-from = "stockalpha888888@163.com"
-password = "VKJQLUCIOOZIFNUW"
-smtpServer = "smtp.163.com"
-smtpPort = "25"
+from = "chatalpha@outlook.com"
+password = "li197910"
+smtpServer = "smtp.office365.com"
+smtpPort = "587"
 
 [jwt]
 sign = "your-secret-key"

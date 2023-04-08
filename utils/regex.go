@@ -16,7 +16,7 @@ func IsValidPasswordFormat(password string) bool {
 		return false
 	}
 
-	// 密码必须包含数字、小写字母、大写字母、特殊字符中的至少三种
+	// 密码必须包含数字、小写字母、大写字母、特殊字符中的至少两种
 	digitRegExp := `[0-9]`
 	lowercaseRegExp := `[a-z]`
 	uppercaseRegExp := `[A-Z]`
@@ -34,7 +34,7 @@ func IsValidPasswordFormat(password string) bool {
 	if match, _ := regexp.MatchString(specialCharacterRegExp, password); match {
 		matchCount++
 	}
-	if matchCount < 3 {
+	if matchCount < 2 {
 		return false
 	}
 

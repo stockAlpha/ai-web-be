@@ -37,13 +37,14 @@ const (
 )
 
 var NotAuthApisMap = map[string]string{
-	SendVerificationCodeApi: SendVerificationCodeApi,
-	RegisterApi:             RegisterApi,
-	LoginApi:                LoginApi,
+	Prefix + SendVerificationCodeApi: Prefix + SendVerificationCodeApi,
+	Prefix + RegisterApi:             Prefix + RegisterApi,
+	Prefix + LoginApi:                Prefix + LoginApi,
 }
 
 const (
-	SendVerificationCodeApi = "/apis/stock/web/verify/send_code"
-	RegisterApi             = "/apis/stock/web/user/register"
-	LoginApi                = "/apis/stock/web/user/login"
+	Prefix                  = "/api/stock/web"
+	SendVerificationCodeApi = "/v1/verify/send_code"
+	RegisterApi             = "/v1/user/register"
+	LoginApi                = "/v1/user/login"
 )

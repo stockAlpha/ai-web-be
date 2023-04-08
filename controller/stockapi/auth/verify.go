@@ -51,7 +51,7 @@ func SendVerificationCode(c *gin.Context) {
 	body := "您的验证码为：" + code
 	err = notify.SendEmail(req.Email, subject, body)
 	if err != nil {
-		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "send verification code occur err")
+		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "send verification code occur err %s", err.Error())
 		cg.Res(http.StatusBadRequest, controller.ErrSendMailFail)
 	}
 
