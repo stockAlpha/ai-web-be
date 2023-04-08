@@ -37,17 +37,17 @@ const (
 )
 
 var NotAuthApisMap = map[string]string{
-	ChatPrefix + SendEmailVerificationCodeApi: ChatPrefix + SendEmailVerificationCodeApi,
-	ChatPrefix + RegisterApi:                  ChatPrefix + RegisterApi,
-	ChatPrefix + LoginApi:                     ChatPrefix + LoginApi,
+	ChatPrefix + SendVerificationCodeApi: ChatPrefix + SendVerificationCodeApi,
+	ChatPrefix + RegisterApi:             ChatPrefix + RegisterApi,
+	ChatPrefix + LoginApi:                ChatPrefix + LoginApi,
 }
 
 const (
-	ChatPrefix                   = "/api/chat"
-	SendEmailVerificationCodeApi = "/user/v1/verify/email/send_code"
-	RegisterApi                  = "/user/v1/register"
-	LoginApi                     = "/user/v1/login"
-	BatchGenerateRechargeKeyApi  = "/user/v1/batch/recharge/key"
-	RechargeApi                  = "/user/v1/recharge"
-	OpenaiCompletionsApi         = "/openai/v1/completions"
+	ChatPrefix                  = "/api/chat"
+	SendVerificationCodeApi     = "/user/v1/verify/send_code"
+	RegisterApi                 = "/user/v1/register"
+	LoginApi                    = "/user/v1/login"
+	BatchGenerateRechargeKeyApi = "/user/v1/batch/recharge/key"
+	RechargeApi                 = "/user/v1/recharge"
+	OpenaiCompletionsApi        = "/openai/v1/completions"
 )

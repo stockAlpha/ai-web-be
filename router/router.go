@@ -12,7 +12,7 @@ func Register(r *gin.Engine) *gin.Engine {
 
 	stock.POST("/echo", echo.Echo)
 
-	stock.POST(consts.SendEmailVerificationCodeApi, auth.SendVerificationCode)
+	stock.POST(consts.SendVerificationCodeApi, auth.SendVerificationCode)
 	stock.POST(consts.RegisterApi, auth.Register)
 	stock.POST(consts.LoginApi, auth.Login)
 	return r
