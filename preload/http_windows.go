@@ -3,10 +3,9 @@ package preload
 import (
 	"net/http"
 
-	"git.garena.com/shopee/sz-devops/dev-tools/pipeline-platform/gocommon/conf"
-	"git.garena.com/shopee/sz-devops/dev-tools/pipeline-platform/gocommon/consts"
-	"git.garena.com/shopee/sz-devops/dev-tools/pipeline-platform/gocommon/tlog"
-	"git.garena.com/shopee/sz-devops/dev-tools/pipeline-platform/middleware"
+	"stock-web-be/gocommon/conf"
+	"stock-web-be/gocommon/consts"
+	"stock-web-be/gocommon/tlog"
 
 	"github.com/gin-gonic/gin"
 )
