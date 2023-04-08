@@ -1,4 +1,4 @@
-package stockapi
+package userapi
 
 import (
 	"stock-web-be/dao/db"

@@ -6,9 +6,9 @@ import (
 	"stock-web-be/controller"
 	"stock-web-be/gocommon/consts"
 	"stock-web-be/gocommon/tlog"
-	"stock-web-be/idl/stockapi/user"
-	"stock-web-be/logic/stockapi"
-	"stock-web-be/logic/stockapi/notify"
+	"stock-web-be/idl/userapi/user"
+	"stock-web-be/logic/userapi"
+	"stock-web-be/logic/userapi/notify"
 	"stock-web-be/utils"
 )
 
@@ -30,7 +30,7 @@ func SendVerificationCode(c *gin.Context) {
 	}
 
 	//验证当前邮箱是否已注册
-	existUser, err := stockapi.GetUserInfoByEmail(req.Email)
+	existUser, err := userapi.GetUserInfoByEmail(req.Email)
 	if err != nil {
 		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "query existUser by email is fatal")
 		cg.Res(http.StatusBadRequest, controller.ErrnoError)
@@ -56,7 +56,7 @@ func SendVerificationCode(c *gin.Context) {
 	}
 
 	//验证码存入db
-	err = stockapi.InsertEmailVerificationCode(code, req.Email)
+	err = userapi.InsertEmailVerificationCode(code, req.Email)
 	if err != nil {
 		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "store verification code occur err")
 		cg.Res(http.StatusBadRequest, controller.ErrStoreEmailCode)

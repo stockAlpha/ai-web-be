@@ -7,8 +7,8 @@ import (
 	"stock-web-be/controller"
 	"stock-web-be/gocommon/consts"
 	"stock-web-be/gocommon/tlog"
-	"stock-web-be/idl/stockapi/user"
-	"stock-web-be/logic/stockapi"
+	"stock-web-be/idl/userapi/user"
+	"stock-web-be/logic/userapi"
 	"stock-web-be/utils"
 	"strconv"
 )
@@ -31,7 +31,7 @@ func Login(c *gin.Context) {
 	}
 
 	//验证当前邮箱是否已注册
-	existUser, err := stockapi.GetUserInfoByEmail(req.Email)
+	existUser, err := userapi.GetUserInfoByEmail(req.Email)
 	if err != nil {
 		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "query existUser by email is fatal")
 		cg.Res(http.StatusBadRequest, controller.ErrnoError)
@@ -60,7 +60,7 @@ func Login(c *gin.Context) {
 
 	//生成jwt token
 	//对userId, email加入jwt信息中
-	token, err := stockapi.GenerateToken(strconv.FormatUint(existUser.ID, 10), req.Email)
+	token, err := userapi.GenerateToken(strconv.FormatUint(existUser.ID, 10), req.Email)
 	if err != nil {
 		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "generate token error")
 		cg.Res(http.StatusBadRequest, controller.ErrGenerateJwtToken)

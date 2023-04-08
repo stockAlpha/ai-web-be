@@ -11,8 +11,8 @@ import (
 	"stock-web-be/gocommon/conf"
 	"stock-web-be/gocommon/consts"
 	"stock-web-be/gocommon/tlog"
-	"stock-web-be/logic/stockapi"
-	"stock-web-be/logic/stockapi/notify"
+	"stock-web-be/logic/userapi"
+	"stock-web-be/logic/userapi/notify"
 	"stock-web-be/middleware"
 	"strconv"
 )
@@ -25,7 +25,7 @@ func Init() {
 	conf.Init("")
 	//logic类init start
 	notify.Init()
-	stockapi.Init()
+	userapi.Init()
 	middleware.Init()
 	//logic类init end
 	tlog.Init()

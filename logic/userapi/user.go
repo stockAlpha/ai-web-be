@@ -1,4 +1,4 @@
-package stockapi
+package userapi
 
 import (
 	"math/rand"

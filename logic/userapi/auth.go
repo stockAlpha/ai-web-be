@@ -1,4 +1,4 @@
-package stockapi
+package userapi
 
 import (
 	"github.com/dgrijalva/jwt-go"

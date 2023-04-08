@@ -1,4 +1,4 @@
-package stockapi
+package userapi
 
 type EchoReq struct {
 	Msg string `json:"msg" binding:"required"`
