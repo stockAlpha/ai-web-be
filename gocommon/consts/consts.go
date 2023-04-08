@@ -55,5 +55,5 @@ const (
 
 // env
 const (
-	Env = "env"
+	Env = "ENV"
 )
