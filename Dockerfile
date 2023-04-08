@@ -27,7 +27,7 @@ COPY --from=builder /go/stock-web-be/main .
 COPY --from=builder /go/stock-web-be/conf ./conf
 # 需暴露的端口
 RUN if [ -z "$PORT" ]; then \
-        export PORT=8080; \
+        export PORT=8180; \
     fi
 EXPOSE $PORT
 ENV ENV=prod
