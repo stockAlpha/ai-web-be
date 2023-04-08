@@ -6,6 +6,7 @@ import (
 	"github.com/swaggo/gin-swagger/swaggerFiles"
 	"net/http"
 	"stock-web-be/controller/userapi/auth"
+	"stock-web-be/controller/userapi/limit"
 	"stock-web-be/docs"
 	"stock-web-be/gocommon/consts"
 )
@@ -56,4 +57,5 @@ func registerChat(chat *gin.RouterGroup) {
 	chat.POST(consts.SendVerificationCodeApi, auth.SendVerificationCode)
 	chat.POST(consts.RegisterApi, auth.Register)
 	chat.POST(consts.LoginApi, auth.Login)
+	chat.POST(consts.RechargeApi, limit.Recharge)
 }

@@ -73,6 +73,7 @@ const (
 	ErrPasswordNotMatch         = 40109
 	ErrEmailNotFound            = 40110
 	ErrAddUser                  = 40111
+	ErrRechargeKey              = 40112
 )
 
 var ErrMsg = map[int]string{
@@ -92,6 +93,7 @@ var ErrMsg = map[int]string{
 	ErrPasswordNotMatch:         "input password incorrect",
 	ErrEmailNotFound:            "get user by email not found",
 	ErrAddUser:                  "add user occur error",
+	ErrRechargeKey:              "recharge key error",
 }
 
 // EchoJSON json格式输出

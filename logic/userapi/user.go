@@ -21,7 +21,8 @@ func GetUserInfoByEmail(email string) (*db.User, error) {
 
 func AddUser(email string, hashPassword string, tenantId uint64) (uint64, error) {
 	//生成随机nickName
-	nickName := "stock-" + strconv.Itoa(rand.Intn(10000))
+	// todo: nickname使用租户名称前缀
+	nickName := "chat-" + strconv.Itoa(rand.Intn(10000))
 
 	user := &db.User{
 		NickName:    nickName,

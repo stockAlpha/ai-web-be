@@ -12,12 +12,12 @@ import (
 	"strconv"
 )
 
-// @Summary 用户注册
-// @Accept  json
-// @Produce  json
-// @param req body user.RegisterRequest true "注册请求参数"
-// @Success 200 {string} string "返回token"
-// @Router /api/v1/user/register [post]
+// @Summary	用户注册
+// @Accept		json
+// @Produce	json
+// @param		req	body		user.RegisterRequest	true	"注册请求参数"
+// @Success	200	{string}	string						"返回token"
+// @Router		/api/v1/user/register [post]
 func Register(c *gin.Context) {
 	cg := controller.Gin{Ctx: c}
 

@@ -13,12 +13,12 @@ import (
 	"strconv"
 )
 
-// @Summary 用户登录
-// @Accept  json
-// @Produce  json
-// @param req body user.LoginRequest true "登录请求参数"
-// @Success 200 {string} string "返回token"
-// @Router /api/v1/user/login [post]
+// @Summary	用户登录
+// @Accept		json
+// @Produce	json
+// @param		req	body		user.LoginRequest	true	"登录请求参数"
+// @Success	200	{string}	string					"返回token"
+// @Router		/api/v1/user/login [post]
 func Login(c *gin.Context) {
 	cg := controller.Gin{Ctx: c}
 	var req user.LoginRequest
