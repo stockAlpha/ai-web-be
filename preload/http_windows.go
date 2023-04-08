@@ -3,11 +3,11 @@ package preload
 import (
 	"net/http"
 
+	"github.com/gin-gonic/gin"
 	"stock-web-be/gocommon/conf"
 	"stock-web-be/gocommon/consts"
 	"stock-web-be/gocommon/tlog"
-
-	"github.com/gin-gonic/gin"
+	"stock-web-be/middleware"
 )
 
 type server struct {

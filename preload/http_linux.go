@@ -6,6 +6,7 @@ import (
 	"stock-web-be/gocommon/conf"
 	"stock-web-be/gocommon/consts"
 	"stock-web-be/gocommon/tlog"
+	"stock-web-be/middleware"
 )
 
 type server struct {
