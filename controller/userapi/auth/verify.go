@@ -12,6 +12,9 @@ import (
 	"stock-web-be/utils"
 )
 
+// @Summary 发送验证码
+// @param req body user.SendVerificationCodeRequest true "发送验证码请求参数(默认为email)"
+// @Router /api/v1/user/verify/send_code [post]
 func SendVerificationCode(c *gin.Context) {
 	cg := controller.Gin{Ctx: c}
 	var req user.SendVerificationCodeRequest

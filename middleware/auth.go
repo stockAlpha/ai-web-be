@@ -18,7 +18,6 @@ func Init() {
 func ValidUser() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		path := c.FullPath()
-
 		notAuthApis := consts.NotAuthApisMap
 		// 如果请求路径为 不需要鉴权的api
 		if notAuthApis[path] != "" {

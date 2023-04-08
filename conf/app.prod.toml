@@ -28,9 +28,9 @@ maxHourRotate = 1                      # 默认日志按小时切分
 level = "info"
 
 [mysql]
-auth = "stock"
-password = "stock"
-addr = "localhost:3306"
+auth = "root"
+password = "ISsYBFqvktJsmbSa8EfA"
+addr = "containers-us-west-203.railway.app:7806"
 database = "stock"
 charset = "utf8mb4"
 parseTime = true
@@ -52,4 +52,4 @@ smtpServer = "smtp.office365.com"
 smtpPort = "587"
 
 [jwt]
-sign = "your-secret-key"
+sign = "chat_alpha_20220408"
