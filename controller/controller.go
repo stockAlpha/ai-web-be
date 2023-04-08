@@ -69,6 +69,10 @@ const (
 	ErrVerificationCodeNotFound = 40105
 	ErrNotFormatPassword        = 40106
 	ErrGenerateJwtToken         = 40107
+	ErrComputeHashPassword      = 40108
+	ErrPasswordNotMatch         = 40109
+	ErrEmailNotFound            = 40110
+	ErrAddUser                  = 40111
 )
 
 var ErrMsg = map[int]string{
@@ -84,6 +88,10 @@ var ErrMsg = map[int]string{
 	ErrVerificationCodeNotFound: "verification code not found",
 	ErrNotFormatPassword:        "not format password",
 	ErrGenerateJwtToken:         "generate jwt token error",
+	ErrComputeHashPassword:      "compute hash password error",
+	ErrPasswordNotMatch:         "input password incorrect",
+	ErrEmailNotFound:            "get user by email not found",
+	ErrAddUser:                  "add user occur error",
 }
 
 // EchoJSON json格式输出

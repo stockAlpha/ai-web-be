@@ -2,7 +2,6 @@ package auth
 
 import (
 	"github.com/gin-gonic/gin"
-	"golang.org/x/crypto/bcrypt"
 	"net/http"
 	"stock-web-be/controller"
 	"stock-web-be/gocommon/consts"
@@ -13,9 +12,10 @@ import (
 	"strconv"
 )
 
-func Login(c *gin.Context) {
+func Register(c *gin.Context) {
 	cg := controller.Gin{Ctx: c}
-	var req user.LoginRequest
+
+	var req user.RegisterRequest
 
 	if err := c.ShouldBindJSON(&req); err != nil {
 		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "request params invalid, error: %s", err.Error())
@@ -30,6 +30,13 @@ func Login(c *gin.Context) {
 		return
 	}
 
+	//校验密码格式
+	if !utils.IsValidPasswordFormat(req.Password) {
+		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "password is out of specification")
+		cg.Res(http.StatusBadRequest, controller.ErrNotFormatEmail)
+		return
+	}
+
 	//验证当前邮箱是否已注册
 	existUser, err := stockapi.GetUserInfoByEmail(req.Email)
 	if err != nil {
@@ -38,29 +45,43 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	if existUser == nil {
-		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "not found user by email")
+	if existUser != nil {
+		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "query existUser by email is fatal")
 		cg.Res(http.StatusBadRequest, controller.ErrEmailAlreadyExists)
 		return
 	}
 
-	//验证密码md5值
-	// 验证密码
-	err = bcrypt.CompareHashAndPassword([]byte(existUser.Password), []byte(req.Password))
+	//验证code是否存在
+	existCode, err := stockapi.ExistCode(req.Code, req.Email)
 	if err != nil {
-		if err == bcrypt.ErrMismatchedHashAndPassword {
-			tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "compare hash password not match")
-			cg.Res(http.StatusBadRequest, controller.ErrPasswordNotMatch)
-			return
-		}
-		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "compute hash password error")
+		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "query code by email is fatal")
+		cg.Res(http.StatusBadRequest, controller.ErrQueryVerificationCode)
+		return
+	}
+
+	if !existCode {
+		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "the code is not exist or expire")
+		cg.Res(http.StatusBadRequest, controller.ErrVerificationCodeNotFound)
+		return
+	}
+
+	//对密码进行加密,并添加用户
+	hashPassword, err := utils.HashPassword(req.Password)
+	if err != nil {
+		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "compute hash password err")
 		cg.Res(http.StatusBadRequest, controller.ErrComputeHashPassword)
 		return
 	}
 
-	//生成jwt token
+	userId, err := stockapi.AddUser(req.Email, hashPassword, req.TenantId)
+	if err != nil {
+		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "add user error")
+		cg.Res(http.StatusBadRequest, controller.ErrAddUser)
+		return
+	}
+
 	//对userId, email加入jwt信息中
-	token, err := stockapi.GenerateToken(strconv.FormatUint(existUser.ID, 10), req.Email)
+	token, err := stockapi.GenerateToken(strconv.FormatUint(userId, 10), req.Email)
 	if err != nil {
 		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "generate token error")
 		cg.Res(http.StatusBadRequest, controller.ErrGenerateJwtToken)

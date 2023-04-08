@@ -13,6 +13,6 @@ func Register(r *gin.Engine) *gin.Engine {
 
 	stock.POST("/verify/send_code", auth.SendVerificationCode)
 	stock.POST("/user/register", auth.Register)
-
+	stock.POST("/user/login", auth.Login)
 	return r
 }

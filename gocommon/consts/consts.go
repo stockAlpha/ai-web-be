@@ -35,3 +35,15 @@ const (
 	ContentType = "Content-Type"
 	Location    = "Location"
 )
+
+var NotAuthApisMap = map[string]string{
+	SendVerificationCodeApi: SendVerificationCodeApi,
+	RegisterApi:             RegisterApi,
+	LoginApi:                LoginApi,
+}
+
+const (
+	SendVerificationCodeApi = "/apis/stock/web/verify/send_code"
+	RegisterApi             = "/apis/stock/web/user/register"
+	LoginApi                = "/apis/stock/web/user/login"
+)

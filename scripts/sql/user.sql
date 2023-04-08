@@ -61,7 +61,7 @@ create table if not exists users
     primary key,
     email        varchar(50)                        not null,
     nick_name    varchar(50)                        not null,
-    password     varchar(50)                        not null,
+    password     varchar(1024)                        not null,
     tenant_id    int                                not null,
     created_time datetime default CURRENT_TIMESTAMP not null,
     updated_time datetime default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP
