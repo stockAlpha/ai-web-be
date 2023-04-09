@@ -43,7 +43,7 @@ func Completions(c *gin.Context) {
 	defer resp.Body.Close()
 
 	var response openai.CompletionsResponse
-	json.NewDecoder(resp.Body).Decode(&response)
+	_ = json.NewDecoder(resp.Body).Decode(&response)
 	fmt.Println("response:", response)
 	cg.Resp(http.StatusOK, controller.ErrnoSuccess, response)
 	return
