@@ -1,6 +1,7 @@
 package openai
 
 type CompletionsRequest struct {
+	OpenAIKey   string
 	Model       string    `json:"model"`
 	Messages    []Message `json:"messages"`
 	Temperature float32   `json:"temperature"`

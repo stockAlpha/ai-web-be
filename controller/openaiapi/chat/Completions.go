@@ -28,11 +28,16 @@ func Completions(c *gin.Context) {
 		return
 	}
 
-	key := conf.Handler.GetString(`openai.key`)
+	key := req.OpenAIKey
+	if key == "" {
+		key = conf.Handler.GetString(`openai.key`)
+	}
 	requestJSON, _ := json.Marshal(req)
 
 	client := &http.Client{}
 	openAIReq, _ := http.NewRequest("POST", "https://api.openai.com/v1/chat/completions", bytes.NewBuffer(requestJSON))
+	fmt.Println("key:", key)
+	fmt.Println("openAIReq:", openAIReq)
 	openAIReq.Header.Add("Authorization", "Bearer "+key)
 	openAIReq.Header.Add("Content-Type", "application/json")
 	resp, err := client.Do(openAIReq)
