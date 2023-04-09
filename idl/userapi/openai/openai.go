@@ -16,9 +16,9 @@ type CompletionsResponse struct {
 	Created int    `json:"created"`
 	Choices []struct {
 		Index        int     `json:"index"`
-		Message      Message `json:"choices"`
+		Message      Message `json:"message"`
 		FinishReason string  `json:"finish_reason"`
-	}
+	} `json:"choices"`
 	Usage struct {
 		PromptTokens     int `json:"prompt_tokens"`
 		CompletionTokens int `json:"completion_tokens"`
