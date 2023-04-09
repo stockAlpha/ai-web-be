@@ -57,6 +57,7 @@ func SendVerificationCode(c *gin.Context) {
 	if err != nil {
 		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "send verification code occur err %s", err.Error())
 		cg.Res(http.StatusBadRequest, controller.ErrSendMailFail)
+		return
 	}
 
 	//验证码存入db
