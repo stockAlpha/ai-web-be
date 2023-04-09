@@ -25,12 +25,7 @@ func Completions(c *gin.Context) {
 		cg.Res(http.StatusBadRequest, controller.ErrnoInvalidPrm)
 		return
 	}
-
-	apiKey := req.OpenAIKey
-	if apiKey == "" {
-		apiKey = conf.Handler.GetString(`openai.key`)
-	}
-
+	apiKey := conf.Handler.GetString(`openai.key`)
 	client := resty.New()
 	resp, err := client.R().
 		SetHeader("Authorization", "Bearer "+apiKey).

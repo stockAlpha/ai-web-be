@@ -1,14 +1,13 @@
 package openai
 
 type CompletionsRequest struct {
-	OpenAIKey   string
 	Model       string    `json:"model"`
 	Messages    []Message `json:"messages"`
-	Temperature float32   `json:"temperature"`
-	MaxTokens   int       `json:"max_tokens"`
-	TopP        int       `json:"top_p"`
-	N           int       `json:"n"`
-	Stream      bool      `json:"stream"`
+	Temperature float32   `json:"temperature" default:"1"`
+	MaxTokens   int       `json:"max_tokens" default:"1000"`
+	TopP        int       `json:"top_p" default:"1"`
+	N           int       `json:"n" default:"1"`
+	Stream      bool      `json:"stream" default:"false"`
 }
 
 type CompletionsResponse struct {
