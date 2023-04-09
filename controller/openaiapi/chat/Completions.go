@@ -14,7 +14,7 @@ import (
 	"stock-web-be/idl/userapi/openai"
 )
 
-// @Tags	OpenAI相关接口
+// @Tags	代理OpenAI相关接口
 // @Summary	对话
 // @param		req	body	openai.CompletionsRequest	true	"openai请求参数"
 // @Router		/api/v1/openai/v1/chat/completions [post]
