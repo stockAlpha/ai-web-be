@@ -12,6 +12,7 @@ import (
 	"stock-web-be/utils"
 )
 
+// @Tags	用户相关接口
 // @Summary	发送验证码
 // @param		req	body	user.SendVerificationCodeRequest	true	"发送验证码请求参数(默认为email)"
 // @Router		/api/v1/user/verify/send_code [post]

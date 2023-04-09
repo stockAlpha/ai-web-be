@@ -13,6 +13,7 @@ import (
 	"strconv"
 )
 
+// @Tags	用户相关接口
 // @Summary	用户登录
 // @Accept		json
 // @Produce	json
@@ -46,7 +47,7 @@ func Login(c *gin.Context) {
 
 	if existUser == nil {
 		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "not found user by email")
-		cg.Res(http.StatusBadRequest, controller.ErrEmailAlreadyExists)
+		cg.Res(http.StatusBadRequest, controller.ErrEmailNotFound)
 		return
 	}
 

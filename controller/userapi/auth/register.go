@@ -12,6 +12,7 @@ import (
 	"strconv"
 )
 
+// @Tags	用户相关接口
 // @Summary	用户注册
 // @Accept		json
 // @Produce	json

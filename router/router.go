@@ -5,6 +5,7 @@ import (
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"github.com/swaggo/gin-swagger/swaggerFiles"
 	"net/http"
+	"stock-web-be/controller/openaiapi/chat"
 	"stock-web-be/controller/userapi/auth"
 	"stock-web-be/controller/userapi/integral"
 	"stock-web-be/docs"
@@ -37,25 +38,32 @@ func Register(r *gin.Engine) *gin.Engine {
 	r.Use(Options)
 	r.Use(Secure)
 	swagger(r)
-	chat := r.Group(consts.Prefix)
-
-	registerChat(chat)
+	registerUser(r.Group(consts.UserPrefix))
+	registerIntegral(r.Group(consts.IntegralPrefix))
+	registerOpenAI(r.Group(consts.OpenaiPrefix))
 	return r
 }
 
 func swagger(r *gin.Engine) {
-	// programatically set swagger info
-	docs.SwaggerInfo.Title = "Swagger Example API"
-	docs.SwaggerInfo.Description = "This is a sample server Petstore server."
+	docs.SwaggerInfo.Title = "Stock Web API"
+	docs.SwaggerInfo.Description = "This is stock web server api."
 	docs.SwaggerInfo.Version = "1.0"
 	docs.SwaggerInfo.Schemes = []string{"http", "https"}
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 }
 
-func registerChat(chat *gin.RouterGroup) {
-	chat.POST(consts.SendVerificationCodeApi, auth.SendVerificationCode)
-	chat.POST(consts.RegisterApi, auth.Register)
-	chat.POST(consts.LoginApi, auth.Login)
-	chat.POST(consts.RechargeApi, integral.Recharge)
-	chat.GET(consts.ProfileApi, auth.Profile)
+func registerUser(group *gin.RouterGroup) {
+	group.POST(consts.SendVerificationCodeApi, auth.SendVerificationCode)
+	group.POST(consts.RegisterApi, auth.Register)
+	group.POST(consts.LoginApi, auth.Login)
+	group.GET(consts.ProfileApi, auth.Profile)
+}
+
+func registerIntegral(group *gin.RouterGroup) {
+	group.POST(consts.RechargeApi, integral.Recharge)
+	group.POST(consts.GenerateRechargeKeyApi, integral.GenerateKey)
+}
+
+func registerOpenAI(group *gin.RouterGroup) {
+	group.POST(consts.OpenaiCompletionsApi, chat.Completions)
 }

@@ -37,21 +37,29 @@ const (
 )
 
 var NotAuthApisMap = map[string]string{
-	Prefix + SendVerificationCodeApi: Prefix + SendVerificationCodeApi,
-	Prefix + RegisterApi:             Prefix + RegisterApi,
-	Prefix + LoginApi:                Prefix + LoginApi,
-	"/swagger/*any":                  "/swagger/*any",
+	UserPrefix + SendVerificationCodeApi: UserPrefix + SendVerificationCodeApi,
+	UserPrefix + RegisterApi:             UserPrefix + RegisterApi,
+	UserPrefix + LoginApi:                UserPrefix + LoginApi,
+	"/swagger/*any":                      "/swagger/*any",
+}
+
+var CanGenerateRechargeKeyUserMap = map[string]string{
+	"stalary@163.com": "stalary@163.com",
 }
 
 const (
-	Prefix                      = "/api/v1"
-	SendVerificationCodeApi     = "/user/verify/send_code"
-	RegisterApi                 = "/user/register"
-	LoginApi                    = "/user/login"
-	BatchGenerateRechargeKeyApi = "/user/batch/recharge/key"
-	RechargeApi                 = "/user/recharge"
-	OpenaiCompletionsApi        = "/openai/v1/completions"
-	ProfileApi                  = "/user/profile"
+	UserPrefix              = "/api/v1/user"
+	SendVerificationCodeApi = "/verify/send_code"
+	RegisterApi             = "/register"
+	LoginApi                = "/login"
+	ProfileApi              = "/profile"
+
+	IntegralPrefix         = "/api/v1/integral"
+	GenerateRechargeKeyApi = "/generate_key"
+	RechargeApi            = "/recharge"
+
+	OpenaiPrefix         = "/api/v1/openai"
+	OpenaiCompletionsApi = "/v1/completions"
 )
 
 // env

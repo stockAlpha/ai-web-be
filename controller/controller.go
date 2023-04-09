@@ -74,6 +74,8 @@ const (
 	ErrEmailNotFound            = 40110
 	ErrAddUser                  = 40111
 	ErrRechargeKey              = 40112
+	ErrGenerateRechargeKey      = 40113
+	ErrRechargeKeyUsed          = 40114
 )
 
 var ErrMsg = map[int]string{
@@ -94,6 +96,8 @@ var ErrMsg = map[int]string{
 	ErrEmailNotFound:            "get user by email not found",
 	ErrAddUser:                  "add user occur error",
 	ErrRechargeKey:              "recharge key error",
+	ErrGenerateRechargeKey:      "generate recharge key error",
+	ErrRechargeKeyUsed:          "recharge key has been used",
 }
 
 // EchoJSON json格式输出

@@ -49,7 +49,6 @@ func (a *loginAuth) Next(fromServer []byte, more bool) ([]byte, error) {
 }
 
 func SendEmail(to, subject, body string) error {
-	fmt.Println(SendMail + "," + SendPassword + "," + SmtpServer)
 	// outlook need use custom
 	auth := LoginAuth(SendMail, SendPassword)
 	msg := []byte("To: " + to + "\r\n" +
@@ -57,5 +56,6 @@ func SendEmail(to, subject, body string) error {
 		"\r\n" + body + "\r\n")
 
 	err := smtp.SendMail(SmtpServer+":"+SmtpPort, auth, SendMail, []string{to}, msg)
+	fmt.Println("send email success to: ", to, " subject: ", subject, " body: ", body)
 	return err
 }

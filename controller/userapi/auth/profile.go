@@ -7,6 +7,7 @@ import (
 	"stock-web-be/idl/userapi/user"
 )
 
+// @Tags	用户相关接口
 // @Summary	获取用户信息
 // @Router		/api/v1/user/profile [get]
 // @Response 200 {object} user.ProfileResponse 用户信息

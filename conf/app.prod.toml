@@ -53,3 +53,6 @@ smtpPort = "587"
 
 [jwt]
 sign = "chat_alpha_20220408"
+
+[openai]
+token = "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"
