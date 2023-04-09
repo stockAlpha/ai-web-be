@@ -1,11 +1,9 @@
 package chat
 
 import (
-	"bytes"
-	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"io"
+	"github.com/go-resty/resty/v2"
 	"net/http"
 	"stock-web-be/controller"
 	"stock-web-be/gocommon/conf"
@@ -28,31 +26,29 @@ func Completions(c *gin.Context) {
 		return
 	}
 
-	key := req.OpenAIKey
-	if key == "" {
-		key = conf.Handler.GetString(`openai.key`)
+	apiKey := req.OpenAIKey
+	if apiKey == "" {
+		apiKey = conf.Handler.GetString(`openai.key`)
 	}
-	requestJSON, _ := json.Marshal(req)
 
-	client := &http.Client{}
-	openAIReq, _ := http.NewRequest("POST", "https://api.openai.com/v1/chat/completions", bytes.NewBuffer(requestJSON))
-	fmt.Println("key:", key)
-	fmt.Println("openAIReq:", openAIReq)
-	openAIReq.Header.Add("Authorization", "Bearer "+key)
-	openAIReq.Header.Add("Content-Type", "application/json")
-	resp, err := client.Do(openAIReq)
+	client := resty.New()
+	resp, err := client.R().
+		SetHeader("Authorization", "Bearer "+apiKey).
+		SetHeader("Content-Type", "application/json").
+		SetBody(req).
+		Post("https://api.openai.com/v1/chat/completions")
+
 	if err != nil {
-		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "request OpenAI, error: %s", err.Error())
+		fmt.Println("Error sending request:", err)
 		cg.Res(http.StatusBadRequest, controller.ErrnoInvalidPrm)
 		return
 	}
-	defer func(Body io.ReadCloser) {
-		_ = Body.Close()
-	}(resp.Body)
 
-	var response openai.CompletionsResponse
-	_ = json.NewDecoder(resp.Body).Decode(&response)
-	fmt.Println("response:", response)
-	cg.Resp(http.StatusOK, controller.ErrnoSuccess, response)
+	if resp.StatusCode() != 200 {
+		fmt.Println("res error", resp)
+		cg.Res(http.StatusBadRequest, controller.ErrnoInvalidPrm)
+		return
+	}
+	cg.Resp(http.StatusOK, controller.ErrnoSuccess, resp)
 	return
 }

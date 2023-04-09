@@ -55,4 +55,4 @@ smtpPort = "587"
 sign = "your-secret-key"
 
 [openai]
-key = "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"
+key = "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"

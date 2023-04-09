@@ -5,6 +5,7 @@ go 1.19
 require (
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/gin-gonic/gin v1.9.0
+	github.com/go-resty/resty/v2 v2.7.0
 	github.com/google/uuid v1.1.2
 	github.com/lestrrat-go/file-rotatelogs v2.4.0+incompatible
 	github.com/spf13/viper v1.15.0
