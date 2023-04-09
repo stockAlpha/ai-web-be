@@ -1,4 +1,4 @@
-package limit
+package integral
 
 import (
 	"github.com/gin-gonic/gin"
@@ -7,17 +7,17 @@ import (
 	"stock-web-be/dao/db"
 	"stock-web-be/gocommon/consts"
 	"stock-web-be/gocommon/tlog"
-	"stock-web-be/idl/userapi/limit"
+	"stock-web-be/idl/userapi/integral"
 )
 
 // @Summary	充值
 // @Accept		json
 // @Produce	json
-// @param		req	body	limit.RechargeRequest	true	"充值请求参数"
+// @param		req	body	integral.RechargeRequest	true	"充值请求参数"
 // @Router		/api/v1/user/recharge [post]
 func Recharge(c *gin.Context) {
 	cg := controller.Gin{Ctx: c}
-	var req limit.RechargeRequest
+	var req integral.RechargeRequest
 
 	if err := c.ShouldBindJSON(&req); err != nil {
 		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "request params invalid, error: %s", err.Error())

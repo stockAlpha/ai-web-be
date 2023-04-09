@@ -6,8 +6,9 @@ import (
 )
 
 type RechargeKey struct {
-	ID          uint64    `gorm:"primary_key" json:"id"`
-	RechargeKey string    `gorm:"column:recharge_key" json:"recharge_key"`
+	ID          uint64 `gorm:"primary_key" json:"id"`
+	RechargeKey string `gorm:"column:recharge_key" json:"recharge_key"`
+
 	Status      uint8     `gorm:"column:status" json:"status"`
 	UseAccount  string    `gorm:"column:use_account" json:"use_account"`
 	CreatedTime time.Time `gorm:"column:created_time" json:"created_time"`

@@ -11,10 +11,10 @@ writeTimeout = 21000     # Recieve http body and response timeout(ms), default 1
 idleTimeout = 60000      # Keep-alive timeout(ms), default 60000
 
 [httpclient]
-maxIdleConns = 10              # MaxIdleConns controls the maximum number of idle (keep-alive) connections across all hosts. Zero means no limit.
+maxIdleConns = 10              # MaxIdleConns controls the maximum number of idle (keep-alive) connections across all hosts. Zero means no integral.
 maxIdleConnsPerHost = 10       # MaxIdleConnsPerHost, if non-zero, controls the maximum idle (keep-alive) connections to keep per-host. If zero, DefaultMaxIdleConnsPerHost is used.
-maxConnsPerHost = 20	       # MaxConnsPerHost optionally limits the total number of connections per host, including connections in the dialing, active, and idle states. On limit violation, dials will block. Zero means no limit.
-idleConnTimeout = 120            #IdleConnTimeout is the maximum amount of time an idle (keep-alive) connection will remain idle before closing itself. Zero means no limit.
+maxConnsPerHost = 20	       # MaxConnsPerHost optionally limits the total number of connections per host, including connections in the dialing, active, and idle states. On integral violation, dials will block. Zero means no integral.
+idleConnTimeout = 120            #IdleConnTimeout is the maximum amount of time an idle (keep-alive) connection will remain idle before closing itself. Zero means no integral.
 timeout = 5000                 #Time(ms) for Establishing tcp connection, sending request, and reading response.
 
 [pprof]

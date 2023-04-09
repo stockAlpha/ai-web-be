@@ -15,18 +15,18 @@ type Gin struct {
 }
 
 type GinResp struct {
-	ErrNo  int         `json:"errNo"`
-	ErrMsg string      `json:"errMsg"`
-	LogID  string      `json:"logid"`
-	Data   interface{} `json:"data"`
+	Code  int         `json:"code"`
+	Msg   string      `json:"msg"`
+	LogID string      `json:"logid"`
+	Data  interface{} `json:"data"`
 }
 
 func (g *Gin) Resp(httpCode, errCode int, data interface{}) {
 	res := GinResp{
-		ErrNo:  errCode,
-		ErrMsg: ErrMsg[errCode],
-		LogID:  g.Ctx.GetString(tlog.LOGID),
-		Data:   data,
+		Code:  errCode,
+		Msg:   ErrMsg[errCode],
+		LogID: g.Ctx.GetString(tlog.LOGID),
+		Data:  data,
 	}
 
 	g.Ctx.JSON(httpCode, res)
@@ -34,10 +34,10 @@ func (g *Gin) Resp(httpCode, errCode int, data interface{}) {
 
 func (g *Gin) RespWithMsg(httpCode, errCode int, msg string, data interface{}) {
 	resp := GinResp{
-		ErrNo:  errCode,
-		ErrMsg: msg,
-		LogID:  g.Ctx.GetString(tlog.LOGID),
-		Data:   data,
+		Code:  errCode,
+		Msg:   msg,
+		LogID: g.Ctx.GetString(tlog.LOGID),
+		Data:  data,
 	}
 
 	g.Ctx.JSON(httpCode, resp)
@@ -45,10 +45,10 @@ func (g *Gin) RespWithMsg(httpCode, errCode int, msg string, data interface{}) {
 
 func (g *Gin) Res(httpCode, errCode int) {
 	res := GinResp{
-		ErrNo:  errCode,
-		ErrMsg: ErrMsg[errCode],
-		LogID:  g.Ctx.GetString(tlog.LOGID),
-		Data:   nil,
+		Code:  errCode,
+		Msg:   ErrMsg[errCode],
+		LogID: g.Ctx.GetString(tlog.LOGID),
+		Data:  nil,
 	}
 
 	g.Ctx.JSON(httpCode, res)

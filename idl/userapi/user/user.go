@@ -18,3 +18,8 @@ type LoginRequest struct {
 	Email    string `json:"email" binding:"required"`
 	Password string `json:"password" binding:"required"`
 }
+
+type ProfileResponse struct {
+	Email    string `json:"email"`
+	NickName string `json:"nick_name"`
+}

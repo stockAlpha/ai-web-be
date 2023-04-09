@@ -51,6 +51,7 @@ const (
 	BatchGenerateRechargeKeyApi = "/user/batch/recharge/key"
 	RechargeApi                 = "/user/recharge"
 	OpenaiCompletionsApi        = "/openai/v1/completions"
+	ProfileApi                  = "/user/profile"
 )
 
 // env
