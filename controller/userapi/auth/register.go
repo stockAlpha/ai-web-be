@@ -40,7 +40,7 @@ func Register(c *gin.Context) {
 	//校验密码格式
 	if !utils.IsValidPasswordFormat(req.Password) {
 		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "password is out of specification")
-		cg.Res(http.StatusBadRequest, controller.ErrNotFormatEmail)
+		cg.Res(http.StatusBadRequest, controller.ErrNotFormatPassword)
 		return
 	}
 
