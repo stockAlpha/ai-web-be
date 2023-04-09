@@ -3,6 +3,7 @@ package conf
 import (
 	"fmt"
 	"os"
+	"stock-web-be/gocommon/consts"
 
 	"github.com/spf13/viper"
 )
@@ -29,7 +30,13 @@ func LoadConfig(confPath string) *viper.Viper {
 	handler := viper.New()
 
 	if confPath == "" {
-		handler.SetConfigName("app") // 默认文件配置文件为app.toml
+		// local or prod
+		confEnv := os.Getenv(consts.Env)
+		if confEnv != "" {
+			handler.SetConfigName("app." + confEnv)
+		} else {
+			handler.SetConfigName("app.local") // 默认文件配置文件为app.toml
+		}
 		handler.AddConfigPath(Root + "/conf")
 	} else {
 		handler.SetConfigFile(confPath)

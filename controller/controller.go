@@ -3,16 +3,55 @@ package controller
 import (
 	"encoding/json"
 	"fmt"
+	"stock-web-be/gocommon/tlog"
 	"strconv"
 	"strings"
 
 	"github.com/gin-gonic/gin"
 )
 
-type Resp struct {
-	ErrNo  int         `json:"errNo"`
-	ErrMsg string      `json:"errMsg"`
-	Data   interface{} `json:"data"`
+type Gin struct {
+	Ctx *gin.Context
+}
+
+type GinResp struct {
+	Code  int         `json:"code"`
+	Msg   string      `json:"msg"`
+	LogID string      `json:"logid"`
+	Data  interface{} `json:"data"`
+}
+
+func (g *Gin) Resp(httpCode, errCode int, data interface{}) {
+	res := GinResp{
+		Code:  errCode,
+		Msg:   ErrMsg[errCode],
+		LogID: g.Ctx.GetString(tlog.LOGID),
+		Data:  data,
+	}
+
+	g.Ctx.JSON(httpCode, res)
+}
+
+func (g *Gin) RespWithMsg(httpCode, errCode int, msg string, data interface{}) {
+	resp := GinResp{
+		Code:  errCode,
+		Msg:   msg,
+		LogID: g.Ctx.GetString(tlog.LOGID),
+		Data:  data,
+	}
+
+	g.Ctx.JSON(httpCode, resp)
+}
+
+func (g *Gin) Res(httpCode, errCode int) {
+	res := GinResp{
+		Code:  errCode,
+		Msg:   ErrMsg[errCode],
+		LogID: g.Ctx.GetString(tlog.LOGID),
+		Data:  nil,
+	}
+
+	g.Ctx.JSON(httpCode, res)
 }
 
 // 业务错误码(对外)，非http状态码
@@ -20,15 +59,46 @@ const (
 	ErrnoSuccess = 0
 	ErrnoError   = 1
 
-	ErrnoNotFoundPipeline = 20
-	ErrnoMultiPipeline    = 21
+	ErrnoInvalidPrm = 40000
+
+	ErrNotFormatEmail           = 40100
+	ErrEmailAlreadyExists       = 40101
+	ErrSendMailFail             = 40102
+	ErrStoreEmailCode           = 40103
+	ErrQueryVerificationCode    = 40104
+	ErrVerificationCodeNotFound = 40105
+	ErrNotFormatPassword        = 40106
+	ErrGenerateJwtToken         = 40107
+	ErrComputeHashPassword      = 40108
+	ErrPasswordNotMatch         = 40109
+	ErrEmailNotFound            = 40110
+	ErrAddUser                  = 40111
+	ErrRechargeKey              = 40112
+	ErrGenerateRechargeKey      = 40113
+	ErrRechargeKeyUsed          = 40114
 )
 
-// 业务错误码标识的信息(对外)
-const (
-	ErrmsgSuccess = "success"
-	ErrmsgError   = "error"
-)
+var ErrMsg = map[int]string{
+	ErrnoSuccess: "success",
+	ErrnoError:   "error",
+
+	ErrnoInvalidPrm:             "invalid parms",
+	ErrNotFormatEmail:           "not format email",
+	ErrEmailAlreadyExists:       "email already exists",
+	ErrSendMailFail:             "send verification code error",
+	ErrStoreEmailCode:           "store email verification code error",
+	ErrQueryVerificationCode:    "query verification code error",
+	ErrVerificationCodeNotFound: "verification code not found",
+	ErrNotFormatPassword:        "not format password",
+	ErrGenerateJwtToken:         "generate jwt token error",
+	ErrComputeHashPassword:      "compute hash password error",
+	ErrPasswordNotMatch:         "input password incorrect",
+	ErrEmailNotFound:            "get user by email not found",
+	ErrAddUser:                  "add user occur error",
+	ErrRechargeKey:              "recharge key error",
+	ErrGenerateRechargeKey:      "generate recharge key error",
+	ErrRechargeKeyUsed:          "recharge key has been used",
+}
 
 // EchoJSON json格式输出
 func EchoJSON(ctx *gin.Context, body interface{}) {
@@ -57,7 +127,7 @@ func DownloadTextPlain(ctx *gin.Context, text string, filename string) {
 }
 
 func EchoData(ctx *gin.Context, data interface{}) {
-	b, err := json.Marshal(Resp{ErrnoSuccess, ErrmsgSuccess, data})
+	b, err := json.Marshal(GinResp{0, "", "", data})
 	if err != nil {
 		ctx.Data(200, "application/json", []byte(`{"errno":1, "errmsg":"`+err.Error()+`","data":null}`))
 	} else {

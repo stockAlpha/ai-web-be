@@ -2,12 +2,68 @@ package router
 
 import (
 	"github.com/gin-gonic/gin"
-	"stock-web-be/controller/stockapi/echo"
+	ginSwagger "github.com/swaggo/gin-swagger"
+	"github.com/swaggo/gin-swagger/swaggerFiles"
+	"net/http"
+	"stock-web-be/controller/openaiapi/chat"
+	"stock-web-be/controller/userapi/auth"
+	"stock-web-be/controller/userapi/integral"
+	"stock-web-be/docs"
+	"stock-web-be/gocommon/consts"
 )
 
-func Register(r *gin.Engine) *gin.Engine {
-	stock := r.Group("/apis/stock/web/")
+func Options(c *gin.Context) {
+	if c.Request.Method != "OPTIONS" {
+		c.Next()
+	} else {
+		c.Header("Access-Control-Allow-Origin", "*")
+		c.Header("Access-Control-Allow-Methods", "GET,POST,PUT,PATCH,DELETE,OPTIONS")
+		c.Header("Access-Control-Allow-Headers", "authorization, origin, content-type, accept")
+		c.Header("Allow", "HEAD,GET,POST,PUT,PATCH,DELETE,OPTIONS")
+		c.Header("Content-Type", "application/json")
+		c.AbortWithStatus(http.StatusOK)
+	}
+}
+func Secure(c *gin.Context) {
+	c.Header("Access-Control-Allow-Origin", "*")
+	//c.Header("X-Frame-Options", "DENY")
+	c.Header("X-Content-Type-Options", "nosniff")
+	c.Header("X-XSS-Protection", "1; mode=block")
+	if c.Request.TLS != nil {
+		c.Header("Strict-Transport-Security", "max-age=31536000")
+	}
+}
 
-	stock.POST("/echo", echo.Echo)
+func Register(r *gin.Engine) *gin.Engine {
+	r.Use(Options)
+	r.Use(Secure)
+	swagger(r)
+	registerUser(r.Group(consts.UserPrefix))
+	registerIntegral(r.Group(consts.IntegralPrefix))
+	registerOpenAI(r.Group(consts.OpenaiPrefix))
 	return r
+}
+
+func swagger(r *gin.Engine) {
+	docs.SwaggerInfo.Title = "Stock Web API"
+	docs.SwaggerInfo.Description = "This is stock web server api."
+	docs.SwaggerInfo.Version = "1.0"
+	docs.SwaggerInfo.Schemes = []string{"http", "https"}
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+}
+
+func registerUser(group *gin.RouterGroup) {
+	group.POST(consts.SendVerificationCodeApi, auth.SendVerificationCode)
+	group.POST(consts.RegisterApi, auth.Register)
+	group.POST(consts.LoginApi, auth.Login)
+	group.GET(consts.ProfileApi, auth.Profile)
+}
+
+func registerIntegral(group *gin.RouterGroup) {
+	group.POST(consts.RechargeApi, integral.Recharge)
+	group.POST(consts.GenerateRechargeKeyApi, integral.GenerateKey)
+}
+
+func registerOpenAI(group *gin.RouterGroup) {
+	group.POST(consts.OpenaiCompletionsApi, chat.Completions)
 }

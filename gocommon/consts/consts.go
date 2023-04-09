@@ -35,3 +35,34 @@ const (
 	ContentType = "Content-Type"
 	Location    = "Location"
 )
+
+var NotAuthApisMap = map[string]string{
+	UserPrefix + SendVerificationCodeApi: UserPrefix + SendVerificationCodeApi,
+	UserPrefix + RegisterApi:             UserPrefix + RegisterApi,
+	UserPrefix + LoginApi:                UserPrefix + LoginApi,
+	"/swagger/*any":                      "/swagger/*any",
+}
+
+var CanGenerateRechargeKeyUserMap = map[string]string{
+	"stalary@163.com": "stalary@163.com",
+}
+
+const (
+	UserPrefix              = "/api/v1/user"
+	SendVerificationCodeApi = "/verify/send_code"
+	RegisterApi             = "/register"
+	LoginApi                = "/login"
+	ProfileApi              = "/profile"
+
+	IntegralPrefix         = "/api/v1/integral"
+	GenerateRechargeKeyApi = "/generate_key"
+	RechargeApi            = "/recharge"
+
+	OpenaiPrefix         = "/api/v1/openai"
+	OpenaiCompletionsApi = "/v1/chat/completions"
+)
+
+// env
+const (
+	Env = "ENV"
+)

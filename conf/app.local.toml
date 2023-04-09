@@ -1,0 +1,58 @@
+pid = "var/run/stock-web-api.pid"
+version = "1.0.0"
+
+
+[http]
+addr = ":8180"           # 默认agent启动端口，可以修改
+handlerTimeout = 60000   # Handler timeout(ms), default 5000
+readHeaderTimeout = 2000 # Request header timeout(ms), default 2000
+readTimeout = 5000       # Recieve http request timeout(ms), including the body, default 5000
+writeTimeout = 21000     # Recieve http body and response timeout(ms), default 10000
+idleTimeout = 60000      # Keep-alive timeout(ms), default 60000
+
+[httpclient]
+maxIdleConns = 10              # MaxIdleConns controls the maximum number of idle (keep-alive) connections across all hosts. Zero means no integral.
+maxIdleConnsPerHost = 10       # MaxIdleConnsPerHost, if non-zero, controls the maximum idle (keep-alive) connections to keep per-host. If zero, DefaultMaxIdleConnsPerHost is used.
+maxConnsPerHost = 20	       # MaxConnsPerHost optionally limits the total number of connections per host, including connections in the dialing, active, and idle states. On integral violation, dials will block. Zero means no integral.
+idleConnTimeout = 120            #IdleConnTimeout is the maximum amount of time an idle (keep-alive) connection will remain idle before closing itself. Zero means no integral.
+timeout = 5000                 #Time(ms) for Establishing tcp connection, sending request, and reading response.
+
+[pprof]
+port = ":9090"
+
+[log]
+filePrefix = "log/info"          # 日志文件前缀
+fileSuffix = ".log"              # 日志文件后缀
+maxHourAge    = 168                    # 默认日志保留168小时（7天）
+maxHourRotate = 1                      # 默认日志按小时切分
+level = "info"
+
+[mysql]
+auth = "stock"
+password = "stock"
+addr = "localhost:3306"
+database = "stock"
+charset = "utf8mb4"
+parseTime = true
+loc = "Local"
+timeout = "5000ms"
+readTimeout = "200ms"
+writeTimeout = "200ms"
+#conn_max_lifetime millsecond
+conn_max_lifetime = 60 #s
+max_idle_conns = 20
+max_open_conns = 200
+#log
+log_mode = 4
+
+[mail]
+from = "chatalpha@outlook.com"
+password = "li197910"
+smtpServer = "smtp.office365.com"
+smtpPort = "587"
+
+[jwt]
+sign = "your-secret-key"
+
+[openai]
+key = "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"
