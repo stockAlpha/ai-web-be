@@ -16,7 +16,7 @@ import (
 // @Tags	OpenAI相关接口
 // @Summary	对话
 // @param		req	body	openai.CompletionsRequest	true	"openai请求参数"
-// @Router		/api/v1/openai/v1/completions [post]
+// @Router		/api/v1/openai/v1/chat/completions [post]
 func Completions(c *gin.Context) {
 	cg := controller.Gin{Ctx: c}
 	var req openai.CompletionsRequest
@@ -31,7 +31,7 @@ func Completions(c *gin.Context) {
 	requestJSON, _ := json.Marshal(req)
 
 	client := &http.Client{}
-	openAIReq, _ := http.NewRequest("POST", "https://api.openai.com/v1/models/completions", bytes.NewBuffer(requestJSON))
+	openAIReq, _ := http.NewRequest("POST", "https://api.openai.com/v1/chat/completions", bytes.NewBuffer(requestJSON))
 	openAIReq.Header.Add("Authorization", "Bearer "+key)
 	openAIReq.Header.Add("Content-Type", "application/json")
 	resp, err := client.Do(openAIReq)

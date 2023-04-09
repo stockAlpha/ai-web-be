@@ -59,7 +59,7 @@ const (
 	RechargeApi            = "/recharge"
 
 	OpenaiPrefix         = "/api/v1/openai"
-	OpenaiCompletionsApi = "/v1/completions"
+	OpenaiCompletionsApi = "/v1/chat/completions"
 )
 
 // env
