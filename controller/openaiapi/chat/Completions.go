@@ -1,6 +1,7 @@
 package chat
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/go-resty/resty/v2"
@@ -44,6 +45,13 @@ func Completions(c *gin.Context) {
 		cg.Res(http.StatusBadRequest, controller.ErrnoInvalidPrm)
 		return
 	}
-	cg.Resp(http.StatusOK, controller.ErrnoSuccess, resp)
-	return
+
+	var res openai.CompletionsResponse
+	if err := json.Unmarshal(resp.Body(), &res); err != nil {
+		fmt.Println("Error decoding user:", err)
+		return
+	}
+
+	fmt.Println(resp)
+	cg.Resp(http.StatusOK, controller.ErrnoSuccess, res)
 }
