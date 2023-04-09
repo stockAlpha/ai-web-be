@@ -1,9 +1,13 @@
 package chat
 
 import (
+	"bytes"
+	"encoding/json"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"stock-web-be/controller"
+	"stock-web-be/gocommon/conf"
 	"stock-web-be/gocommon/consts"
 	"stock-web-be/gocommon/tlog"
 	"stock-web-be/idl/userapi/openai"
@@ -22,4 +26,25 @@ func Completions(c *gin.Context) {
 		cg.Res(http.StatusBadRequest, controller.ErrnoInvalidPrm)
 		return
 	}
+
+	key := conf.Handler.GetString(`openai.key`)
+	requestJSON, _ := json.Marshal(req)
+
+	client := &http.Client{}
+	openAIReq, _ := http.NewRequest("POST", "https://api.openai.com/v1/models/completions", bytes.NewBuffer(requestJSON))
+	openAIReq.Header.Add("Authorization", "Bearer "+key)
+	openAIReq.Header.Add("Content-Type", "application/json")
+	resp, err := client.Do(openAIReq)
+	if err != nil {
+		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "request OpenAI, error: %s", err.Error())
+		cg.Res(http.StatusBadRequest, controller.ErrnoInvalidPrm)
+		return
+	}
+	defer resp.Body.Close()
+
+	var response openai.CompletionsResponse
+	json.NewDecoder(resp.Body).Decode(&response)
+	fmt.Println("response:", response)
+	cg.Resp(http.StatusOK, controller.ErrnoSuccess, response)
+	return
 }
