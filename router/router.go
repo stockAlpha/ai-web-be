@@ -66,4 +66,5 @@ func registerIntegral(group *gin.RouterGroup) {
 
 func registerOpenAI(group *gin.RouterGroup) {
 	group.POST(consts.OpenaiCompletionsApi, chat.Completions)
+	group.POST(consts.ImageApi, chat.Image)
 }
