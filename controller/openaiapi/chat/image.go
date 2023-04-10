@@ -13,7 +13,7 @@ import (
 )
 
 // @Tags	代理OpenAI相关接口
-// @Summary	对话
+// @Summary	生成图片
 // @param		req	body	openai.ImageRequest	true	"openai请求参数"
 // @Router		/api/v1/openai/v1/image [post]
 func Image(c *gin.Context) {
