@@ -12,8 +12,6 @@ import (
 
 // @Tags	积分相关接口
 // @Summary	充值
-// @Accept		json
-// @Produce	json
 // @param		req	body	integral.RechargeRequest	true	"充值请求参数"
 // @Router		/api/v1/integral/recharge [post]
 func Recharge(c *gin.Context) {

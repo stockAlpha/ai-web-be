@@ -61,6 +61,7 @@ const (
 	OpenaiPrefix         = "/api/v1/openai"
 	OpenaiCompletionsApi = "/v1/chat/completions"
 	ImageApi             = "/v1/image"
+	AudioApi             = "/v1/audio"
 )
 
 // env
