@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-type User struct {
+type UserProfile struct {
 	ID          uint64    `gorm:"primary_key" json:"id"`
 	Email       string    `gorm:"column:email" json:"email"`
 	Password    string    `gorm:"column:password" json:"password"`
@@ -16,11 +16,11 @@ type User struct {
 	UpdatedTime time.Time `gorm:"column:updated_time" json:"updated_time"`
 }
 
-func (user *User) TableName() string {
-	return "users"
+func (user *UserProfile) TableName() string {
+	return "user_profile"
 }
 
-func (user *User) InsertUser() error {
+func (user *UserProfile) InsertUser() error {
 	db := DbIns.Table(user.TableName())
 
 	err := db.Create(user).Error
@@ -33,7 +33,7 @@ func (user *User) InsertUser() error {
 	return nil
 }
 
-func (user *User) GetUserByEmail(email string) error {
+func (user *UserProfile) GetUserByEmail(email string) error {
 	db := DbIns.Table(user.TableName())
 
 	err := db.Table(user.TableName()).

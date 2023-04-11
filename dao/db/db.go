@@ -43,7 +43,16 @@ func InitDB() {
 	sqldb.SetMaxOpenConns(conf.Handler.GetInt("mysql.max_open_conns"))
 	sqldb.SetConnMaxLifetime(time.Duration(conf.Handler.GetInt("mysql.conn_max_lifetime")) * time.Second)
 	// 自动建表改表
+	db.AutoMigrate(&Permission{})
 	db.AutoMigrate(&RechargeKey{})
+	db.AutoMigrate(&Role{})
+	db.AutoMigrate(&RolePermission{})
+	db.AutoMigrate(&Tenant{})
+	db.AutoMigrate(&ThirdAuth{})
+	db.AutoMigrate(&UserProfile{})
+	db.AutoMigrate(&UserIntegral{})
+	db.AutoMigrate(&UserRole{})
+	db.AutoMigrate(&VerificationCode{})
 	DbIns = &DB{
 		db,
 	}

@@ -26,6 +26,7 @@ func ValidUser() gin.HandlerFunc {
 		}
 
 		authHeader := c.GetHeader("Authorization")
+		fmt.Println("authHeader", authHeader)
 		if authHeader == "" {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
 				"error": "Not authorized",

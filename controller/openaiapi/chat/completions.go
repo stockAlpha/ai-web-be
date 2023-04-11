@@ -28,6 +28,7 @@ func Completions(c *gin.Context) {
 		cg.Res(http.StatusBadRequest, controller.ErrnoInvalidPrm)
 		return
 	}
+	fmt.Println("req", req)
 	ctx := context.Background()
 	resp, err := client.CreateChatCompletion(
 		ctx,

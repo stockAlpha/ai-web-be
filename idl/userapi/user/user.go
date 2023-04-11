@@ -21,5 +21,6 @@ type LoginRequest struct {
 
 type ProfileResponse struct {
 	Email    string `json:"email"`
-	NickName string `json:"nickName"`
+	NickName string `json:"nick_name"`
+	Integral int32  `json:"integral"` // 用户当前积分
 }
