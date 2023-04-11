@@ -21,8 +21,8 @@ func InsertEmailVerificationCode(code string, email string) error {
 		SendSubjectType: MailCode,
 		Code:            code,
 		ExpireTime:      expireTime,
-		CreatedTime:     time.Now(),
-		UpdatedTime:     time.Now(),
+		CreateTime:      time.Now(),
+		UpdateTime:      time.Now(),
 	}
 
 	err := verificationCode.InsertCode()

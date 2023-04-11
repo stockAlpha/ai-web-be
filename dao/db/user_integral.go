@@ -7,11 +7,11 @@ import (
 )
 
 type UserIntegral struct {
-	ID          uint64    `gorm:"primary_key" json:"id"`
-	UserId      uint64    `gorm:"column:user_id" json:"user_id"`
-	Amount      int       `gorm:"column:amount" json:"amount"`
-	CreatedTime time.Time `gorm:"column:created_time" json:"created_time"`
-	UpdatedTime time.Time `gorm:"column:updated_time" json:"updated_time"`
+	ID         uint64    `gorm:"primary_key" json:"id"`
+	UserId     uint64    `gorm:"column:user_id" json:"user_id"`
+	Amount     int       `gorm:"column:amount" json:"amount"`
+	CreateTime time.Time `gorm:"column:create_time" json:"create_time"`
+	UpdateTime time.Time `gorm:"column:update_time" json:"update_time"`
 }
 
 func (u *UserIntegral) TableName() string {

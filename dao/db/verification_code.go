@@ -11,8 +11,8 @@ type VerificationCode struct {
 	SendSubjectType int       `gorm:"column:send_subject_type" json:"send_subject_type"`
 	Code            string    `gorm:"column:code" json:"code"`
 	ExpireTime      time.Time `gorm:"column:expire_time" json:"expire_time"`
-	CreatedTime     time.Time `gorm:"column:created_time" json:"created_time"`
-	UpdatedTime     time.Time `gorm:"column:updated_time" json:"updated_time"`
+	CreateTime      time.Time `gorm:"column:create_time" json:"create_time"`
+	UpdateTime      time.Time `gorm:"column:update_time" json:"update_time"`
 }
 
 func (code *VerificationCode) TableName() string {

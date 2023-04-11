@@ -7,12 +7,12 @@ import (
 )
 
 type User struct {
-	ID          uint64    `gorm:"primary_key" json:"id"`
-	Email       string    `gorm:"column:email" json:"email"`
-	Password    string    `gorm:"column:password" json:"password"`
-	NickName    string    `gorm:"column:nick_name" json:"nick_name"`
-	CreatedTime time.Time `gorm:"column:created_time" json:"created_time"`
-	UpdatedTime time.Time `gorm:"column:updated_time" json:"updated_time"`
+	ID         uint64    `gorm:"primary_key" json:"id"`
+	Email      string    `gorm:"column:email" json:"email"`
+	Password   string    `gorm:"column:password" json:"password"`
+	NickName   string    `gorm:"column:nick_name" json:"nick_name"`
+	CreateTime time.Time `gorm:"column:create_time" json:"create_time"`
+	UpdateTime time.Time `gorm:"column:update_time" json:"update_time"`
 }
 
 func (user *User) TableName() string {

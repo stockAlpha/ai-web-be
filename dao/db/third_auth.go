@@ -12,7 +12,7 @@ type ThirdAuth struct {
 	ThirdAuthId   string    `gorm:"column:third_auth_id" json:"third_auth_id"`
 	Token         string    `gorm:"column:token" json:"token"`
 	ExpireTime    time.Time `gorm:"column:expire_time" json:"expire_time"`
-	CreatedTime   time.Time `gorm:"column:created_time" json:"created_time"`
+	CreateTime    time.Time `gorm:"column:create_time" json:"create_time"`
 	UpdateTime    time.Time `gorm:"column:update_time" json:"update_time"`
 }
 

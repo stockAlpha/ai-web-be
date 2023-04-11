@@ -11,8 +11,8 @@ type RechargeKey struct {
 	Type        uint8     `gorm:"column:type" json:"type"`     // 1代表100积分，2代表500积分，3代表1000积分
 	Status      uint8     `gorm:"column:status" json:"status"` // 0代表未使用，1代表已使用，2代表已失效
 	UseAccount  uint64    `gorm:"column:use_account" json:"use_account"`
-	CreatedTime time.Time `gorm:"column:created_time" json:"created_time"`
-	UpdatedTime time.Time `gorm:"column:updated_time" json:"updated_time"`
+	CreateTime  time.Time `gorm:"column:create_time" json:"create_time"`
+	UpdateTime  time.Time `gorm:"column:update_time" json:"update_time"`
 }
 
 func (r *RechargeKey) TableName() string {

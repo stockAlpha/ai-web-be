@@ -43,8 +43,8 @@ func GenerateKey(c *gin.Context) {
 			RechargeKey: key,
 			Status:      0,
 			Type:        req.Type,
-			CreatedTime: time.Now(),
-			UpdatedTime: time.Now(),
+			CreateTime:  time.Now(),
+			UpdateTime:  time.Now(),
 		}
 		// 插入生成的key
 		err := rechargeKey.InsertRechargeKey()

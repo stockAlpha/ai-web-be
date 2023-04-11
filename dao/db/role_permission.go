@@ -6,10 +6,10 @@ import (
 )
 
 type RolePermission struct {
-	ID          uint64    `gorm:"primary_key" json:"id"`
-	Name        string    `gorm:"column:name" json:"name"`
-	CreatedTime time.Time `gorm:"column:created_time" json:"created_time"`
-	UpdateTime  time.Time `gorm:"column:update_time" json:"update_time"`
+	ID         uint64    `gorm:"primary_key" json:"id"`
+	Name       string    `gorm:"column:name" json:"name"`
+	CreateTime time.Time `gorm:"column:create_time" json:"create_time"`
+	UpdateTime time.Time `gorm:"column:update_time" json:"update_time"`
 }
 
 func (rolePermission *RolePermission) TableName() string {
