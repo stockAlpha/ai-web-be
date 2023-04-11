@@ -18,8 +18,8 @@ func Profile(c *gin.Context) {
 	cg := controller.Gin{Ctx: c}
 	res := user.ProfileResponse{}
 	email := c.GetString("email")
+	userId := c.GetUint64("user_id")
 	userProfile, _ := userapi.GetUserProfileByEmail(email)
-	userId := userProfile.ID
 	userIntegral, _ := userapi.GetUserIntegralByUserId(userId)
 	if userIntegral == nil {
 		integral, err := userapi.CreateUserIntegral(userId)

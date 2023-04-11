@@ -7,7 +7,7 @@ type RechargeRequest struct {
 type RecordRequest struct {
 	Type  string `json:"type" binding:"required"`  // 计费类型，chat/image/audio
 	Model string `json:"model" binding:"required"` // 使用模型
-	Size  int    `json:"size" binding:"required"`  // 大小，chat为字数，image为尺寸，音频为时长
+	Size  int    `json:"size" binding:"required"`  // 大小，chat为字数，image为尺寸，audio为时长(分钟)
 }
 
 type BatchGenerateKeyRequest struct {

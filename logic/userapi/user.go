@@ -7,8 +7,8 @@ import (
 	"time"
 )
 
-func GetUserProfileByEmail(email string) (*db.UserProfile, error) {
-	user := &db.UserProfile{}
+func GetUserProfileByEmail(email string) (*db.User, error) {
+	user := &db.User{}
 	err := user.GetUserByEmail(email)
 	if err != nil {
 		return nil, err
@@ -64,16 +64,14 @@ func SubUserIntegral(userId uint64, amount int) (db.UserIntegral, error) {
 	return integral, nil
 }
 
-func AddUser(email string, hashPassword string, tenantId uint64) (uint64, error) {
+func AddUser(email string, hashPassword string) (uint64, error) {
 	//生成随机nickName
-	// todo: nickname使用租户名称前缀
 	nickName := "chat-" + strconv.Itoa(rand.Intn(10000))
 
-	user := &db.UserProfile{
+	user := &db.User{
 		NickName:    nickName,
 		Email:       email,
 		Password:    hashPassword,
-		TenantId:    tenantId,
 		CreatedTime: time.Now(),
 		UpdatedTime: time.Now(),
 	}

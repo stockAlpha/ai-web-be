@@ -3,7 +3,6 @@ create table if not exists permissions
     id           int auto_increment
     primary key,
     name         varchar(50)                        not null,
-    tenant_id    int                                not null,
     created_time datetime default CURRENT_TIMESTAMP not null,
     updated_time datetime default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP
     );
@@ -25,7 +24,6 @@ create table if not exists roles
     id           int auto_increment
     primary key,
     name         varchar(50)                        not null,
-    tenant_id    int                                not null,
     created_time datetime default CURRENT_TIMESTAMP not null,
     updated_time datetime default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP
     );
@@ -62,7 +60,6 @@ create table if not exists users
     email        varchar(50)                        not null,
     nick_name    varchar(50)                        not null,
     password     varchar(1024)                        not null,
-    tenant_id    int                                not null,
     created_time datetime default CURRENT_TIMESTAMP not null,
     updated_time datetime default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP
     );
