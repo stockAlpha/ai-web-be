@@ -8,6 +8,7 @@ import (
 	"stock-web-be/gocommon/tlog"
 	"stock-web-be/idl/userapi/user"
 	"stock-web-be/logic/userapi"
+	"strconv"
 )
 
 // @Tags	用户相关接口
@@ -18,7 +19,7 @@ func Profile(c *gin.Context) {
 	cg := controller.Gin{Ctx: c}
 	res := user.ProfileResponse{}
 	email := c.GetString("email")
-	userId := c.GetUint64("user_id")
+	userId, _ := strconv.ParseUint(c.GetString("user_id"), 10, 64)
 	userProfile, _ := userapi.GetUserProfileByEmail(email)
 	userIntegral, _ := userapi.GetUserIntegralByUserId(userId)
 	if userIntegral == nil {

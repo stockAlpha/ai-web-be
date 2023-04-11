@@ -46,22 +46,28 @@ func CreateUserIntegral(userId uint64) (db.UserIntegral, error) {
 	return integral, nil
 }
 
-func AddUserIntegral(userId uint64, amount int) (db.UserIntegral, error) {
-	integral := db.UserIntegral{}
-	err := integral.AddAmount(userId, amount)
+func AddUserIntegral(userId uint64, amount int) error {
+	integral, err := GetUserIntegralByUserId(userId)
 	if err != nil {
-		return integral, err
+		return err
 	}
-	return integral, nil
+	err = integral.AddAmount(amount)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
-func SubUserIntegral(userId uint64, amount int) (db.UserIntegral, error) {
-	integral := db.UserIntegral{}
-	err := integral.SubAmount(userId, amount)
+func SubUserIntegral(userId uint64, amount int) error {
+	integral, err := GetUserIntegralByUserId(userId)
 	if err != nil {
-		return integral, err
+		return err
 	}
-	return integral, nil
+	err = integral.SubAmount(amount)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func AddUser(email string, hashPassword string) (uint64, error) {

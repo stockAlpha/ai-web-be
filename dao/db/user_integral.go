@@ -47,21 +47,21 @@ func (u *UserIntegral) GetUserIntegralByUserId(userId uint64) error {
 	return nil
 }
 
-func (u *UserIntegral) AddAmount(userId uint64, amount int) error {
+func (u *UserIntegral) AddAmount(amount int) error {
 	db := DbIns.Table(u.TableName())
 	return db.Transaction(func(tx *gorm.DB) error {
-		if err := tx.Model(u).UpdateColumn("amount", gorm.Expr("amount + ?", amount)).Where("user_id = ?", userId).Error; err != nil {
+		if err := tx.Model(u).UpdateColumn("amount", gorm.Expr("amount + ?", amount)).Error; err != nil {
 			return err
 		}
 		return nil
 	})
 }
 
-func (u *UserIntegral) SubAmount(userId uint64, amount int) error {
+func (u *UserIntegral) SubAmount(amount int) error {
 	db := DbIns.Table(u.TableName())
 	return db.Transaction(func(tx *gorm.DB) error {
 		if u.Amount >= amount {
-			if err := tx.Model(u).UpdateColumn("amount", gorm.Expr("points - ?", amount)).Where("user_id = ?", userId).Error; err != nil {
+			if err := tx.Model(u).UpdateColumn("amount", gorm.Expr("amount - ?", amount)).Error; err != nil {
 				return err
 			}
 			return nil

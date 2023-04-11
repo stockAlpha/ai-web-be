@@ -26,7 +26,6 @@ func ValidUser() gin.HandlerFunc {
 		}
 
 		authHeader := c.GetHeader("Authorization")
-		fmt.Println("authHeader", authHeader)
 		if authHeader == "" {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
 				"code": 401,
@@ -56,7 +55,7 @@ func ValidUser() gin.HandlerFunc {
 			return
 		}
 		if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
-			userId := claims["userId"].(uint64)
+			userId := claims["userId"].(string)
 			email := claims["email"].(string)
 			c.Set("user_id", userId)
 			c.Set("email", email)

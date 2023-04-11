@@ -8,6 +8,7 @@ import (
 	"stock-web-be/gocommon/tlog"
 	"stock-web-be/idl/userapi/integral"
 	"stock-web-be/logic/userapi"
+	"strconv"
 )
 
 // @Tags	积分相关接口
@@ -16,9 +17,8 @@ import (
 // @Router		/api/v1/integral/record [post]
 func Record(c *gin.Context) {
 	cg := controller.Gin{Ctx: c}
-	userId := c.GetUint64("user_id")
+	userId, _ := strconv.ParseUint(c.GetString("user_id"), 10, 64)
 	var req integral.RecordRequest
-
 	if err := c.ShouldBindJSON(&req); err != nil {
 		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "request params invalid, error: %s", err.Error())
 		cg.Res(http.StatusBadRequest, controller.ErrnoInvalidPrm)
@@ -34,6 +34,11 @@ func Record(c *gin.Context) {
 	case "audio":
 		amount = 8
 	}
-	userapi.SubUserIntegral(userId, amount)
+	err := userapi.SubUserIntegral(userId, amount)
+	if err != nil {
+		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "record user integral error: %s", err.Error())
+		cg.Res(http.StatusBadRequest, controller.ErrnoInvalidPrm)
+		return
+	}
 	cg.Res(http.StatusOK, controller.ErrnoSuccess)
 }

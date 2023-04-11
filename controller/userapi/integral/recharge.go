@@ -9,6 +9,7 @@ import (
 	"stock-web-be/gocommon/tlog"
 	"stock-web-be/idl/userapi/integral"
 	"stock-web-be/logic/userapi"
+	"strconv"
 )
 
 // @Tags	积分相关接口
@@ -17,7 +18,6 @@ import (
 // @Router		/api/v1/integral/recharge [post]
 func Recharge(c *gin.Context) {
 	cg := controller.Gin{Ctx: c}
-	email := c.GetString("email")
 	var req integral.RechargeRequest
 
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -33,18 +33,12 @@ func Recharge(c *gin.Context) {
 	// 判断key是否有效
 	rechargeKey := &db.RechargeKey{}
 	err := rechargeKey.GetRechargeKey(key)
-	if err != nil {
-		cg.Res(http.StatusBadRequest, controller.ErrRechargeKey)
+	if err != nil || rechargeKey.ID == 0 {
+		cg.Res(http.StatusBadRequest, controller.ErrRechargeKeyUsed)
 		return
 	}
 
-	userProfile, err := userapi.GetUserProfileByEmail(email)
-	if err != nil {
-		cg.Res(http.StatusBadRequest, controller.ErrEmailNotFound)
-		return
-	}
-
-	userId := userProfile.ID
+	userId, _ := strconv.ParseUint(c.GetString("user_id"), 10, 64)
 	amount := 0
 	switch rechargeKey.Type {
 	case 1:
@@ -57,14 +51,15 @@ func Recharge(c *gin.Context) {
 		amount = 100
 	}
 	// 添加积分
-	userIntegral := &db.UserIntegral{}
-	userIntegral.AddAmount(userId, amount)
+	// todo 事务
+	userapi.AddUserIntegral(userId, amount)
 
 	// 修改状态
 	rechargeKey.Status = 1
-	rechargeKey.UseAccount = email
+	rechargeKey.UseAccount = userId
 	err = rechargeKey.UpdateRechargeKey()
 	if err != nil {
+		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "use recharge key error, error: %s", err.Error())
 		cg.Res(http.StatusBadRequest, controller.ErrRechargeKeyUsed)
 		return
 	}

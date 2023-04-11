@@ -10,7 +10,7 @@ type RechargeKey struct {
 	RechargeKey string    `gorm:"column:recharge_key" json:"recharge_key"`
 	Type        uint8     `gorm:"column:type" json:"type"`     // 1代表100积分，2代表500积分，3代表1000积分
 	Status      uint8     `gorm:"column:status" json:"status"` // 0代表未使用，1代表已使用，2代表已失效
-	UseAccount  string    `gorm:"column:use_account" json:"use_account"`
+	UseAccount  uint64    `gorm:"column:use_account" json:"use_account"`
 	CreatedTime time.Time `gorm:"column:created_time" json:"created_time"`
 	UpdatedTime time.Time `gorm:"column:updated_time" json:"updated_time"`
 }
@@ -32,7 +32,7 @@ func (r *RechargeKey) InsertRechargeKey() error {
 }
 
 func (r *RechargeKey) UpdateRechargeKey() error {
-	db := DbIns.Table(r.TableName())
+	db := DbIns.Table(r.TableName()).Where("id = ?", r.ID)
 	err := db.Updates(r).Error
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
