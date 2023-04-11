@@ -93,7 +93,7 @@ func Register(c *gin.Context) {
 	}
 
 	//新注册用户赠送10个积分
-	userapi.AddUserIntegral(userId)
+	userapi.CreateUserIntegral(userId)
 	//对userId, email加入jwt信息中
 	token, err := userapi.GenerateToken(strconv.FormatUint(userId, 10), req.Email)
 	if err != nil {

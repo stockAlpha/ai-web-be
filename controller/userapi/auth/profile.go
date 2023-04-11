@@ -22,7 +22,7 @@ func Profile(c *gin.Context) {
 	userId := userProfile.ID
 	userIntegral, _ := userapi.GetUserIntegralByUserId(userId)
 	if userIntegral == nil {
-		integral, err := userapi.AddUserIntegral(userId)
+		integral, err := userapi.CreateUserIntegral(userId)
 		if err != nil {
 			tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "add integral error")
 			cg.Res(http.StatusBadRequest, controller.ErrAddIntegral)

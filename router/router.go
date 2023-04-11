@@ -62,6 +62,7 @@ func registerUser(group *gin.RouterGroup) {
 func registerIntegral(group *gin.RouterGroup) {
 	group.POST(consts.RechargeApi, integral.Recharge)
 	group.POST(consts.GenerateRechargeKeyApi, integral.GenerateKey)
+	group.POST(consts.RecordApi, integral.Record)
 }
 
 func registerOpenAI(group *gin.RouterGroup) {

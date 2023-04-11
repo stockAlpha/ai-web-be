@@ -29,13 +29,15 @@ func ValidUser() gin.HandlerFunc {
 		fmt.Println("authHeader", authHeader)
 		if authHeader == "" {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
-				"error": "Not authorized",
+				"code": 401,
+				"msg":  "Not authorized",
 			})
 			return
 		}
 		if len(authHeader) < 7 || authHeader[:7] != "Bearer " {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
-				"error": "Invalid token format",
+				"code": 401,
+				"msg":  "Invalid token format",
 			})
 			return
 		}
@@ -48,19 +50,21 @@ func ValidUser() gin.HandlerFunc {
 		})
 		if err != nil {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
-				"error": err.Error(),
+				"code": 401,
+				"msg":  err.Error(),
 			})
 			return
 		}
 		if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
-			userId := claims["userId"].(string)
+			userId := claims["userId"].(uint64)
 			email := claims["email"].(string)
 			c.Set("user_id", userId)
 			c.Set("email", email)
 			c.Next()
 		} else {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
-				"error": "Invalid token",
+				"code": 401,
+				"msg":  "Invalid token",
 			})
 		}
 	}

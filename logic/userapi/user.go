@@ -31,7 +31,7 @@ func GetUserIntegralByUserId(userId uint64) (*db.UserIntegral, error) {
 	return u, nil
 }
 
-func AddUserIntegral(userId uint64) (db.UserIntegral, error) {
+func CreateUserIntegral(userId uint64) (db.UserIntegral, error) {
 	integral := db.UserIntegral{
 		UserId: userId,
 		// 初始化10积分
@@ -40,6 +40,24 @@ func AddUserIntegral(userId uint64) (db.UserIntegral, error) {
 		CreatedTime: time.Now(),
 	}
 	err := integral.InsertUserIntegral()
+	if err != nil {
+		return integral, err
+	}
+	return integral, nil
+}
+
+func AddUserIntegral(userId uint64, amount int) (db.UserIntegral, error) {
+	integral := db.UserIntegral{}
+	err := integral.AddAmount(userId, amount)
+	if err != nil {
+		return integral, err
+	}
+	return integral, nil
+}
+
+func SubUserIntegral(userId uint64, amount int) (db.UserIntegral, error) {
+	integral := db.UserIntegral{}
+	err := integral.SubAmount(userId, amount)
 	if err != nil {
 		return integral, err
 	}

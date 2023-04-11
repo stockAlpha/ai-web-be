@@ -57,6 +57,7 @@ const (
 	IntegralPrefix         = "/api/v1/integral"
 	GenerateRechargeKeyApi = "/generate_key"
 	RechargeApi            = "/recharge"
+	RecordApi              = "/record"
 
 	OpenaiPrefix         = "/api/v1/openai"
 	OpenaiCompletionsApi = "/v1/chat/completions"
