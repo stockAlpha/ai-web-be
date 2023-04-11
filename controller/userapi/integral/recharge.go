@@ -8,6 +8,7 @@ import (
 	"stock-web-be/gocommon/consts"
 	"stock-web-be/gocommon/tlog"
 	"stock-web-be/idl/userapi/integral"
+	"stock-web-be/logic/userapi"
 )
 
 // @Tags	积分相关接口
@@ -33,10 +34,31 @@ func Recharge(c *gin.Context) {
 	rechargeKey := &db.RechargeKey{}
 	err := rechargeKey.GetRechargeKey(key)
 	if err != nil {
-		// todo：判断状态,更新次数
 		cg.Res(http.StatusBadRequest, controller.ErrRechargeKey)
 		return
 	}
+
+	userProfile, err := userapi.GetUserProfileByEmail(email)
+	if err != nil {
+		cg.Res(http.StatusBadRequest, controller.ErrEmailNotFound)
+		return
+	}
+
+	userId := userProfile.ID
+	amount := 0
+	switch rechargeKey.Type {
+	case 1:
+		amount = 100
+	case 2:
+		amount = 500
+	case 3:
+		amount = 1000
+	default:
+		amount = 100
+	}
+	// 添加积分
+	userIntegral := &db.UserIntegral{}
+	userIntegral.AddAmount(userId, amount)
 
 	// 修改状态
 	rechargeKey.Status = 1

@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-func GetUserInfoByEmail(email string) (*db.UserProfile, error) {
+func GetUserProfileByEmail(email string) (*db.UserProfile, error) {
 	user := &db.UserProfile{}
 	err := user.GetUserByEmail(email)
 	if err != nil {

@@ -18,7 +18,7 @@ func Profile(c *gin.Context) {
 	cg := controller.Gin{Ctx: c}
 	res := user.ProfileResponse{}
 	email := c.GetString("email")
-	userProfile, _ := userapi.GetUserInfoByEmail(email)
+	userProfile, _ := userapi.GetUserProfileByEmail(email)
 	userId := userProfile.ID
 	userIntegral, _ := userapi.GetUserIntegralByUserId(userId)
 	if userIntegral == nil {

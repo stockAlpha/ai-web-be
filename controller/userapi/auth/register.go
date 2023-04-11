@@ -30,6 +30,11 @@ func Register(c *gin.Context) {
 		return
 	}
 
+	//租户默认先都用1
+	if req.TenantId == 0 {
+		req.TenantId = 1
+	}
+
 	//验证邮箱格式
 	if req.Email == "" || !utils.IsEmailValid(req.Email) {
 		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "email is out of specification")
@@ -45,7 +50,7 @@ func Register(c *gin.Context) {
 	}
 
 	//验证当前邮箱是否已注册
-	existUser, err := userapi.GetUserInfoByEmail(req.Email)
+	existUser, err := userapi.GetUserProfileByEmail(req.Email)
 	if err != nil {
 		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "query existUser by email is fatal")
 		cg.Res(http.StatusBadRequest, controller.ErrnoError)
