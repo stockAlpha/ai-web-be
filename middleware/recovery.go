@@ -37,7 +37,7 @@ func Recovery() gin.HandlerFunc {
 					h.Get("Content-Type"), h.Get("Content-Length"), h.Get("User-Agent"), h.Get("X_bd_product"),
 					h.Get("X_bd_spanid"), h.Get("X_bd_subsys"), h.Get("X_bd_uniqid"), h.Get("X_bd_userip"),
 					r.Proto, r.RemoteAddr, err, string(debug.Stack()))
-				c.String(http.StatusOK, `{"errno":-100,"errmsg":"panic","data":{}}`)
+				c.String(http.StatusOK, `{"code":-100,"msg":"panic","data":{}}`)
 				c.Abort()
 			}
 		}()

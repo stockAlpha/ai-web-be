@@ -34,6 +34,10 @@ func Recharge(c *gin.Context) {
 	rechargeKey := &db.RechargeKey{}
 	err := rechargeKey.GetRechargeKey(key)
 	if err != nil || rechargeKey.ID == 0 {
+		cg.Res(http.StatusBadRequest, controller.ErrRechargeKey)
+		return
+	}
+	if rechargeKey.Status != 0 {
 		cg.Res(http.StatusBadRequest, controller.ErrRechargeKeyUsed)
 		return
 	}

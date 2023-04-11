@@ -47,7 +47,7 @@ func (r *RechargeKey) GetRechargeKey(key string) error {
 	db := DbIns.Table(r.TableName())
 
 	err := db.Table(r.TableName()).
-		Where("recharge_key = ? and status=0", key).
+		Where("recharge_key = ?", key).
 		Find(r).Error
 
 	if err != nil {

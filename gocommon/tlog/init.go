@@ -162,42 +162,42 @@ func NewTLog(log, wflog, metriclog, accesslog *zap.Logger) *TLog {
 
 // Debugf ...
 func (tl *TLog) Debugf(ctx context.Context, tag string, format string, args ...interface{}) {
-	tl.log.Debug(tl.format(ctx, "DEBUG", tag, format, args...))
+	tl.format(ctx, "DEBUG", tag, format, args...)
 }
 
 // Infof ...
 func (tl *TLog) Infof(ctx context.Context, tag string, format string, args ...interface{}) {
-	tl.log.Info(tl.format(ctx, "INFO", tag, format, args...))
+	tl.format(ctx, "INFO", tag, format, args...)
 }
 
 // Warnf ...
 func (tl *TLog) Warnf(ctx context.Context, tag string, format string, args ...interface{}) {
-	tl.wflog.Warn(tl.format(ctx, "WARN", tag, format, args...))
+	tl.format(ctx, "WARN", tag, format, args...)
 }
 
 // Errorf ...
 func (tl *TLog) Errorf(ctx context.Context, tag string, format string, args ...interface{}) {
-	tl.wflog.Error(tl.format(ctx, "ERROR", tag, format, args...))
+	tl.format(ctx, "ERROR", tag, format, args...)
 }
 
 // Fatalf ...
 func (tl *TLog) Fatalf(ctx context.Context, tag string, format string, args ...interface{}) {
-	tl.wflog.Error(tl.format(ctx, "FATAL", tag, format, args...))
+	tl.format(ctx, "FATAL", tag, format, args...)
 }
 
 // Panicf ...
 func (tl *TLog) Panicf(ctx context.Context, tag string, format string, args ...interface{}) {
-	tl.wflog.Error(tl.format(ctx, "PANIC", tag, format, args...))
+	tl.format(ctx, "PANIC", tag, format, args...)
 }
 
 // Metric ...
 func (tl *TLog) Metricf(ctx context.Context, tag string, format string, args ...interface{}) {
-	tl.metriclog.Info(tl.format(ctx, "METRIC", tag, format, args...))
+	tl.format(ctx, "METRIC", tag, format, args...)
 }
 
 // Access ...
 func (tl *TLog) Accessf(ctx context.Context, tag string, format string, args ...interface{}) {
-	tl.accesslog.Info(tl.format(ctx, "ACCESS", tag, format, args...))
+	tl.format(ctx, "ACCESS", tag, format, args...)
 }
 
 func (tl *TLog) format(ctx context.Context, level, tag, format string, args ...interface{}) string {
