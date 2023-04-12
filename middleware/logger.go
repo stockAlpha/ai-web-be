@@ -1,7 +1,10 @@
-//logger-中间件，打印access日志
-//Gin：
+// logger-中间件，打印access日志
+// Gin：
+//
 //	appEngine := gin.New()
+//
 // PrintResponseLen为响应打印长度，设置为0则不打印
+//
 //	appEngine.Use(log.GinLogger(log.LoggerConfig{PrintResponseLen: 0}))
 package middleware
 
@@ -53,7 +56,7 @@ func (w bodyLogWriter) Write(b []byte) (int, error) {
 }
 
 // access日志打印
-//logId串联请求链路
+// logId串联请求链路
 func GinLogger(config LoggerConfig) gin.HandlerFunc {
 	// 本地IP
 	var localIP string = ""
@@ -95,20 +98,23 @@ func GinLogger(config LoggerConfig) gin.HandlerFunc {
 			args = string(body)
 		}
 
-		tlog.Handler.Accessf(c, consts.SLTagRequestIn,
-			"bff-x-request-id=%s||method=%s||uri=%s||proto=%s||refer=%s||cookie=%s||client_ip=%s||local_ip=%s||user_agent=%s||content_type=%s||header=%s||args=%s||errno=0||response=||proc_time=0",
-			c.GetHeader("bff-x-request-id"),
-			c.Request.Method,
-			c.Request.URL.Path,
-			c.Request.Proto,
-			c.Request.Referer(),
-			c.Request.Cookies(),
-			c.ClientIP(),
-			localIP,
-			c.Request.UserAgent(),
-			c.Request.Header.Get(consts.ContentType),
-			string(header),
-			args)
+		// 非OPTIONS请求打印日志
+		if c.Request.Method != "OPTIONS" {
+			tlog.Handler.Accessf(c, consts.SLTagRequestIn,
+				"bff-x-request-id=%s||method=%s||uri=%s||proto=%s||refer=%s||cookie=%s||client_ip=%s||local_ip=%s||user_agent=%s||content_type=%s||header=%s||args=%s||errno=0||response=||proc_time=0",
+				c.GetHeader("bff-x-request-id"),
+				c.Request.Method,
+				c.Request.URL.Path,
+				c.Request.Proto,
+				c.Request.Referer(),
+				c.Request.Cookies(),
+				c.ClientIP(),
+				localIP,
+				c.Request.UserAgent(),
+				c.Request.Header.Get(consts.ContentType),
+				string(header),
+				args)
+		}
 
 		// 处理请求
 		c.Next()
