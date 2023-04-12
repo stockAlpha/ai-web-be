@@ -30,22 +30,22 @@ func Register(c *gin.Context) {
 		return
 	}
 
-	//验证邮箱格式
+	// 验证邮箱格式
 	if req.Email == "" || !utils.IsEmailValid(req.Email) {
 		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "email is out of specification")
 		cg.Res(http.StatusBadRequest, controller.ErrNotFormatEmail)
 		return
 	}
 
-	//校验密码格式
+	// 校验密码格式
 	if !utils.IsValidPasswordFormat(req.Password) {
 		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "password is out of specification")
 		cg.Res(http.StatusBadRequest, controller.ErrNotFormatPassword)
 		return
 	}
 
-	//验证当前邮箱是否已注册
-	existUser, err := userapi.GetUserProfileByEmail(req.Email)
+	// 验证当前邮箱是否已注册
+	existUser, err := userapi.GetUserByEmail(req.Email)
 	if err != nil {
 		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "query existUser by email is fatal")
 		cg.Res(http.StatusBadRequest, controller.ErrnoError)
@@ -58,7 +58,7 @@ func Register(c *gin.Context) {
 		return
 	}
 
-	//验证code是否存在
+	// 验证code是否存在
 	existCode, err := userapi.ExistCode(req.Code, req.Email)
 	if err != nil {
 		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "query code by email is fatal")
@@ -72,7 +72,7 @@ func Register(c *gin.Context) {
 		return
 	}
 
-	//对密码进行加密,并添加用户
+	// 对密码进行加密,并添加用户
 	hashPassword, err := utils.HashPassword(req.Password)
 	if err != nil {
 		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "compute hash password err")
@@ -80,16 +80,35 @@ func Register(c *gin.Context) {
 		return
 	}
 
-	userId, err := userapi.AddUser(req.Email, hashPassword)
+	userId, err := userapi.AddUser(req.Email, hashPassword, utils.GenerateCode())
 	if err != nil {
 		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "add user error")
 		cg.Res(http.StatusBadRequest, controller.ErrAddUser)
 		return
 	}
 
-	//新注册用户赠送10个积分
-	userapi.CreateUserIntegral(userId)
-	//对userId, email加入jwt信息中
+	// 新注册用户赠送10个积分
+	// 判断是否为被邀请用户，如果是则赠送20个积分，并且给邀请人也赠送10个积分
+	inviteCode := req.InviteCode
+	addAmount := 10
+	if inviteCode != "" {
+		inviteUser, err := userapi.GetUserByInviteCode(inviteCode)
+		if err != nil {
+			tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "query user by invite code error")
+		} else {
+			if inviteUser != nil {
+				// 邀请人增加10的积分
+				fromUserId := inviteUser.ID
+				userapi.AddUserIntegral(fromUserId, 10)
+				// 插入邀请关系
+				userapi.AddInviteRelation(fromUserId, userId, inviteCode)
+			} else {
+				addAmount += 10
+			}
+		}
+	}
+	userapi.CreateUserIntegral(userId, addAmount)
+	// 对userId, email加入jwt信息中
 	token, err := userapi.GenerateToken(strconv.FormatUint(userId, 10), req.Email)
 	if err != nil {
 		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "generate token error")

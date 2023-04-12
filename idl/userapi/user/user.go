@@ -6,10 +6,11 @@ type SendVerificationCodeRequest struct {
 }
 
 type RegisterRequest struct {
-	Type     string `json:"type" default:"email"` // 可选字段，默认为email
-	Email    string `json:"email" binding:"required"`
-	Password string `json:"password" binding:"required"`
-	Code     string `json:"code" binding:"required"` // 验证码
+	Type       string `json:"type" default:"email"`        // 可选字段，默认为email
+	Email      string `json:"email" binding:"required"`    // 邮箱
+	Password   string `json:"password" binding:"required"` // 密码
+	Code       string `json:"code" binding:"required"`     // 验证码
+	InviteCode string `json:"invite_code"`                 // 邀请码
 }
 
 type LoginRequest struct {
@@ -19,7 +20,9 @@ type LoginRequest struct {
 }
 
 type ProfileResponse struct {
-	Email    string `json:"email"`
-	NickName string `json:"nick_name"`
-	Integral int    `json:"integral"` // 用户当前积分
+	Email      string `json:"email"`       // 邮箱
+	NickName   string `json:"nick_name"`   // 昵称
+	Avatar     string `json:"avatar"`      // 头像
+	InviteCode string `json:"invite_code"` // 邀请码
+	Integral   int    `json:"integral"`    // 用户当前积分
 }

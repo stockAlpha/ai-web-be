@@ -7,9 +7,21 @@ import (
 	"time"
 )
 
-func GetUserProfileByEmail(email string) (*db.User, error) {
+func GetUserByEmail(email string) (*db.User, error) {
 	user := &db.User{}
 	err := user.GetUserByEmail(email)
+	if err != nil {
+		return nil, err
+	}
+	if user.ID == 0 {
+		return nil, nil
+	}
+	return user, nil
+}
+
+func GetUserByInviteCode(inviteCode string) (*db.User, error) {
+	user := &db.User{}
+	err := user.GetUserByInviteCode(inviteCode)
 	if err != nil {
 		return nil, err
 	}
@@ -31,11 +43,11 @@ func GetUserIntegralByUserId(userId uint64) (*db.UserIntegral, error) {
 	return u, nil
 }
 
-func CreateUserIntegral(userId uint64) (db.UserIntegral, error) {
+func CreateUserIntegral(userId uint64, amount int) (db.UserIntegral, error) {
 	integral := db.UserIntegral{
 		UserId: userId,
 		// 初始化10积分
-		Amount:     10,
+		Amount:     amount,
 		UpdateTime: time.Now(),
 		CreateTime: time.Now(),
 	}
@@ -70,7 +82,7 @@ func SubUserIntegral(userId uint64, amount int) error {
 	return nil
 }
 
-func AddUser(email string, hashPassword string) (uint64, error) {
+func AddUser(email string, hashPassword string, inviteCode string) (uint64, error) {
 	//生成随机nickName
 	nickName := "chat-" + strconv.Itoa(rand.Intn(10000))
 
@@ -78,6 +90,7 @@ func AddUser(email string, hashPassword string) (uint64, error) {
 		NickName:   nickName,
 		Email:      email,
 		Password:   hashPassword,
+		InviteCode: inviteCode,
 		CreateTime: time.Now(),
 		UpdateTime: time.Now(),
 	}
@@ -87,4 +100,20 @@ func AddUser(email string, hashPassword string) (uint64, error) {
 		return 0, err
 	}
 	return user.ID, nil
+}
+
+func AddInviteRelation(fromUserId uint64, toUserId uint64, inviteCode string) error {
+	relation := &db.InviteRelation{
+		FromUserId: fromUserId,
+		ToUserId:   toUserId,
+		InviteCode: inviteCode,
+		CreateTime: time.Now(),
+		UpdateTime: time.Now(),
+	}
+
+	err := relation.InsertRelation()
+	if err != nil {
+		return err
+	}
+	return nil
 }

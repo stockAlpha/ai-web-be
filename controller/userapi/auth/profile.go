@@ -4,8 +4,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"stock-web-be/controller"
-	"stock-web-be/gocommon/consts"
-	"stock-web-be/gocommon/tlog"
 	"stock-web-be/idl/userapi/user"
 	"stock-web-be/logic/userapi"
 	"strconv"
@@ -20,20 +18,12 @@ func Profile(c *gin.Context) {
 	res := user.ProfileResponse{}
 	email := c.GetString("email")
 	userId, _ := strconv.ParseUint(c.GetString("user_id"), 10, 64)
-	userProfile, _ := userapi.GetUserProfileByEmail(email)
+	userProfile, _ := userapi.GetUserByEmail(email)
 	userIntegral, _ := userapi.GetUserIntegralByUserId(userId)
-	if userIntegral == nil {
-		integral, err := userapi.CreateUserIntegral(userId)
-		if err != nil {
-			tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "add integral error")
-			cg.Res(http.StatusBadRequest, controller.ErrAddIntegral)
-			return
-		}
-		res.Integral = integral.Amount
-	} else {
-		res.Integral = userIntegral.Amount
-	}
+	res.Integral = userIntegral.Amount
 	res.NickName = userProfile.NickName
+	res.Avatar = userProfile.Avatar
+	res.InviteCode = userProfile.InviteCode
 	res.Email = email
 	cg.Resp(http.StatusOK, controller.ErrnoSuccess, res)
 }
