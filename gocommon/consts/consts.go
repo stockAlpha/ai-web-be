@@ -3,8 +3,7 @@ package consts
 // Log tag
 const (
 	SLTagUndefined           = " _undef"
-	SLTagRequestIn           = " _com_request_in"
-	SLTagRequestOut          = " _com_request_out"
+	SLTagRequest             = " _request"
 	SLTagHTTPFailed          = " _http_fail"
 	SLTagSpaceHTTPFailed     = " _space_http_fail"
 	SLTagHTTPSuccess         = " _http_success"

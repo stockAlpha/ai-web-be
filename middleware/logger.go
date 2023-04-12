@@ -10,11 +10,9 @@ package middleware
 
 import (
 	"bytes"
-	"encoding/json"
 	"io/ioutil"
 	"stock-web-be/gocommon/consts"
 	"stock-web-be/gocommon/tlog"
-	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -58,19 +56,11 @@ func (w bodyLogWriter) Write(b []byte) (int, error) {
 // access日志打印
 // logId串联请求链路
 func GinLogger(config LoggerConfig) gin.HandlerFunc {
-	// 本地IP
-	var localIP string = ""
 	// 当前模块名
 	return func(c *gin.Context) {
 		// 开始时间
 		start := time.Now()
 		c.Set(consts.TimeMilliRequestIn, start.UnixMilli())
-		//// 请求url
-		//path := c.Request.URL.Path
-		//raw := c.Request.URL.RawQuery
-		//if raw != "" {
-		//	path = path + "?" + raw
-		//}
 		// 请求报文
 		body, _ := ioutil.ReadAll(c.Request.Body)
 		c.Request.Body = ioutil.NopCloser(bytes.NewBuffer(body))
@@ -86,9 +76,6 @@ func GinLogger(config LoggerConfig) gin.HandlerFunc {
 		blw := &bodyLogWriter{body: bytes.NewBufferString(""), ResponseWriter: c.Writer}
 		c.Writer = blw
 
-		// header
-		header, _ := json.Marshal(c.Request.Header)
-
 		// args
 		var args string
 		switch c.Request.Method {
@@ -96,24 +83,6 @@ func GinLogger(config LoggerConfig) gin.HandlerFunc {
 			args = c.Request.URL.RawQuery
 		case "POST":
 			args = string(body)
-		}
-
-		// 非OPTIONS请求打印日志
-		if c.Request.Method != "OPTIONS" {
-			tlog.Handler.Accessf(c, consts.SLTagRequestIn,
-				"bff-x-request-id=%s||method=%s||uri=%s||proto=%s||refer=%s||cookie=%s||client_ip=%s||local_ip=%s||user_agent=%s||content_type=%s||header=%s||args=%s||errno=0||response=||proc_time=0",
-				c.GetHeader("bff-x-request-id"),
-				c.Request.Method,
-				c.Request.URL.Path,
-				c.Request.Proto,
-				c.Request.Referer(),
-				c.Request.Cookies(),
-				c.ClientIP(),
-				localIP,
-				c.Request.UserAgent(),
-				c.Request.Header.Get(consts.ContentType),
-				string(header),
-				args)
 		}
 
 		// 处理请求
@@ -124,25 +93,13 @@ func GinLogger(config LoggerConfig) gin.HandlerFunc {
 		// 执行时间 单位:毫秒
 		latency := end.Sub(start).Milliseconds()
 
-		// 统一access log格式便于解析
-		// /pipeline/.*/log接口不用打印response
-		if c.Request.URL.Path == `/metrics` || strings.HasSuffix(c.Request.URL.Path, "/log") {
-			tlog.Handler.Accessf(c, consts.SLTagRequestOut,
-				"bff-x-request-id=%s||method=%s||uri=%s||proto=||refer=||cookie=||client_ip=||local_ip=||user_agent=||content_type=||header=||args=||errno=%d||response=||proc_time=%v",
-				c.GetHeader("bff-x-request-id"),
-				c.Request.Method,
-				c.Request.URL.Path,
-				c.Writer.Status(),
-				latency)
-		} else {
-			tlog.Handler.Accessf(c, consts.SLTagRequestOut,
-				"bff-x-request-id=%s||method=%s||uri=%s||proto=||refer=||cookie=||client_ip=||local_ip=||user_agent=||content_type=||header=||args=||errno=%d||response=%s||proc_time=%v",
-				c.GetHeader("bff-x-request-id"),
-				c.Request.Method,
-				c.Request.URL.Path,
-				c.Writer.Status(),
-				blw.body.String(),
-				latency)
-		}
+		tlog.Handler.Accessf(c, consts.SLTagRequest,
+			"method=%s||uri=%s||args=%s||errno=%d||response=%s||proc_time=%v",
+			c.Request.Method,
+			c.Request.URL.Path,
+			args,
+			c.Writer.Status(),
+			blw.body.String(),
+			latency)
 	}
 }
