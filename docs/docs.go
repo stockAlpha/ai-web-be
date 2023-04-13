@@ -160,16 +160,10 @@ const docTemplate = `{
         },
         "/api/v1/user/login": {
             "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
                 "tags": [
                     "用户相关接口"
                 ],
-                "summary": "用户登录",
+                "summary": "登录",
                 "parameters": [
                     {
                         "description": "登录请求参数",
@@ -205,6 +199,24 @@ const docTemplate = `{
                         }
                     }
                 }
+            },
+            "post": {
+                "tags": [
+                    "用户相关接口"
+                ],
+                "summary": "修改用户信息",
+                "parameters": [
+                    {
+                        "description": "用户信息",
+                        "name": "req",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/user.ProfileRequest"
+                        }
+                    }
+                ],
+                "responses": {}
             }
         },
         "/api/v1/user/register": {
@@ -414,17 +426,40 @@ const docTemplate = `{
                 }
             }
         },
+        "user.ProfileRequest": {
+            "type": "object",
+            "properties": {
+                "avatar": {
+                    "description": "头像",
+                    "type": "string"
+                },
+                "nick_name": {
+                    "description": "昵称",
+                    "type": "string"
+                }
+            }
+        },
         "user.ProfileResponse": {
             "type": "object",
             "properties": {
+                "avatar": {
+                    "description": "头像",
+                    "type": "string"
+                },
                 "email": {
+                    "description": "邮箱",
                     "type": "string"
                 },
                 "integral": {
                     "description": "用户当前积分",
                     "type": "integer"
                 },
+                "invite_code": {
+                    "description": "邀请码",
+                    "type": "string"
+                },
                 "nick_name": {
+                    "description": "昵称",
                     "type": "string"
                 }
             }
@@ -442,9 +477,15 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "email": {
+                    "description": "邮箱",
+                    "type": "string"
+                },
+                "invite_code": {
+                    "description": "邀请码",
                     "type": "string"
                 },
                 "password": {
+                    "description": "密码",
                     "type": "string"
                 },
                 "type": {

@@ -59,6 +59,7 @@ func registerUser(group *gin.RouterGroup) {
 	group.POST(consts.RegisterApi, auth.Register)
 	group.POST(consts.LoginApi, auth.Login)
 	group.GET(consts.ProfileApi, auth.Profile)
+	group.POST(consts.ProfileApi, auth.UpdateProfile)
 }
 
 func registerIntegral(group *gin.RouterGroup) {

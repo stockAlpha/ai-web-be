@@ -34,6 +34,18 @@ func (user *User) InsertUser() error {
 	return nil
 }
 
+func (user *User) UpdateUser() {
+	db := DbIns.Table(user.TableName()).Where("id = ?", user.ID)
+	updateMap := map[string]interface{}{}
+	if user.NickName != "" {
+		updateMap["nick_name"] = user.NickName
+	}
+	if user.Avatar != "" {
+		updateMap["avatar"] = user.Avatar
+	}
+	db.Updates(updateMap)
+}
+
 func (user *User) GetUserByEmail(email string) error {
 	db := DbIns.Table(user.TableName())
 

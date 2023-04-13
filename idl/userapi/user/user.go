@@ -26,3 +26,8 @@ type ProfileResponse struct {
 	InviteCode string `json:"invite_code"` // 邀请码
 	Integral   int    `json:"integral"`    // 用户当前积分
 }
+
+type ProfileRequest struct {
+	NickName string `json:"nick_name"` // 昵称
+	Avatar   string `json:"avatar"`    // 头像
+}

@@ -106,14 +106,31 @@ definitions:
     - email
     - password
     type: object
+  user.ProfileRequest:
+    properties:
+      avatar:
+        description: 头像
+        type: string
+      nick_name:
+        description: 昵称
+        type: string
+    type: object
   user.ProfileResponse:
     properties:
+      avatar:
+        description: 头像
+        type: string
       email:
+        description: 邮箱
         type: string
       integral:
         description: 用户当前积分
         type: integer
+      invite_code:
+        description: 邀请码
+        type: string
       nick_name:
+        description: 昵称
         type: string
     type: object
   user.RegisterRequest:
@@ -122,8 +139,13 @@ definitions:
         description: 验证码
         type: string
       email:
+        description: 邮箱
+        type: string
+      invite_code:
+        description: 邀请码
         type: string
       password:
+        description: 密码
         type: string
       type:
         default: email
@@ -243,8 +265,6 @@ paths:
       - 代理OpenAI相关接口
   /api/v1/user/login:
     post:
-      consumes:
-      - application/json
       parameters:
       - description: 登录请求参数
         in: body
@@ -252,14 +272,12 @@ paths:
         required: true
         schema:
           $ref: '#/definitions/user.LoginRequest'
-      produces:
-      - application/json
       responses:
         "200":
           description: 返回token
           schema:
             type: string
-      summary: 用户登录
+      summary: 登录
       tags:
       - 用户相关接口
   /api/v1/user/profile:
@@ -270,6 +288,18 @@ paths:
           schema:
             $ref: '#/definitions/user.ProfileResponse'
       summary: 获取用户信息
+      tags:
+      - 用户相关接口
+    post:
+      parameters:
+      - description: 用户信息
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/user.ProfileRequest'
+      responses: {}
+      summary: 修改用户信息
       tags:
       - 用户相关接口
   /api/v1/user/register:

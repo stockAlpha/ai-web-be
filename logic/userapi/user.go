@@ -108,6 +108,15 @@ func AddUser(email string, hashPassword string) (uint64, error) {
 	return user.ID, nil
 }
 
+func UpdateUser(userId uint64, nickName, avatar string) {
+	user := &db.User{
+		ID:       userId,
+		NickName: nickName,
+		Avatar:   avatar,
+	}
+	user.UpdateUser()
+}
+
 func AddInviteRelation(fromUserId uint64, toUserId uint64, inviteCode string) error {
 	relation := &db.InviteRelation{
 		FromUserId: fromUserId,

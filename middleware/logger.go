@@ -82,7 +82,9 @@ func GinLogger(config LoggerConfig) gin.HandlerFunc {
 		case "GET":
 			args = c.Request.URL.RawQuery
 		case "POST":
-			args = string(body)
+			if len(string(body)) <= 1000 {
+				args = string(body)
+			}
 		}
 
 		// 处理请求
@@ -93,13 +95,18 @@ func GinLogger(config LoggerConfig) gin.HandlerFunc {
 		// 执行时间 单位:毫秒
 		latency := end.Sub(start).Milliseconds()
 
+		res := blw.body.String()
+		if len(res) > 1000 {
+			res = ""
+		}
+
 		tlog.Handler.Accessf(c, consts.SLTagRequest,
 			"method=%s||uri=%s||args=%s||errno=%d||response=%s||proc_time=%v",
 			c.Request.Method,
 			c.Request.URL.Path,
 			args,
 			c.Writer.Status(),
-			blw.body.String(),
+			res,
 			latency)
 	}
 }

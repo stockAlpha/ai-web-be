@@ -14,9 +14,7 @@ import (
 )
 
 // @Tags	用户相关接口
-// @Summary	用户登录
-// @Accept		json
-// @Produce	json
+// @Summary	登录
 // @param		req	body		user.LoginRequest	true	"登录请求参数"
 // @Success	200	{string}	string					"返回token"
 // @Router		/api/v1/user/login [post]
