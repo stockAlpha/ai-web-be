@@ -46,13 +46,13 @@ func Recharge(c *gin.Context) {
 	amount := 0
 	switch rechargeKey.Type {
 	case 1:
-		amount = 100
+		amount = 30
 	case 2:
-		amount = 500
-	case 3:
-		amount = 1000
-	default:
 		amount = 100
+	case 3:
+		amount = 500
+	default:
+		amount = 30
 	}
 	// 添加积分
 	// todo 事务

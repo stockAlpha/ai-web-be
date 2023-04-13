@@ -87,6 +87,7 @@ func Register(c *gin.Context) {
 		return
 	}
 
+	// todo 事务
 	// 新注册用户赠送10个积分
 	// 判断是否为被邀请用户，如果是则赠送20个积分，并且给邀请人也赠送10个积分
 	inviteCode := req.InviteCode
