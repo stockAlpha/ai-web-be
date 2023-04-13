@@ -1,8 +1,10 @@
 package userapi
 
 import (
+	"fmt"
 	"math/rand"
 	"stock-web-be/dao/db"
+	"stock-web-be/utils"
 	"strconv"
 	"time"
 )
@@ -82,15 +84,21 @@ func SubUserIntegral(userId uint64, amount int) error {
 	return nil
 }
 
-func AddUser(email string, hashPassword string, inviteCode string) (uint64, error) {
-	//生成随机nickName
+func AddUser(email string, hashPassword string) (uint64, error) {
+	// 生成随机nickName
 	nickName := "chat-" + strconv.Itoa(rand.Intn(10000))
+	// 生成邀请码
+	inviteCode := utils.GenerateCode()
+	// 生成头像
+	randomNumber := rand.Intn(12) + 1
+	avatar := fmt.Sprintf("/public/avatar/%d.jpeg", randomNumber)
 
 	user := &db.User{
 		NickName:   nickName,
 		Email:      email,
 		Password:   hashPassword,
 		InviteCode: inviteCode,
+		Avatar:     avatar,
 		CreateTime: time.Now(),
 		UpdateTime: time.Now(),
 	}

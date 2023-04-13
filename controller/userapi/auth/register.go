@@ -80,7 +80,7 @@ func Register(c *gin.Context) {
 		return
 	}
 
-	userId, err := userapi.AddUser(req.Email, hashPassword, utils.GenerateCode())
+	userId, err := userapi.AddUser(req.Email, hashPassword)
 	if err != nil {
 		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "add user error")
 		cg.Res(http.StatusBadRequest, controller.ErrAddUser)

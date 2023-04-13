@@ -35,6 +35,8 @@ func Secure(c *gin.Context) {
 }
 
 func Register(r *gin.Engine) *gin.Engine {
+	// 将 public 目录下的所有静态文件提供给客户端进行访问
+	r.Static("/public", "./public")
 	r.Use(Options)
 	r.Use(Secure)
 	swagger(r)
