@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"stock-web-be/controller"
@@ -29,6 +30,8 @@ func Register(c *gin.Context) {
 		cg.Res(http.StatusBadRequest, controller.ErrnoInvalidPrm)
 		return
 	}
+
+	fmt.Println("req", req.Email, req.InviteCode, req.Code)
 
 	// 验证邮箱格式
 	if req.Email == "" || !utils.IsEmailValid(req.Email) {
