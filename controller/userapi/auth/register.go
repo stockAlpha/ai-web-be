@@ -31,7 +31,7 @@ func Register(c *gin.Context) {
 		return
 	}
 
-	fmt.Println("req", req.Email, req.InviteCode, req.Code)
+	fmt.Println("req=", req.Email, req.InviteCode, req.Code)
 
 	// 验证邮箱格式
 	if req.Email == "" || !utils.IsEmailValid(req.Email) {
