@@ -1,7 +1,6 @@
 package userapi
 
 import (
-	"fmt"
 	"math/rand"
 	"stock-web-be/dao/db"
 	"stock-web-be/utils"
@@ -90,8 +89,7 @@ func AddUser(email string, hashPassword string) (uint64, error) {
 	// 生成邀请码
 	inviteCode := utils.GenerateCode()
 	// 生成头像
-	randomNumber := rand.Intn(12) + 1
-	avatar := fmt.Sprintf("/public/avatar/%d.jpeg", randomNumber)
+	avatar := utils.GetRandomAvatar()
 
 	user := &db.User{
 		NickName:   nickName,
