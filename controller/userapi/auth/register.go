@@ -106,7 +106,6 @@ func Register(c *gin.Context) {
 				userapi.AddUserIntegral(fromUserId, 10)
 				// 插入邀请关系
 				userapi.AddInviteRelation(fromUserId, userId, inviteCode)
-			} else {
 				addAmount += 10
 			}
 		}
