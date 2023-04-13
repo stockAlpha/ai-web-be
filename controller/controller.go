@@ -83,7 +83,7 @@ var ErrMsg = map[int]string{
 	ErrnoSuccess: "success",
 	ErrnoError:   "error",
 
-	ErrnoInvalidPrm:             "invalid parms",
+	ErrnoInvalidPrm:             "invalid params",
 	ErrNotFormatEmail:           "not format email",
 	ErrEmailAlreadyExists:       "email already exists",
 	ErrSendMailFail:             "send verification code error",
