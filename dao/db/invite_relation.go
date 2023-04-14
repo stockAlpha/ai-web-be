@@ -3,6 +3,8 @@ package db
 import (
 	"errors"
 	"time"
+
+	"gorm.io/gorm"
 )
 
 type InviteRelation struct {
@@ -18,9 +20,10 @@ func (i *InviteRelation) TableName() string {
 	return "invite_relation"
 }
 
-func (i *InviteRelation) InsertRelation() error {
-	db := DbIns.Table(i.TableName())
-
+func (i *InviteRelation) InsertRelation(db *gorm.DB) error {
+	if db == nil {
+		db = DbIns.Table(i.TableName())
+	}
 	err := db.Create(i).Error
 	if err != nil {
 		return err

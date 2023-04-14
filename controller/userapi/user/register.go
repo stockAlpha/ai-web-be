@@ -1,15 +1,18 @@
 package user
 
 import (
-	"github.com/gin-gonic/gin"
 	"net/http"
+	"strconv"
+
 	"stock-web-be/controller"
+	db2 "stock-web-be/dao/db"
 	"stock-web-be/gocommon/consts"
 	"stock-web-be/gocommon/tlog"
 	"stock-web-be/idl/userapi/user"
 	"stock-web-be/logic/userapi"
 	"stock-web-be/utils"
-	"strconv"
+
+	"github.com/gin-gonic/gin"
 )
 
 // @Tags	用户相关接口
@@ -87,27 +90,11 @@ func Register(c *gin.Context) {
 		return
 	}
 
-	// todo 事务
 	// 新注册用户赠送10个积分
 	// 判断是否为被邀请用户，如果是则赠送20个积分，并且给邀请人也赠送10个积分
 	inviteCode := req.InviteCode
-	addAmount := 10
-	if inviteCode != "" {
-		inviteUser, err := userapi.GetUserByInviteCode(inviteCode)
-		if err != nil {
-			tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "query user by invite code error")
-		} else {
-			if inviteUser != nil {
-				// 邀请人增加10的积分
-				fromUserId := inviteUser.ID
-				userapi.AddUserIntegral(fromUserId, 10)
-				// 插入邀请关系
-				userapi.AddInviteRelation(fromUserId, userId, inviteCode)
-				addAmount += 10
-			}
-		}
-	}
-	userapi.CreateUserIntegral(userId, addAmount)
+	// todo 注册失败是全部回滚？然后邮件通知么？目前不做处理
+	_ = AddInviteRelationAndIntegral(c, inviteCode, userId)
 	// 对userId, email加入jwt信息中
 	token, err := userapi.GenerateToken(strconv.FormatUint(userId, 10), req.Email)
 	if err != nil {
@@ -116,4 +103,40 @@ func Register(c *gin.Context) {
 		return
 	}
 	cg.Resp(http.StatusOK, controller.ErrnoSuccess, token)
+}
+func AddInviteRelationAndIntegral(c *gin.Context, inviteCode string, userId uint64) error {
+	// 新注册用户赠送10个积分
+	// 判断是否为被邀请用户，如果是则赠送20个积分，并且给邀请人也赠送10个积分
+	addAmount := 10
+	//声明个db，做事务回滚
+	db := db2.DbIns.Begin()
+	inviteUser, err := userapi.GetUserByInviteCode(inviteCode, db)
+	if err != nil {
+		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "query user by invite code error")
+		db.Rollback()
+		return err
+	}
+	if inviteUser != nil {
+		// 邀请人增加10的积分
+		fromUserId := inviteUser.ID
+		err := userapi.AddUserIntegral(fromUserId, 10, db)
+		if err != nil {
+			db.Rollback()
+			return err
+		}
+		// 插入邀请关系
+		err = userapi.AddInviteRelation(fromUserId, userId, inviteCode, db)
+		if err != nil {
+			db.Rollback()
+			return err
+		}
+		addAmount += 10
+	}
+	_, err = userapi.CreateUserIntegral(userId, addAmount, db)
+	if err != nil {
+		db.Rollback()
+		return err
+	}
+	db.Commit()
+	return nil
 }
