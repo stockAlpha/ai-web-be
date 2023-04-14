@@ -2,6 +2,7 @@ package integral
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/stockAlpha/gopkg/common/safego"
 	"net/http"
 	"stock-web-be/controller"
 	"stock-web-be/dao/db"
@@ -9,6 +10,7 @@ import (
 	"stock-web-be/gocommon/tlog"
 	"stock-web-be/idl/userapi/integral"
 	"stock-web-be/logic/userapi"
+	"stock-web-be/logic/userapi/notify"
 	"strconv"
 )
 
@@ -43,6 +45,7 @@ func Recharge(c *gin.Context) {
 	}
 
 	userId, _ := strconv.ParseUint(c.GetString("user_id"), 10, 64)
+	email := c.GetString("email")
 	amount := 0
 	switch rechargeKey.Type {
 	case 1:
@@ -67,5 +70,8 @@ func Recharge(c *gin.Context) {
 		cg.Res(http.StatusBadRequest, controller.ErrRechargeKeyUsed)
 		return
 	}
+	safego.SafeGoWithWG(func() {
+		notify.SendEmail(email, "充值成功", "您已成功充值"+strconv.Itoa(amount)+"积分，快去看看吧！")
+	})
 	cg.Res(http.StatusOK, controller.ErrnoSuccess)
 }

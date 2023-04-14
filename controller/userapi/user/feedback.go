@@ -2,6 +2,7 @@ package user
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/stockAlpha/gopkg/common/safego"
 	"net/http"
 	"stock-web-be/controller"
 	"stock-web-be/gocommon/consts"
@@ -40,6 +41,8 @@ func Feedback(c *gin.Context) {
 		title += "其他"
 	}
 	ret := "用户ID：" + strconv.FormatUint(userId, 10) + "\n" + "邮箱：" + email + "\n" + "反馈内容：" + req.Content
-	_ = notify.SendEmail("stalary@163.com", title, ret)
+	safego.SafeGoWithWG(func() {
+		notify.SendEmail("stalary@163.com", title, ret)
+	})
 	cg.Res(http.StatusOK, controller.ErrnoSuccess)
 }

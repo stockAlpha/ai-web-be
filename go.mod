@@ -9,6 +9,7 @@ require (
 	github.com/lestrrat-go/file-rotatelogs v2.4.0+incompatible
 	github.com/sashabaranov/go-openai v1.7.0
 	github.com/spf13/viper v1.15.0
+	github.com/stockAlpha/gopkg/common/safego v0.0.0-20230331033607-14017625792a
 	github.com/swaggo/gin-swagger v1.3.0
 	github.com/swaggo/swag v1.8.4
 	go.uber.org/zap v1.24.0
@@ -49,6 +50,7 @@ require (
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/pelletier/go-toml/v2 v2.0.7 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
+	github.com/sirupsen/logrus v1.9.0 // indirect
 	github.com/spf13/afero v1.9.3 // indirect
 	github.com/spf13/cast v1.5.0 // indirect
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
