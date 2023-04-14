@@ -11,9 +11,9 @@ type ManualRechargeRequest struct {
 }
 
 type RecordRequest struct {
-	Type  string `json:"type"`  // 计费类型，chat/image/audio
-	Model string `json:"model"` // 使用模型
-	Size  int    `json:"size"`  // 大小，chat为字数，image为尺寸，audio为时长(分钟)
+	Type  string `json:"type" binding:"required"`  // 计费类型，chat/image/audio
+	Model string `json:"model" binding:"required"` // 使用模型
+	Size  int    `json:"size"`                     // 大小，chat为字数，image为尺寸，audio为时长(分钟)
 }
 
 type BatchGenerateKeyRequest struct {
