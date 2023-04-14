@@ -41,7 +41,7 @@ func InitDB() {
 	sqldb, _ := db.DB()
 	sqldb.SetMaxIdleConns(conf.Handler.GetInt("mysql.max_idle_conns"))
 	sqldb.SetMaxOpenConns(conf.Handler.GetInt("mysql.max_open_conns"))
-	sqldb.SetConnMaxLifetime(time.Duration(conf.Handler.GetInt("mysql.conn_max_lifetime")) * time.Second)
+	sqldb.SetConnMaxLifetime(time.Duration(conf.Handler.GetInt("mysql.conn_max_lifetime")) * time.Minute)
 	// 自动建表改表
 	db.AutoMigrate(&Permission{})
 	db.AutoMigrate(&RechargeKey{})
