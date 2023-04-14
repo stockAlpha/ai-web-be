@@ -52,6 +52,7 @@ const (
 	RegisterApi             = "/register"
 	LoginApi                = "/login"
 	ProfileApi              = "/profile"
+	FeedbackApi             = "/feedback"
 
 	IntegralPrefix         = "/api/v1/integral"
 	GenerateRechargeKeyApi = "/generate_key"

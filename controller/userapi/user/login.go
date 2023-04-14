@@ -1,4 +1,4 @@
-package auth
+package user
 
 import (
 	"github.com/gin-gonic/gin"
@@ -49,7 +49,7 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	//验证密码md5值
+	// 验证密码md5值
 	// 验证密码
 	err = bcrypt.CompareHashAndPassword([]byte(existUser.Password), []byte(req.Password))
 	if err != nil {

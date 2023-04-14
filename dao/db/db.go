@@ -53,6 +53,7 @@ func InitDB() {
 	db.AutoMigrate(&UserRole{})
 	db.AutoMigrate(&VerificationCode{})
 	db.AutoMigrate(&InviteRelation{})
+	db.AutoMigrate(&Feedback{})
 	DbIns = &DB{
 		db,
 	}

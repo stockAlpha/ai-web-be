@@ -132,3 +132,19 @@ func AddInviteRelation(fromUserId uint64, toUserId uint64, inviteCode string) er
 	}
 	return nil
 }
+
+func AddFeedback(fromUserId uint64, feedbackType int, content string) error {
+	feedback := &db.Feedback{
+		FromUserId:   fromUserId,
+		FeedbackType: feedbackType,
+		Content:      content,
+		CreateTime:   time.Now(),
+		UpdateTime:   time.Now(),
+	}
+
+	err := feedback.InsertFeedback()
+	if err != nil {
+		return err
+	}
+	return nil
+}

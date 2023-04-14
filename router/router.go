@@ -6,8 +6,8 @@ import (
 	"github.com/swaggo/gin-swagger/swaggerFiles"
 	"net/http"
 	"stock-web-be/controller/openaiapi/chat"
-	"stock-web-be/controller/userapi/auth"
 	"stock-web-be/controller/userapi/integral"
+	"stock-web-be/controller/userapi/user"
 	"stock-web-be/docs"
 	"stock-web-be/gocommon/consts"
 )
@@ -55,11 +55,12 @@ func swagger(r *gin.Engine) {
 }
 
 func registerUser(group *gin.RouterGroup) {
-	group.POST(consts.SendVerificationCodeApi, auth.SendVerificationCode)
-	group.POST(consts.RegisterApi, auth.Register)
-	group.POST(consts.LoginApi, auth.Login)
-	group.GET(consts.ProfileApi, auth.Profile)
-	group.POST(consts.ProfileApi, auth.UpdateProfile)
+	group.POST(consts.SendVerificationCodeApi, user.SendVerificationCode)
+	group.POST(consts.RegisterApi, user.Register)
+	group.POST(consts.LoginApi, user.Login)
+	group.GET(consts.ProfileApi, user.Profile)
+	group.POST(consts.ProfileApi, user.UpdateProfile)
+	group.POST(consts.FeedbackApi, user.Feedback)
 }
 
 func registerIntegral(group *gin.RouterGroup) {

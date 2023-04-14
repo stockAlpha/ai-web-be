@@ -31,3 +31,8 @@ type ProfileRequest struct {
 	NickName string `json:"nickName"` // 昵称
 	Avatar   string `json:"avatar"`   // 头像
 }
+
+type FeedbackRequest struct {
+	FeedbackType int    `json:"feedbackType" binding:"required"` // 反馈类型: 1-问题反馈 2-功能建议 3-咨询 4-其他
+	Content      string `json:"content" binding:"required"`      // 反馈内容
+}

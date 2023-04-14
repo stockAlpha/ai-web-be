@@ -158,6 +158,26 @@ const docTemplate = `{
                 "responses": {}
             }
         },
+        "/api/v1/user/feedback": {
+            "post": {
+                "tags": [
+                    "用户相关接口"
+                ],
+                "summary": "意见反馈",
+                "parameters": [
+                    {
+                        "description": "反馈信息",
+                        "name": "req",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/user.FeedbackRequest"
+                        }
+                    }
+                ],
+                "responses": {}
+            }
+        },
         "/api/v1/user/login": {
             "post": {
                 "tags": [
@@ -406,6 +426,23 @@ const docTemplate = `{
                 }
             }
         },
+        "user.FeedbackRequest": {
+            "type": "object",
+            "required": [
+                "content",
+                "feedbackType"
+            ],
+            "properties": {
+                "content": {
+                    "description": "反馈内容",
+                    "type": "string"
+                },
+                "feedbackType": {
+                    "description": "反馈类型: 1-问题反馈 2-功能建议 3-咨询",
+                    "type": "integer"
+                }
+            }
+        },
         "user.LoginRequest": {
             "type": "object",
             "required": [
@@ -433,7 +470,7 @@ const docTemplate = `{
                     "description": "头像",
                     "type": "string"
                 },
-                "nick_name": {
+                "nickName": {
                     "description": "昵称",
                     "type": "string"
                 }
@@ -454,11 +491,11 @@ const docTemplate = `{
                     "description": "用户当前积分",
                     "type": "integer"
                 },
-                "invite_code": {
+                "inviteCode": {
                     "description": "邀请码",
                     "type": "string"
                 },
-                "nick_name": {
+                "nickName": {
                     "description": "昵称",
                     "type": "string"
                 }
@@ -480,7 +517,7 @@ const docTemplate = `{
                     "description": "邮箱",
                     "type": "string"
                 },
-                "invite_code": {
+                "inviteCode": {
                     "description": "邀请码",
                     "type": "string"
                 },

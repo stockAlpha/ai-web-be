@@ -92,6 +92,18 @@ definitions:
       user:
         type: string
     type: object
+  user.FeedbackRequest:
+    properties:
+      content:
+        description: 反馈内容
+        type: string
+      feedbackType:
+        description: '反馈类型: 1-问题反馈 2-功能建议 3-咨询'
+        type: integer
+    required:
+    - content
+    - feedbackType
+    type: object
   user.LoginRequest:
     properties:
       email:
@@ -111,7 +123,7 @@ definitions:
       avatar:
         description: 头像
         type: string
-      nick_name:
+      nickName:
         description: 昵称
         type: string
     type: object
@@ -126,10 +138,10 @@ definitions:
       integral:
         description: 用户当前积分
         type: integer
-      invite_code:
+      inviteCode:
         description: 邀请码
         type: string
-      nick_name:
+      nickName:
         description: 昵称
         type: string
     type: object
@@ -141,7 +153,7 @@ definitions:
       email:
         description: 邮箱
         type: string
-      invite_code:
+      inviteCode:
         description: 邀请码
         type: string
       password:
@@ -263,6 +275,19 @@ paths:
       summary: 生成图片
       tags:
       - 代理OpenAI相关接口
+  /api/v1/user/feedback:
+    post:
+      parameters:
+      - description: 反馈信息
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/user.FeedbackRequest'
+      responses: {}
+      summary: 意见反馈
+      tags:
+      - 用户相关接口
   /api/v1/user/login:
     post:
       parameters:
