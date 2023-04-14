@@ -77,6 +77,7 @@ const (
 	ErrGenerateRechargeKey      = 40113
 	ErrRechargeKeyUsed          = 40114
 	ErrAddIntegral              = 40115
+	ErrRegister                 = 40116
 )
 
 var ErrMsg = map[int]string{
@@ -100,6 +101,7 @@ var ErrMsg = map[int]string{
 	ErrGenerateRechargeKey:      "generate recharge key error",
 	ErrRechargeKeyUsed:          "recharge key has been used",
 	ErrAddIntegral:              "add integral error",
+	ErrRegister:                 "register error",
 }
 
 // EchoJSON json格式输出

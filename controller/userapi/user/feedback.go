@@ -1,16 +1,17 @@
 package user
 
 import (
-	"github.com/gin-gonic/gin"
-	"github.com/stockAlpha/gopkg/common/safego"
 	"net/http"
+	"strconv"
+
+	"stock-web-be/async"
 	"stock-web-be/controller"
 	"stock-web-be/gocommon/consts"
 	"stock-web-be/gocommon/tlog"
 	"stock-web-be/idl/userapi/user"
 	"stock-web-be/logic/userapi"
-	"stock-web-be/logic/userapi/notify"
-	"strconv"
+
+	"github.com/gin-gonic/gin"
 )
 
 // @Tags	用户相关接口
@@ -41,8 +42,6 @@ func Feedback(c *gin.Context) {
 		title += "其他"
 	}
 	ret := "用户ID：" + strconv.FormatUint(userId, 10) + "\n" + "邮箱：" + email + "\n" + "反馈内容：" + req.Content
-	safego.SafeGoWithWG(func() {
-		notify.SendEmail("stalary@163.com", title, ret)
-	})
+	async.MailChan <- async.MailChanType{To: "stalary@163.com", Subject: title, Body: ret}
 	cg.Res(http.StatusOK, controller.ErrnoSuccess)
 }

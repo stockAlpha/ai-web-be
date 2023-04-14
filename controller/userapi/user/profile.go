@@ -1,12 +1,14 @@
 package user
 
 import (
-	"github.com/gin-gonic/gin"
 	"net/http"
+	"strconv"
+
 	"stock-web-be/controller"
 	"stock-web-be/idl/userapi/user"
 	"stock-web-be/logic/userapi"
-	"strconv"
+
+	"github.com/gin-gonic/gin"
 )
 
 // @Tags	用户相关接口
@@ -19,7 +21,7 @@ func Profile(c *gin.Context) {
 	email := c.GetString("email")
 	userId, _ := strconv.ParseUint(c.GetString("user_id"), 10, 64)
 	userProfile, _ := userapi.GetUserByEmail(email)
-	userIntegral, _ := userapi.GetUserIntegralByUserId(userId)
+	userIntegral, _ := userapi.GetUserIntegralByUserId(userId, nil)
 	res.Integral = userIntegral.Amount
 	res.NickName = userProfile.NickName
 	res.Avatar = userProfile.Avatar
