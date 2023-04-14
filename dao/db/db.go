@@ -1,6 +1,7 @@
 package db
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"stock-web-be/gocommon/conf"
@@ -42,6 +43,10 @@ func InitDB() {
 	sqldb.SetMaxIdleConns(conf.Handler.GetInt("mysql.max_idle_conns"))
 	sqldb.SetMaxOpenConns(conf.Handler.GetInt("mysql.max_open_conns"))
 	sqldb.SetConnMaxLifetime(time.Duration(conf.Handler.GetInt("mysql.conn_max_lifetime")) * time.Minute)
+	// 每15s探活
+	cancelPing, cancel := context.WithTimeout(context.Background(), 15*time.Second)
+	defer cancel()
+	sqldb.PingContext(cancelPing)
 	// 自动建表改表
 	db.AutoMigrate(&Permission{})
 	db.AutoMigrate(&RechargeKey{})

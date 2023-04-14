@@ -103,7 +103,7 @@ var ErrMsg = map[int]string{
 	ErrRechargeKeyUsed:          "充值密钥已使用",
 	ErrAddIntegral:              "添加积分错误",
 	ErrRegister:                 "注册失败",
-	ErrIntegralNotEnough:        "积分不足",
+	ErrIntegralNotEnough:        "积分不足，请点击左下角设置进行充值",
 }
 
 // EchoJSON json格式输出
