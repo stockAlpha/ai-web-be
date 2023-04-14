@@ -1,8 +1,9 @@
 package db
 
 import (
-	"gorm.io/gorm"
 	"time"
+
+	"gorm.io/gorm"
 )
 
 type RechargeKey struct {
@@ -31,9 +32,13 @@ func (r *RechargeKey) InsertRechargeKey() error {
 	return nil
 }
 
-func (r *RechargeKey) UpdateRechargeKey() error {
-	db := DbIns.Table(r.TableName()).Where("id = ?", r.ID)
-	err := db.Updates(r).Error
+func (r *RechargeKey) UpdateRechargeKey(db *gorm.DB) error {
+	if db == nil {
+		db = DbIns.Table(r.TableName())
+	} else {
+		db = db.Table(r.TableName())
+	}
+	err := db.Where("id = ?", r.ID).Updates(r).Error
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return nil
