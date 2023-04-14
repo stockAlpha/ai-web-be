@@ -221,6 +221,6 @@ func (tl *TLog) format(ctx context.Context, level, tag, format string, args ...i
 		}
 	}
 	// return fmt.Sprintf("[%s][%s][%s:%d] %s", level, ts, file, line, fmt.Sprintf(format, args...))
-	fmt.Printf("%s %s %s:%d %s||logid=%s||%s", ts, level, file, line, tag, logid, fmt.Sprintf(format, args...))
+	fmt.Printf("%s %s %s:%d %s||logid=%s||%s\n", ts, level, file, line, tag, logid, fmt.Sprintf(format, args...))
 	return fmt.Sprintf("%s %s %s:%d %s||logid=%s||%s", ts, level, file, line, tag, logid, fmt.Sprintf(format, args...))
 }

@@ -1,14 +1,16 @@
 package integral
 
 import (
-	"github.com/gin-gonic/gin"
 	"net/http"
+	"strconv"
+
 	"stock-web-be/controller"
 	"stock-web-be/gocommon/consts"
 	"stock-web-be/gocommon/tlog"
 	"stock-web-be/idl/userapi/integral"
 	"stock-web-be/logic/userapi"
-	"strconv"
+
+	"github.com/gin-gonic/gin"
 )
 
 // @Tags	积分相关接口

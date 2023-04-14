@@ -1,15 +1,18 @@
 package user
 
 import (
-	"github.com/gin-gonic/gin"
 	"net/http"
+	"strconv"
+
 	"stock-web-be/controller"
+	"stock-web-be/dao/db"
 	"stock-web-be/gocommon/consts"
 	"stock-web-be/gocommon/tlog"
 	"stock-web-be/idl/userapi/user"
 	"stock-web-be/logic/userapi"
 	"stock-web-be/utils"
-	"strconv"
+
+	"github.com/gin-gonic/gin"
 )
 
 // @Tags	用户相关接口
@@ -80,34 +83,15 @@ func Register(c *gin.Context) {
 		return
 	}
 
-	userId, err := userapi.AddUser(req.Email, hashPassword)
-	if err != nil {
-		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "add user error")
-		cg.Res(http.StatusBadRequest, controller.ErrAddUser)
-		return
-	}
-
-	// todo 事务
 	// 新注册用户赠送10个积分
 	// 判断是否为被邀请用户，如果是则赠送20个积分，并且给邀请人也赠送10个积分
 	inviteCode := req.InviteCode
-	addAmount := 10
-	if inviteCode != "" {
-		inviteUser, err := userapi.GetUserByInviteCode(inviteCode)
-		if err != nil {
-			tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "query user by invite code error")
-		} else {
-			if inviteUser != nil {
-				// 邀请人增加10的积分
-				fromUserId := inviteUser.ID
-				userapi.AddUserIntegral(fromUserId, 10)
-				// 插入邀请关系
-				userapi.AddInviteRelation(fromUserId, userId, inviteCode)
-				addAmount += 10
-			}
-		}
+	userId, err := transactionRegister(c, req.Email, hashPassword, inviteCode)
+	if err != nil {
+		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "register error, please retry it")
+		cg.Res(http.StatusBadRequest, controller.ErrRegister)
+		return
 	}
-	userapi.CreateUserIntegral(userId, addAmount)
 	// 对userId, email加入jwt信息中
 	token, err := userapi.GenerateToken(strconv.FormatUint(userId, 10), req.Email)
 	if err != nil {
@@ -116,4 +100,52 @@ func Register(c *gin.Context) {
 		return
 	}
 	cg.Resp(http.StatusOK, controller.ErrnoSuccess, token)
+}
+
+// 开启事务注册
+func transactionRegister(c *gin.Context, email, hashPassword, inviteCode string) (uint64, error) {
+	// 声明个db，做事务回滚
+	curDb := db.DbIns.Begin()
+	// 注册新用户
+	userId, err := userapi.AddUser(email, hashPassword, curDb)
+	if err != nil {
+		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "add user error")
+		curDb.Rollback()
+		return 0, err
+	}
+
+	// 新注册用户赠送10个积分
+	// 判断是否为被邀请用户，如果是则赠送20个积分，并且给邀请人也赠送10个积分
+	addAmount := 10
+
+	inviteUser, err := userapi.GetUserByInviteCode(inviteCode, curDb)
+	if err != nil {
+		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "query user by invite code error")
+		curDb.Rollback()
+		return 0, err
+	}
+	curDb.Rollback()
+	if inviteUser != nil {
+		// 邀请人增加10的积分
+		fromUserId := inviteUser.ID
+		err := userapi.AddUserIntegral(fromUserId, 10, curDb)
+		if err != nil {
+			curDb.Rollback()
+			return 0, err
+		}
+		// 插入邀请关系
+		err = userapi.AddInviteRelation(fromUserId, userId, inviteCode, curDb)
+		if err != nil {
+			curDb.Rollback()
+			return 0, err
+		}
+		addAmount += 10
+	}
+	_, err = userapi.CreateUserIntegral(userId, addAmount, curDb)
+	if err != nil {
+		curDb.Rollback()
+		return 0, err
+	}
+	curDb.Commit()
+	return userId, nil
 }

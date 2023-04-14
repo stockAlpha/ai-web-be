@@ -1,21 +1,20 @@
 package integral
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
-	"github.com/stockAlpha/gopkg/common/safego"
 	"net/http"
+	"stock-web-be/async"
 	"stock-web-be/controller"
 	"stock-web-be/dao/db"
 	"stock-web-be/gocommon/consts"
 	"stock-web-be/gocommon/tlog"
 	"stock-web-be/idl/userapi/integral"
 	"stock-web-be/logic/userapi"
-	"stock-web-be/logic/userapi/notify"
-	"strconv"
 )
 
 // @Tags	积分相关接口
-// @Summary	手动充值
+// @Summary	手动充值(管理员使用)
 // @param		req	body	integral.ManualRechargeRequest	true	"手动充值请求参数"
 // @Router		/api/v1/integral/manual/recharge [post]
 func ManualRecharge(c *gin.Context) {
@@ -79,7 +78,7 @@ func ManualRecharge(c *gin.Context) {
 	}
 	// 添加积分
 	// todo 事务
-	userapi.AddUserIntegral(userId, amount)
+	userapi.AddUserIntegral(userId, amount, nil)
 
 	// 修改状态
 	rechargeKey.Status = 1
@@ -90,8 +89,6 @@ func ManualRecharge(c *gin.Context) {
 		cg.Res(http.StatusBadRequest, controller.ErrRechargeKeyUsed)
 		return
 	}
-	safego.SafeGoWithWG(func() {
-		notify.SendEmail(email, "充值成功", "您已成功充值"+strconv.Itoa(amount)+"积分，快去看看吧！")
-	})
+	async.MailChan <- async.MailChanType{To: email, Subject: consts.RechargeNotifySubject, Body: fmt.Sprintf(consts.RechargeNotifyContent, amount)}
 	cg.Res(http.StatusOK, controller.ErrnoSuccess)
 }

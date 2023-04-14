@@ -2,8 +2,9 @@ package db
 
 import (
 	"errors"
-	"gorm.io/gorm"
 	"time"
+
+	"gorm.io/gorm"
 )
 
 type User struct {
@@ -21,8 +22,10 @@ func (user *User) TableName() string {
 	return "users"
 }
 
-func (user *User) InsertUser() error {
-	db := DbIns.Table(user.TableName())
+func (user *User) InsertUser(db *gorm.DB) error {
+	if db == nil {
+		db = DbIns.Table(user.TableName())
+	}
 
 	err := db.Create(user).Error
 	if err != nil {
@@ -62,8 +65,10 @@ func (user *User) GetUserByEmail(email string) error {
 	return nil
 }
 
-func (user *User) GetUserByInviteCode(inviteCode string) error {
-	db := DbIns.Table(user.TableName())
+func (user *User) GetUserByInviteCode(inviteCode string, db *gorm.DB) error {
+	if db == nil {
+		db = DbIns.Table(user.TableName())
+	}
 
 	err := db.Table(user.TableName()).
 		Where("invite_code = ?", inviteCode).
