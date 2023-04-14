@@ -41,11 +41,13 @@ var NotAuthApisMap = map[string]string{
 	UserPrefix + SendVerificationCodeApi: UserPrefix + SendVerificationCodeApi,
 	UserPrefix + RegisterApi:             UserPrefix + RegisterApi,
 	UserPrefix + LoginApi:                UserPrefix + LoginApi,
+	IntegralPrefix + ManualRechargeApi:   IntegralPrefix + ManualRechargeApi,
 	"/swagger/*any":                      "/swagger/*any",
 }
 
 var CanGenerateRechargeKeyUserMap = map[string]string{
-	"stalary@163.com": "stalary@163.com",
+	"stalary@163.com":    "stalary@163.com",
+	"vinson_neo@163.com": "vinson_neo@163.com",
 }
 
 const (
@@ -59,6 +61,7 @@ const (
 	IntegralPrefix         = "/api/v1/integral"
 	GenerateRechargeKeyApi = "/generate_key"
 	RechargeApi            = "/recharge"
+	ManualRechargeApi      = "/manual/recharge"
 	RecordApi              = "/record"
 
 	OpenaiPrefix         = "/api/v1/openai"
