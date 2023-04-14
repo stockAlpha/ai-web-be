@@ -60,7 +60,7 @@ func Recharge(c *gin.Context) {
 	}
 	// 添加积分
 	// todo 事务
-	userapi.AddUserIntegral(userId, amount)
+	userapi.AddUserIntegral(userId, amount, nil)
 
 	// 修改状态
 	rechargeKey.Status = 1

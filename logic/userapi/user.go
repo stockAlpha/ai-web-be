@@ -2,10 +2,13 @@ package userapi
 
 import (
 	"math/rand"
-	"stock-web-be/dao/db"
-	"stock-web-be/utils"
 	"strconv"
 	"time"
+
+	"stock-web-be/dao/db"
+	"stock-web-be/utils"
+
+	"gorm.io/gorm"
 )
 
 func GetUserByEmail(email string) (*db.User, error) {
@@ -20,9 +23,9 @@ func GetUserByEmail(email string) (*db.User, error) {
 	return user, nil
 }
 
-func GetUserByInviteCode(inviteCode string) (*db.User, error) {
+func GetUserByInviteCode(inviteCode string, transaction *gorm.DB) (*db.User, error) {
 	user := &db.User{}
-	err := user.GetUserByInviteCode(inviteCode)
+	err := user.GetUserByInviteCode(inviteCode, transaction)
 	if err != nil {
 		return nil, err
 	}
@@ -32,9 +35,9 @@ func GetUserByInviteCode(inviteCode string) (*db.User, error) {
 	return user, nil
 }
 
-func GetUserIntegralByUserId(userId uint64) (*db.UserIntegral, error) {
+func GetUserIntegralByUserId(userId uint64, transaction *gorm.DB) (*db.UserIntegral, error) {
 	u := &db.UserIntegral{}
-	err := u.GetUserIntegralByUserId(userId)
+	err := u.GetUserIntegralByUserId(userId, transaction)
 	if err != nil {
 		return nil, err
 	}
@@ -44,7 +47,7 @@ func GetUserIntegralByUserId(userId uint64) (*db.UserIntegral, error) {
 	return u, nil
 }
 
-func CreateUserIntegral(userId uint64, amount int) (db.UserIntegral, error) {
+func CreateUserIntegral(userId uint64, amount int, transaction *gorm.DB) (db.UserIntegral, error) {
 	integral := db.UserIntegral{
 		UserId: userId,
 		// 初始化10积分
@@ -52,19 +55,19 @@ func CreateUserIntegral(userId uint64, amount int) (db.UserIntegral, error) {
 		UpdateTime: time.Now(),
 		CreateTime: time.Now(),
 	}
-	err := integral.InsertUserIntegral()
+	err := integral.InsertUserIntegral(transaction)
 	if err != nil {
 		return integral, err
 	}
 	return integral, nil
 }
 
-func AddUserIntegral(userId uint64, amount int) error {
-	integral, err := GetUserIntegralByUserId(userId)
+func AddUserIntegral(userId uint64, amount int, transaction *gorm.DB) error {
+	integral, err := GetUserIntegralByUserId(userId, transaction)
 	if err != nil {
 		return err
 	}
-	err = integral.AddAmount(amount)
+	err = integral.AddAmount(amount, transaction)
 	if err != nil {
 		return err
 	}
@@ -72,7 +75,7 @@ func AddUserIntegral(userId uint64, amount int) error {
 }
 
 func SubUserIntegral(userId uint64, amount int) error {
-	integral, err := GetUserIntegralByUserId(userId)
+	integral, err := GetUserIntegralByUserId(userId, nil)
 	if err != nil {
 		return err
 	}
@@ -117,7 +120,7 @@ func UpdateUser(userId uint64, nickName, avatar string) {
 	user.UpdateUser()
 }
 
-func AddInviteRelation(fromUserId uint64, toUserId uint64, inviteCode string) error {
+func AddInviteRelation(fromUserId uint64, toUserId uint64, inviteCode string, transaction *gorm.DB) error {
 	relation := &db.InviteRelation{
 		FromUserId: fromUserId,
 		ToUserId:   toUserId,
@@ -126,7 +129,7 @@ func AddInviteRelation(fromUserId uint64, toUserId uint64, inviteCode string) er
 		UpdateTime: time.Now(),
 	}
 
-	err := relation.InsertRelation()
+	err := relation.InsertRelation(transaction)
 	if err != nil {
 		return err
 	}

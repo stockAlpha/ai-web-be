@@ -2,8 +2,9 @@ package db
 
 import (
 	"errors"
-	"gorm.io/gorm"
 	"time"
+
+	"gorm.io/gorm"
 )
 
 type UserIntegral struct {
@@ -18,9 +19,10 @@ func (u *UserIntegral) TableName() string {
 	return "user_integral"
 }
 
-func (u *UserIntegral) InsertUserIntegral() error {
-	db := DbIns.Table(u.TableName())
-
+func (u *UserIntegral) InsertUserIntegral(db *gorm.DB) error {
+	if db == nil {
+		db = DbIns.Table(u.TableName())
+	}
 	err := db.Create(u).Error
 	if err != nil {
 		return err
@@ -31,9 +33,10 @@ func (u *UserIntegral) InsertUserIntegral() error {
 	return nil
 }
 
-func (u *UserIntegral) GetUserIntegralByUserId(userId uint64) error {
-	db := DbIns.Table(u.TableName())
-
+func (u *UserIntegral) GetUserIntegralByUserId(userId uint64, db *gorm.DB) error {
+	if db == nil {
+		db = DbIns.Table(u.TableName())
+	}
 	err := db.Table(u.TableName()).
 		Where("user_id = ?", userId).
 		Find(u).Error
@@ -47,14 +50,14 @@ func (u *UserIntegral) GetUserIntegralByUserId(userId uint64) error {
 	return nil
 }
 
-func (u *UserIntegral) AddAmount(amount int) error {
-	db := DbIns.Table(u.TableName())
-	return db.Transaction(func(tx *gorm.DB) error {
-		if err := tx.Model(u).UpdateColumn("amount", gorm.Expr("amount + ?", amount)).Error; err != nil {
-			return err
-		}
-		return nil
-	})
+func (u *UserIntegral) AddAmount(amount int, db *gorm.DB) error {
+	if db == nil {
+		db = DbIns.Table(u.TableName())
+	}
+	if err := db.Model(u).UpdateColumn("amount", gorm.Expr("amount + ?", amount)).Error; err != nil {
+		return err
+	}
+	return nil
 }
 
 func (u *UserIntegral) SubAmount(amount int) error {
