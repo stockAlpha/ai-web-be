@@ -1,17 +1,18 @@
 package integral
 
 import (
-	"github.com/gin-gonic/gin"
-	"github.com/stockAlpha/gopkg/common/safego"
 	"net/http"
+	"strconv"
+
+	"stock-web-be/async"
 	"stock-web-be/controller"
 	"stock-web-be/dao/db"
 	"stock-web-be/gocommon/consts"
 	"stock-web-be/gocommon/tlog"
 	"stock-web-be/idl/userapi/integral"
 	"stock-web-be/logic/userapi"
-	"stock-web-be/logic/userapi/notify"
-	"strconv"
+
+	"github.com/gin-gonic/gin"
 )
 
 // @Tags	积分相关接口
@@ -70,8 +71,6 @@ func Recharge(c *gin.Context) {
 		cg.Res(http.StatusBadRequest, controller.ErrRechargeKeyUsed)
 		return
 	}
-	safego.SafeGoWithWG(func() {
-		notify.SendEmail(email, "充值成功", "您已成功充值"+strconv.Itoa(amount)+"积分，快去看看吧！")
-	})
+	async.MailChan <- async.MailChanType{To: email, Subject: "充值成功", Body: "您已成功充值" + strconv.Itoa(amount) + "积分，快去看看吧！"}
 	cg.Res(http.StatusOK, controller.ErrnoSuccess)
 }

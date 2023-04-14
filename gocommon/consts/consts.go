@@ -13,12 +13,14 @@ const (
 	SLTagRedisFail           = " _redis_fail"
 	SLTagPanic               = " _panic"
 	SLTagSeverStart          = " _server_start"
+	SLTagSeverStop           = " _server_stop"
 	SLTagSeverFail           = " _server_fail"
 	SLTagPprofFail           = " _pprof_fail"
 	SLtagJsonMarshal         = " _json_marshal"
 	SLTagNotificationFail    = " _notification_fail"
 	SLTagBrokePipe           = " _broke_pipe"
 	SLTagConnRST             = " _connection_reset_by_peer"
+	SyncStop                 = " _async_ready_stop"
 )
 
 // for middleware
