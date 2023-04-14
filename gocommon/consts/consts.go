@@ -42,6 +42,7 @@ var NotAuthApisMap = map[string]string{
 	UserPrefix + RegisterApi:             UserPrefix + RegisterApi,
 	UserPrefix + LoginApi:                UserPrefix + LoginApi,
 	IntegralPrefix + ManualRechargeApi:   IntegralPrefix + ManualRechargeApi,
+	"/public/*filepath":                  "/public/*filepath",
 	"/swagger/*any":                      "/swagger/*any",
 }
 
