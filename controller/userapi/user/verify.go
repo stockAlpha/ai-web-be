@@ -52,9 +52,7 @@ func SendVerificationCode(c *gin.Context) {
 	code := utils.GenerateCode()
 
 	//发送验证码
-	subject := "ChatAlpha 验证码邮件"
-	body := fmt.Sprintf("尊敬的 ChatAlpha 用户\n\n您好！感谢您使用 ChatAlpha 服务。\n\n为了确保您的账户安全，我们已向您发送了一封验证码邮件，请勿将验证码泄露给他人。验证码用于验证您的身份，并防止恶意攻击。\n\n验证码：【%s】\n\n如果您没有进行任何操作，或者不希望继续使用 ChatAlpha 服务，请忽略此邮件。\n\n如有任何问题或疑问，请随时联系我们的客服团队，我们将尽快为您解决问题。\n\n谢谢！\n\nChatAlpha 团队", code)
-	err = notify.SendEmail(req.Email, subject, body)
+	err = notify.SendEmail(req.Email, consts.SendCodeSubject, fmt.Sprintf(consts.SendCodeContent, code))
 	if err != nil {
 		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "send verification code occur err %s", err.Error())
 		cg.Res(http.StatusBadRequest, controller.ErrSendMailFail)

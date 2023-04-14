@@ -1,7 +1,9 @@
 package user
 
 import (
+	"fmt"
 	"net/http"
+	"stock-web-be/async"
 	"strconv"
 
 	"stock-web-be/controller"
@@ -127,8 +129,10 @@ func transactionRegister(c *gin.Context, email, hashPassword, inviteCode string)
 	curDb.Rollback()
 	if inviteUser != nil {
 		// 邀请人增加10的积分
+		fromAddAmount := 10
 		fromUserId := inviteUser.ID
-		err := userapi.AddUserIntegral(fromUserId, 10, curDb)
+		fromEmail := inviteUser.Email
+		err := userapi.AddUserIntegral(fromUserId, fromAddAmount, curDb)
 		if err != nil {
 			curDb.Rollback()
 			return 0, err
@@ -140,6 +144,7 @@ func transactionRegister(c *gin.Context, email, hashPassword, inviteCode string)
 			return 0, err
 		}
 		addAmount += 10
+		async.MailChan <- async.MailChanType{To: fromEmail, Subject: consts.InviteSubject, Body: fmt.Sprintf(consts.InviteContent, email, fromAddAmount)}
 	}
 	_, err = userapi.CreateUserIntegral(userId, addAmount, curDb)
 	if err != nil {
