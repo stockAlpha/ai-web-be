@@ -78,30 +78,32 @@ const (
 	ErrRechargeKeyUsed          = 40114
 	ErrAddIntegral              = 40115
 	ErrRegister                 = 40116
+	ErrIntegralNotEnough        = 40117
 )
 
 var ErrMsg = map[int]string{
 	ErrnoSuccess: "success",
 	ErrnoError:   "error",
 
-	ErrnoInvalidPrm:             "invalid params",
-	ErrNotFormatEmail:           "not format email",
-	ErrEmailAlreadyExists:       "email already exists",
-	ErrSendMailFail:             "send verification code error",
-	ErrStoreEmailCode:           "store email verification code error",
-	ErrQueryVerificationCode:    "query verification code error",
-	ErrVerificationCodeNotFound: "verification code not found",
-	ErrNotFormatPassword:        "not format password",
-	ErrGenerateJwtToken:         "generate jwt token error",
-	ErrComputeHashPassword:      "compute hash password error",
-	ErrPasswordNotMatch:         "input password incorrect",
-	ErrEmailNotFound:            "get user by email not found",
-	ErrAddUser:                  "add user occur error",
-	ErrRechargeKey:              "recharge key error",
-	ErrGenerateRechargeKey:      "generate recharge key error",
-	ErrRechargeKeyUsed:          "recharge key has been used",
-	ErrAddIntegral:              "add integral error",
-	ErrRegister:                 "register error",
+	ErrnoInvalidPrm:             "非法的参数",
+	ErrNotFormatEmail:           "邮件格式非法",
+	ErrEmailAlreadyExists:       "此邮箱已注册",
+	ErrSendMailFail:             "发送验证码失败",
+	ErrStoreEmailCode:           "存储验证码失败",
+	ErrQueryVerificationCode:    "查询验证码失败",
+	ErrVerificationCodeNotFound: "验证码未找到",
+	ErrNotFormatPassword:        "密码格式非法",
+	ErrGenerateJwtToken:         "生成 jwt token 错误",
+	ErrComputeHashPassword:      "计算密码 hash 错误",
+	ErrPasswordNotMatch:         "密码输入错误",
+	ErrEmailNotFound:            "邮箱未找到",
+	ErrAddUser:                  "创建用户错误",
+	ErrRechargeKey:              "充值错误",
+	ErrGenerateRechargeKey:      "生成充值密钥错误",
+	ErrRechargeKeyUsed:          "充值密钥已使用",
+	ErrAddIntegral:              "添加积分错误",
+	ErrRegister:                 "注册失败",
+	ErrIntegralNotEnough:        "积分不足",
 }
 
 // EchoJSON json格式输出
