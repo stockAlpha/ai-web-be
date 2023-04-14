@@ -90,8 +90,8 @@ func Register(c *gin.Context) {
 	inviteCode := req.InviteCode
 	userId, err := transactionRegister(c, req.Email, hashPassword, inviteCode)
 	if err != nil {
-		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "register error, please retry it")
-		cg.Res(http.StatusBadRequest, controller.ErrRegister)
+		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "register error", err.Error())
+		cg.Res(http.StatusBadRequest, controller.ErrServer)
 		return
 	}
 	// 对userId, email加入jwt信息中

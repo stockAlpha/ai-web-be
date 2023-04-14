@@ -79,6 +79,7 @@ const (
 	ErrAddIntegral              = 40115
 	ErrRegister                 = 40116
 	ErrIntegralNotEnough        = 40117
+	ErrServer                   = 40118
 )
 
 var ErrMsg = map[int]string{
@@ -104,6 +105,7 @@ var ErrMsg = map[int]string{
 	ErrAddIntegral:              "添加积分错误",
 	ErrRegister:                 "注册失败",
 	ErrIntegralNotEnough:        "积分不足，请点击左下角设置进行充值",
+	ErrServer:                   "服务器开小车了～，请重试一次",
 }
 
 // EchoJSON json格式输出

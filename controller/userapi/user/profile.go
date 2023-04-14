@@ -2,6 +2,8 @@ package user
 
 import (
 	"net/http"
+	"stock-web-be/gocommon/consts"
+	"stock-web-be/gocommon/tlog"
 	"strconv"
 
 	"stock-web-be/controller"
@@ -20,8 +22,18 @@ func Profile(c *gin.Context) {
 	res := user.ProfileResponse{}
 	email := c.GetString("email")
 	userId, _ := strconv.ParseUint(c.GetString("user_id"), 10, 64)
-	userProfile, _ := userapi.GetUserByEmail(email)
-	userIntegral, _ := userapi.GetUserIntegralByUserId(userId, nil)
+	userProfile, err := userapi.GetUserByEmail(email)
+	if err != nil {
+		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "get user email error", err.Error())
+		cg.Resp(http.StatusBadRequest, controller.ErrServer, res)
+		return
+	}
+	userIntegral, err := userapi.GetUserIntegralByUserId(userId, nil)
+	if err != nil {
+		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "get user integral error", err.Error())
+		cg.Resp(http.StatusBadRequest, controller.ErrServer, res)
+		return
+	}
 	res.Integral = userIntegral.Amount
 	res.NickName = userProfile.NickName
 	res.Avatar = userProfile.Avatar

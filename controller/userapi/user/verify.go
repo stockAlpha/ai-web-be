@@ -55,7 +55,7 @@ func SendVerificationCode(c *gin.Context) {
 	err = notify.SendEmail(req.Email, consts.SendCodeSubject, fmt.Sprintf(consts.SendCodeContent, code))
 	if err != nil {
 		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "send verification code occur err %s", err.Error())
-		cg.Res(http.StatusBadRequest, controller.ErrSendMailFail)
+		cg.Res(http.StatusBadRequest, controller.ErrServer)
 		return
 	}
 
@@ -63,7 +63,7 @@ func SendVerificationCode(c *gin.Context) {
 	err = userapi.InsertEmailVerificationCode(code, req.Email)
 	if err != nil {
 		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "store verification code occur err")
-		cg.Res(http.StatusBadRequest, controller.ErrStoreEmailCode)
+		cg.Res(http.StatusBadRequest, controller.ErrServer)
 		return
 	}
 	cg.Resp(http.StatusOK, controller.ErrnoSuccess, true)

@@ -38,8 +38,8 @@ func Login(c *gin.Context) {
 	//验证当前邮箱是否已注册
 	existUser, err := userapi.GetUserByEmail(req.Email)
 	if err != nil {
-		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "query existUser by email is fatal")
-		cg.Res(http.StatusBadRequest, controller.ErrnoError)
+		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "query existUser by email error", err.Error())
+		cg.Res(http.StatusBadRequest, controller.ErrServer)
 		return
 	}
 

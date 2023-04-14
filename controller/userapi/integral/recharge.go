@@ -64,7 +64,8 @@ func Recharge(c *gin.Context) {
 	err = userapi.AddUserIntegral(userId, amount, tx)
 	if err != nil {
 		tx.Rollback()
-		cg.Res(http.StatusBadRequest, controller.ErrAddIntegral)
+		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "add user integral error", err.Error())
+		cg.Res(http.StatusBadRequest, controller.ErrServer)
 		return
 
 	}
