@@ -4,6 +4,12 @@ type RechargeRequest struct {
 	Key string `json:"key" binding:"required"`
 }
 
+type ManualRechargeRequest struct {
+	Key      string `json:"key" binding:"required"`
+	ToEmail  string `json:"to_email"`
+	AuthCode string `json:"auth_code"` // 允许充值的授权码
+}
+
 type RecordRequest struct {
 	Type  string `json:"type" binding:"required"`  // 计费类型，chat/image/audio
 	Model string `json:"model" binding:"required"` // 使用模型

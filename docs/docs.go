@@ -36,6 +36,26 @@ const docTemplate = `{
                 "responses": {}
             }
         },
+        "/api/v1/integral/manual/recharge": {
+            "post": {
+                "tags": [
+                    "积分相关接口"
+                ],
+                "summary": "手动充值",
+                "parameters": [
+                    {
+                        "description": "手动充值请求参数",
+                        "name": "req",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/integral.ManualRechargeRequest"
+                        }
+                    }
+                ],
+                "responses": {}
+            }
+        },
         "/api/v1/integral/recharge": {
             "post": {
                 "tags": [
@@ -308,6 +328,24 @@ const docTemplate = `{
                 }
             }
         },
+        "integral.ManualRechargeRequest": {
+            "type": "object",
+            "required": [
+                "key"
+            ],
+            "properties": {
+                "auth_code": {
+                    "description": "允许充值的授权码",
+                    "type": "string"
+                },
+                "key": {
+                    "type": "string"
+                },
+                "to_email": {
+                    "type": "string"
+                }
+            }
+        },
         "integral.RechargeRequest": {
             "type": "object",
             "required": [
@@ -323,7 +361,6 @@ const docTemplate = `{
             "type": "object",
             "required": [
                 "model",
-                "size",
                 "type"
             ],
             "properties": {
@@ -438,7 +475,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "feedbackType": {
-                    "description": "反馈类型: 1-问题反馈 2-功能建议 3-咨询",
+                    "description": "反馈类型: 1-问题反馈 2-功能建议 3-咨询 4-其他",
                     "type": "integer"
                 }
             }

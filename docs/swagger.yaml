@@ -9,6 +9,18 @@ definitions:
         description: 1代表100积分，2代表500积分，3代表1000积分
         type: integer
     type: object
+  integral.ManualRechargeRequest:
+    properties:
+      auth_code:
+        description: 允许充值的授权码
+        type: string
+      key:
+        type: string
+      to_email:
+        type: string
+    required:
+    - key
+    type: object
   integral.RechargeRequest:
     properties:
       key:
@@ -29,7 +41,6 @@ definitions:
         type: string
     required:
     - model
-    - size
     - type
     type: object
   openai.ChatCompletionMessage:
@@ -98,7 +109,7 @@ definitions:
         description: 反馈内容
         type: string
       feedbackType:
-        description: '反馈类型: 1-问题反馈 2-功能建议 3-咨询'
+        description: '反馈类型: 1-问题反馈 2-功能建议 3-咨询 4-其他'
         type: integer
     required:
     - content
@@ -193,6 +204,19 @@ paths:
           $ref: '#/definitions/integral.BatchGenerateKeyRequest'
       responses: {}
       summary: 生成积分充值密钥并发送到指定邮箱
+      tags:
+      - 积分相关接口
+  /api/v1/integral/manual/recharge:
+    post:
+      parameters:
+      - description: 手动充值请求参数
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/integral.ManualRechargeRequest'
+      responses: {}
+      summary: 手动充值
       tags:
       - 积分相关接口
   /api/v1/integral/recharge:
