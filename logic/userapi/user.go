@@ -86,7 +86,7 @@ func SubUserIntegral(userId uint64, amount int) error {
 	return nil
 }
 
-func AddUser(email string, hashPassword string) (uint64, error) {
+func AddUser(email, hashPassword string, transaction *gorm.DB) (uint64, error) {
 	// 生成随机nickName
 	nickName := "chat-" + strconv.Itoa(rand.Intn(10000))
 	// 生成邀请码
@@ -104,7 +104,7 @@ func AddUser(email string, hashPassword string) (uint64, error) {
 		UpdateTime: time.Now(),
 	}
 
-	err := user.InsertUser()
+	err := user.InsertUser(transaction)
 	if err != nil {
 		return 0, err
 	}

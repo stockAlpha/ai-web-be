@@ -5,7 +5,7 @@ import (
 	"strconv"
 
 	"stock-web-be/controller"
-	db2 "stock-web-be/dao/db"
+	"stock-web-be/dao/db"
 	"stock-web-be/gocommon/consts"
 	"stock-web-be/gocommon/tlog"
 	"stock-web-be/idl/userapi/user"
@@ -83,18 +83,15 @@ func Register(c *gin.Context) {
 		return
 	}
 
-	userId, err := userapi.AddUser(req.Email, hashPassword)
-	if err != nil {
-		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "add user error")
-		cg.Res(http.StatusBadRequest, controller.ErrAddUser)
-		return
-	}
-
 	// 新注册用户赠送10个积分
 	// 判断是否为被邀请用户，如果是则赠送20个积分，并且给邀请人也赠送10个积分
 	inviteCode := req.InviteCode
-	// todo 注册失败是全部回滚？然后邮件通知么？目前不做处理
-	_ = AddInviteRelationAndIntegral(c, inviteCode, userId)
+	userId, err := transactionRegister(c, req.Email, hashPassword, inviteCode)
+	if err != nil {
+		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "register error, please retry it")
+		cg.Res(http.StatusBadRequest, controller.ErrRegister)
+		return
+	}
 	// 对userId, email加入jwt信息中
 	token, err := userapi.GenerateToken(strconv.FormatUint(userId, 10), req.Email)
 	if err != nil {
@@ -104,39 +101,51 @@ func Register(c *gin.Context) {
 	}
 	cg.Resp(http.StatusOK, controller.ErrnoSuccess, token)
 }
-func AddInviteRelationAndIntegral(c *gin.Context, inviteCode string, userId uint64) error {
+
+// 开启事务注册
+func transactionRegister(c *gin.Context, email, hashPassword, inviteCode string) (uint64, error) {
+	// 声明个db，做事务回滚
+	curDb := db.DbIns.Begin()
+	// 注册新用户
+	userId, err := userapi.AddUser(email, hashPassword, curDb)
+	if err != nil {
+		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "add user error")
+		curDb.Rollback()
+		return 0, err
+	}
+
 	// 新注册用户赠送10个积分
 	// 判断是否为被邀请用户，如果是则赠送20个积分，并且给邀请人也赠送10个积分
 	addAmount := 10
-	//声明个db，做事务回滚
-	db := db2.DbIns.Begin()
-	inviteUser, err := userapi.GetUserByInviteCode(inviteCode, db)
+
+	inviteUser, err := userapi.GetUserByInviteCode(inviteCode, curDb)
 	if err != nil {
 		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "query user by invite code error")
-		db.Rollback()
-		return err
+		curDb.Rollback()
+		return 0, err
 	}
+	curDb.Rollback()
 	if inviteUser != nil {
 		// 邀请人增加10的积分
 		fromUserId := inviteUser.ID
-		err := userapi.AddUserIntegral(fromUserId, 10, db)
+		err := userapi.AddUserIntegral(fromUserId, 10, curDb)
 		if err != nil {
-			db.Rollback()
-			return err
+			curDb.Rollback()
+			return 0, err
 		}
 		// 插入邀请关系
-		err = userapi.AddInviteRelation(fromUserId, userId, inviteCode, db)
+		err = userapi.AddInviteRelation(fromUserId, userId, inviteCode, curDb)
 		if err != nil {
-			db.Rollback()
-			return err
+			curDb.Rollback()
+			return 0, err
 		}
 		addAmount += 10
 	}
-	_, err = userapi.CreateUserIntegral(userId, addAmount, db)
+	_, err = userapi.CreateUserIntegral(userId, addAmount, curDb)
 	if err != nil {
-		db.Rollback()
-		return err
+		curDb.Rollback()
+		return 0, err
 	}
-	db.Commit()
-	return nil
+	curDb.Commit()
+	return userId, nil
 }

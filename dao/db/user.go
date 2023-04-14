@@ -22,8 +22,10 @@ func (user *User) TableName() string {
 	return "users"
 }
 
-func (user *User) InsertUser() error {
-	db := DbIns.Table(user.TableName())
+func (user *User) InsertUser(db *gorm.DB) error {
+	if db == nil {
+		db = DbIns.Table(user.TableName())
+	}
 
 	err := db.Create(user).Error
 	if err != nil {

@@ -1,6 +1,7 @@
 package integral
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -71,6 +72,6 @@ func Recharge(c *gin.Context) {
 		cg.Res(http.StatusBadRequest, controller.ErrRechargeKeyUsed)
 		return
 	}
-	async.MailChan <- async.MailChanType{To: email, Subject: "充值成功", Body: "您已成功充值" + strconv.Itoa(amount) + "积分，快去看看吧！"}
+	async.MailChan <- async.MailChanType{To: email, Subject: consts.RechargeNotifySubject, Body: fmt.Sprintf(consts.RechargeNotifyContent, amount)}
 	cg.Res(http.StatusOK, controller.ErrnoSuccess)
 }
