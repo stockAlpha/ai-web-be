@@ -25,6 +25,8 @@ WORKDIR /go/stock-web-be
 COPY --from=builder /go/stock-web-be/main .
 # 复制编译阶段里的config文件夹到目标目录
 COPY --from=builder /go/stock-web-be/conf ./conf
+# 拷贝所有静态文件
+COPY --from=builder /go/stock-web-be/disk ./disk
 # 需暴露的端口
 RUN if [ -z "$PORT" ]; then \
         export PORT=8080; \

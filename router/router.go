@@ -1,15 +1,17 @@
 package router
 
 import (
-	"github.com/gin-gonic/gin"
-	ginSwagger "github.com/swaggo/gin-swagger"
-	"github.com/swaggo/gin-swagger/swaggerFiles"
 	"net/http"
+
 	"stock-web-be/controller/openaiapi/chat"
 	"stock-web-be/controller/userapi/integral"
 	"stock-web-be/controller/userapi/user"
 	"stock-web-be/docs"
 	"stock-web-be/gocommon/consts"
+
+	"github.com/gin-gonic/gin"
+	ginSwagger "github.com/swaggo/gin-swagger"
+	"github.com/swaggo/gin-swagger/swaggerFiles"
 )
 
 func Options(c *gin.Context) {
@@ -36,7 +38,7 @@ func Secure(c *gin.Context) {
 
 func Register(r *gin.Engine) *gin.Engine {
 	// 将 public 目录下的所有静态文件提供给客户端进行访问
-	r.Static("/public", "./public")
+	r.Static("/public", "./disk/public")
 	r.Use(Options)
 	r.Use(Secure)
 	swagger(r)
