@@ -69,7 +69,7 @@ func (u *UserIntegral) SubAmount(amount int) error {
 			}
 			return nil
 		} else {
-			return errors.New("insufficient amount")
+			return errors.New("余额不足")
 		}
 	})
 }

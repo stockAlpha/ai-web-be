@@ -40,6 +40,11 @@ func Record(c *gin.Context) {
 	}
 	err := userapi.SubUserIntegral(userId, amount)
 	if err != nil {
+		// 链接错误的为了不影响用户使用，先返回成功
+		if err.Error() == "invalid connection" {
+			cg.Res(http.StatusOK, controller.ErrnoSuccess)
+			return
+		}
 		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "record user integral error: %s", err.Error())
 		cg.Res(http.StatusBadRequest, controller.ErrIntegralNotEnough)
 		return
