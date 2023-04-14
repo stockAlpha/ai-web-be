@@ -60,18 +60,25 @@ func Recharge(c *gin.Context) {
 		amount = 30
 	}
 	// 添加积分
-	// todo 事务
-	userapi.AddUserIntegral(userId, amount, nil)
+	tx := db.DbIns.Begin()
+	err = userapi.AddUserIntegral(userId, amount, tx)
+	if err != nil {
+		tx.Rollback()
+		cg.Res(http.StatusBadRequest, controller.ErrAddIntegral)
+		return
 
+	}
 	// 修改状态
 	rechargeKey.Status = 1
 	rechargeKey.UseAccount = userId
-	err = rechargeKey.UpdateRechargeKey()
+	err = rechargeKey.UpdateRechargeKey(tx)
 	if err != nil {
+		tx.Rollback()
 		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "use recharge key error, error: %s", err.Error())
 		cg.Res(http.StatusBadRequest, controller.ErrRechargeKeyUsed)
 		return
 	}
+	tx.Commit()
 	async.MailChan <- async.MailChanType{To: email, Subject: consts.RechargeNotifySubject, Body: fmt.Sprintf(consts.RechargeNotifyContent, amount)}
 	cg.Res(http.StatusOK, controller.ErrnoSuccess)
 }
