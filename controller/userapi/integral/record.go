@@ -33,6 +33,8 @@ func Record(c *gin.Context) {
 		amount = 4
 	case "audio":
 		amount = 8
+	default:
+		amount = 1
 	}
 	err := userapi.SubUserIntegral(userId, amount)
 	if err != nil {
