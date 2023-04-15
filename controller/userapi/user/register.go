@@ -116,10 +116,9 @@ func transactionRegister(c *gin.Context, email, hashPassword, inviteCode string)
 		return 0, err
 	}
 
-	// 新注册用户赠送10个积分
-	// 判断是否为被邀请用户，如果是则赠送20个积分，并且给邀请人也赠送10个积分
-	addAmount := 10
-
+	// 新注册用户赠送50个积分
+	// 判断是否为被邀请用户，如果是则邀请人和被邀请人都增加积分
+	addAmount := 50
 	inviteUser, err := userapi.GetUserByInviteCode(inviteCode, curDb)
 	if err != nil {
 		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "query user by invite code error")
@@ -127,8 +126,8 @@ func transactionRegister(c *gin.Context, email, hashPassword, inviteCode string)
 		return 0, err
 	}
 	if inviteUser != nil {
-		// 邀请人增加10的积分
-		fromAddAmount := 10
+		// 邀请人增加积分
+		fromAddAmount := 20
 		fromUserId := inviteUser.ID
 		fromEmail := inviteUser.Email
 		err := userapi.AddUserIntegral(fromUserId, fromAddAmount, curDb)
@@ -142,7 +141,8 @@ func transactionRegister(c *gin.Context, email, hashPassword, inviteCode string)
 			curDb.Rollback()
 			return 0, err
 		}
-		addAmount += 10
+		// 当前用户增加积分
+		addAmount += 20
 		async.MailChan <- async.MailChanType{To: fromEmail, Subject: consts.InviteSubject, Body: fmt.Sprintf(consts.InviteContent, email, fromAddAmount)}
 	}
 	_, err = userapi.CreateUserIntegral(userId, addAmount, curDb)

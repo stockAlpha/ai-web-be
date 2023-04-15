@@ -51,13 +51,15 @@ func Recharge(c *gin.Context) {
 	amount := 0
 	switch rechargeKey.Type {
 	case 1:
-		amount = 30
+		amount = 50
 	case 2:
-		amount = 100
+		amount = 200
 	case 3:
-		amount = 500
+		amount = 1000
+	case 4:
+		amount = 10000
 	default:
-		amount = 30
+		amount = 50
 	}
 	// 添加积分
 	tx := db.DbIns.Begin()
