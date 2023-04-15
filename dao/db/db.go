@@ -23,13 +23,12 @@ type DB struct {
 
 func InitDB() {
 	var dsn string
-	RAILWAY_ENVIRONMENT := os.Getenv("RAILWAY_ENVIRONMENT")
-	if RAILWAY_ENVIRONMENT == "production" {
+	if os.Getenv("RAILWAY_ENVIRONMENT") == "production" {
 		dsn = fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=%s&parseTime=%t&loc=%s&timeout=%s&readTimeout=%s&writeTimeout=%s",
 			os.Getenv("MYSQLUSER"),
 			os.Getenv("MYSQLPASSWORD"),
 			os.Getenv("MYSQLHOST")+":"+os.Getenv("MYSQLPORT"),
-			conf.Handler.GetString("mysql.database"),
+			os.Getenv("MYSQLDATABASE"),
 			conf.Handler.GetString("mysql.charset"),
 			conf.Handler.GetBool("mysql.parseTime"),
 			conf.Handler.GetString("mysql.loc"),
