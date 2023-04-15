@@ -3,6 +3,7 @@ package conf
 import (
 	"fmt"
 	"os"
+
 	"stock-web-be/gocommon/consts"
 
 	"github.com/spf13/viper"
@@ -45,7 +46,18 @@ func LoadConfig(confPath string) *viper.Viper {
 	if err != nil {
 		panic(fmt.Errorf("fatal error config file: %s", err))
 	}
-
+	handler.AutomaticEnv()
+	for _, key := range handler.AllKeys() {
+		if flag := os.Getenv(key); flag != "" {
+			handler.Set(key, flag)
+			continue
+		}
+		//key = strings.Replace(key, ".", "_", -1)
+		//if flag := os.Getenv(key); flag != "" {
+		//	handler.Set(key, flag)
+		//	continue
+		//}
+	}
 	return handler
 }
 
