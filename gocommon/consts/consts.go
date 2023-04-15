@@ -38,13 +38,15 @@ const (
 )
 
 var NotAuthApisMap = map[string]string{
-	UserPrefix + SendVerificationCodeApi: UserPrefix + SendVerificationCodeApi,
-	UserPrefix + RegisterApi:             UserPrefix + RegisterApi,
-	UserPrefix + LoginApi:                UserPrefix + LoginApi,
-	IntegralPrefix + ManualRechargeApi:   IntegralPrefix + ManualRechargeApi,
-	"/public/*filepath":                  "/public/*filepath",
-	"/favicon.ico":                       "/favicon.ico",
-	"/swagger/*any":                      "/swagger/*any",
+	UserPrefix + SendVerificationCodeApi:         UserPrefix + SendVerificationCodeApi,
+	UserPrefix + RegisterApi:                     UserPrefix + RegisterApi,
+	UserPrefix + LoginApi:                        UserPrefix + LoginApi,
+	UserPrefix + SendPasswordVerificationCodeApi: UserPrefix + SendPasswordVerificationCodeApi,
+	UserPrefix + ChangePasswordApi:               UserPrefix + ChangePasswordApi,
+	IntegralPrefix + ManualRechargeApi:           IntegralPrefix + ManualRechargeApi,
+	"/public/*filepath":                          "/public/*filepath",
+	"/favicon.ico":                               "/favicon.ico",
+	"/swagger/*any":                              "/swagger/*any",
 }
 
 var CanGenerateRechargeKeyUserMap = map[string]string{
@@ -53,12 +55,14 @@ var CanGenerateRechargeKeyUserMap = map[string]string{
 }
 
 const (
-	UserPrefix              = "/api/v1/user"
-	SendVerificationCodeApi = "/verify/send_code"
-	RegisterApi             = "/register"
-	LoginApi                = "/login"
-	ProfileApi              = "/profile"
-	FeedbackApi             = "/feedback"
+	UserPrefix                      = "/api/v1/user"
+	SendVerificationCodeApi         = "/verify/send_code"
+	RegisterApi                     = "/register"
+	LoginApi                        = "/login"
+	ProfileApi                      = "/profile"
+	FeedbackApi                     = "/feedback"
+	ChangePasswordApi               = "/change_password"
+	SendPasswordVerificationCodeApi = "/change_password/verify/code"
 
 	IntegralPrefix         = "/api/v1/integral"
 	GenerateRechargeKeyApi = "/generate_key"

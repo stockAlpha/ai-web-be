@@ -11,6 +11,11 @@ import (
 	"gorm.io/gorm"
 )
 
+var (
+	EMail = 1
+	Phone = 2
+)
+
 func GetUserByEmail(email string) (*db.User, error) {
 	user := &db.User{}
 	err := user.GetUserByEmail(email)
@@ -120,6 +125,14 @@ func UpdateUser(userId uint64, nickName, avatar string) {
 	user.UpdateUser()
 }
 
+func UpdateUserPassword(userId uint64, password string, transaction *gorm.DB) error {
+	user := &db.User{
+		ID:       userId,
+		Password: password,
+	}
+	return user.UpdateUserPassword(transaction)
+}
+
 func AddInviteRelation(fromUserId uint64, toUserId uint64, inviteCode string, transaction *gorm.DB) error {
 	relation := &db.InviteRelation{
 		FromUserId: fromUserId,
@@ -150,4 +163,17 @@ func AddFeedback(fromUserId uint64, feedbackType int, content string) error {
 		return err
 	}
 	return nil
+}
+
+func GetUserByAuthType(subjectId string, subjectType int) (*db.User, error) {
+	var user *db.User
+	var err error
+	if subjectType == EMail {
+		user, err = GetUserByEmail(subjectId)
+	}
+
+	if err != nil {
+		return nil, err
+	}
+	return user, err
 }

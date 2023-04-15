@@ -80,6 +80,9 @@ const (
 	ErrRegister                 = 40116
 	ErrIntegralNotEnough        = 40117
 	ErrServer                   = 40118
+	ErrUserSubjectIdNotFound    = 40119
+	ErrPasswordNotChange        = 40120
+	ErrChangePassword           = 40121
 )
 
 var ErrMsg = map[int]string{

@@ -36,3 +36,15 @@ type FeedbackRequest struct {
 	FeedbackType int    `json:"feedbackType" binding:"required"` // 反馈类型: 1-问题反馈 2-功能建议 3-咨询 4-其他
 	Content      string `json:"content" binding:"required"`      // 反馈内容
 }
+
+type SendPasswordVerificationCodeRequest struct {
+	SubjectType int    `json:"subject_type" default:101` // 可选字段，默认为userapi.ChangePasswordMailCode
+	SubjectName string `json:"subject_name" binding:"required"`
+}
+
+type ChangePasswordRequest struct {
+	SubjectType      int    `json:"subject_type" default:101` // 可选字段，默认为userapi.ChangePasswordMailCode
+	SubjectName      string `json:"subject_name" binding:"required"`
+	VerificationCode string `json:"verification_code" binding:"required"`
+	NewPassword      string `json:"new_password" binding:"required"`
+}
