@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"os"
 	"stock-web-be/gocommon/conf"
 	"stock-web-be/gocommon/consts"
 	"stock-web-be/gocommon/tlog"
@@ -34,6 +35,13 @@ func InitDB() {
 		conf.Handler.GetString("mysql.writeTimeout"),
 	)
 	fmt.Println(dsn)
+	MYSQL_URL := os.Getenv("MYSQL_URL")
+	MYSQLDATABASE := os.Getenv("MYSQLDATABASE")
+	MYSQLHOST := os.Getenv("MYSQLHOST")
+	MYSQLPASSWORD := os.Getenv("MYSQLPASSWORD")
+	MYSQLPORT := os.Getenv("MYSQLPORT")
+	MYSQLUSER := os.Getenv("MYSQLUSER")
+	fmt.Println("MYSQL_URL, MYSQLDATABASE, MYSQLHOST, MYSQLPASSWORD, MYSQLPORT, MYSQLUSER", MYSQL_URL, MYSQLDATABASE, MYSQLHOST, MYSQLPASSWORD, MYSQLPORT, MYSQLUSER)
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{Logger: logger.Default.LogMode(logger.LogLevel(conf.Handler.GetInt("mysql.log_mode")))})
 	if err != nil {
 		tlog.Handler.Fatalf(nil, consts.SLTagMysqlFail, "DB init fail")
@@ -43,7 +51,6 @@ func InitDB() {
 	sqldb.SetMaxIdleConns(conf.Handler.GetInt("mysql.max_idle_conns"))
 	sqldb.SetMaxOpenConns(conf.Handler.GetInt("mysql.max_open_conns"))
 	sqldb.SetConnMaxLifetime(time.Duration(conf.Handler.GetInt("mysql.conn_max_lifetime")) * time.Minute)
-	// 每15s探活
 	cancelPing, cancel := context.WithTimeout(context.Background(), 15*time.Second)
 	defer cancel()
 	sqldb.PingContext(cancelPing)
