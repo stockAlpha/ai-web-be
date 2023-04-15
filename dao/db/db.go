@@ -22,28 +22,36 @@ type DB struct {
 }
 
 func InitDB() {
-	dsn := fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=%s&parseTime=%t&loc=%s&timeout=%s&readTimeout=%s&writeTimeout=%s",
-		conf.Handler.GetString("mysql.auth"),
-		conf.Handler.GetString("mysql.password"),
-		conf.Handler.GetString("mysql.addr"),
-		conf.Handler.GetString("mysql.database"),
-		conf.Handler.GetString("mysql.charset"),
-		conf.Handler.GetBool("mysql.parseTime"),
-		conf.Handler.GetString("mysql.loc"),
-		conf.Handler.GetString("mysql.timeout"),
-		conf.Handler.GetString("mysql.readTimeout"),
-		conf.Handler.GetString("mysql.writeTimeout"),
-	)
-	fmt.Println(dsn)
+	var dsn string
 	RAILWAY_ENVIRONMENT := os.Getenv("RAILWAY_ENVIRONMENT")
-	fmt.Println("RAILWAY_ENVIRONMENT", RAILWAY_ENVIRONMENT)
-	MYSQL_URL := os.Getenv("MYSQL_URL")
-	MYSQLDATABASE := os.Getenv("MYSQLDATABASE")
-	MYSQLHOST := os.Getenv("MYSQLHOST")
-	MYSQLPASSWORD := os.Getenv("MYSQLPASSWORD")
-	MYSQLPORT := os.Getenv("MYSQLPORT")
-	MYSQLUSER := os.Getenv("MYSQLUSER")
-	fmt.Println("MYSQL_URL, MYSQLDATABASE, MYSQLHOST, MYSQLPASSWORD, MYSQLPORT, MYSQLUSER", MYSQL_URL, MYSQLDATABASE, MYSQLHOST, MYSQLPASSWORD, MYSQLPORT, MYSQLUSER)
+	if RAILWAY_ENVIRONMENT == "production" {
+		dsn = fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=%s&parseTime=%t&loc=%s&timeout=%s&readTimeout=%s&writeTimeout=%s",
+			os.Getenv("MYSQLUSER"),
+			os.Getenv("MYSQLPASSWORD"),
+			os.Getenv("MYSQLHOST")+":"+os.Getenv("MYSQLPORT"),
+			conf.Handler.GetString("mysql.database"),
+			conf.Handler.GetString("mysql.charset"),
+			conf.Handler.GetBool("mysql.parseTime"),
+			conf.Handler.GetString("mysql.loc"),
+			conf.Handler.GetString("mysql.timeout"),
+			conf.Handler.GetString("mysql.readTimeout"),
+			conf.Handler.GetString("mysql.writeTimeout"),
+		)
+	} else {
+		dsn = fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=%s&parseTime=%t&loc=%s&timeout=%s&readTimeout=%s&writeTimeout=%s",
+			conf.Handler.GetString("mysql.auth"),
+			conf.Handler.GetString("mysql.password"),
+			conf.Handler.GetString("mysql.addr"),
+			conf.Handler.GetString("mysql.database"),
+			conf.Handler.GetString("mysql.charset"),
+			conf.Handler.GetBool("mysql.parseTime"),
+			conf.Handler.GetString("mysql.loc"),
+			conf.Handler.GetString("mysql.timeout"),
+			conf.Handler.GetString("mysql.readTimeout"),
+			conf.Handler.GetString("mysql.writeTimeout"),
+		)
+	}
+	fmt.Println("dsn=", dsn)
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{Logger: logger.Default.LogMode(logger.LogLevel(conf.Handler.GetInt("mysql.log_mode")))})
 	if err != nil {
 		tlog.Handler.Fatalf(nil, consts.SLTagMysqlFail, "DB init fail")
