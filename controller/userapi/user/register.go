@@ -126,7 +126,6 @@ func transactionRegister(c *gin.Context, email, hashPassword, inviteCode string)
 		curDb.Rollback()
 		return 0, err
 	}
-	curDb.Rollback()
 	if inviteUser != nil {
 		// 邀请人增加10的积分
 		fromAddAmount := 10
