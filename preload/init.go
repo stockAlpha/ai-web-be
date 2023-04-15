@@ -7,14 +7,16 @@ import (
 	"os"
 	"runtime"
 	"runtime/debug"
+	"strconv"
+
 	"stock-web-be/dao/db"
+	"stock-web-be/dao/redis"
 	"stock-web-be/gocommon/conf"
 	"stock-web-be/gocommon/consts"
 	"stock-web-be/gocommon/tlog"
 	"stock-web-be/logic/userapi"
 	"stock-web-be/logic/userapi/notify"
 	"stock-web-be/middleware"
-	"strconv"
 )
 
 /*资源预加载*/
@@ -32,6 +34,7 @@ func Init() {
 	initGOProcs()
 	initPProf()
 	db.InitDB()
+	redis.Init()
 }
 
 func initPProf() {

@@ -56,3 +56,8 @@ sign = "chat_alpha_20220408"
 
 [openai]
 key = "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"
+
+[redis]
+host = "localhost"
+password = ""
+port = "6789"
