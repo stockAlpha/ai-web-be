@@ -35,6 +35,8 @@ func InitDB() {
 		conf.Handler.GetString("mysql.writeTimeout"),
 	)
 	fmt.Println(dsn)
+	RAILWAY_ENVIRONMENT := os.Getenv("RAILWAY_ENVIRONMENT")
+	fmt.Println("RAILWAY_ENVIRONMENT", RAILWAY_ENVIRONMENT)
 	MYSQL_URL := os.Getenv("MYSQL_URL")
 	MYSQLDATABASE := os.Getenv("MYSQLDATABASE")
 	MYSQLHOST := os.Getenv("MYSQLHOST")
