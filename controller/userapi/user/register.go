@@ -116,9 +116,9 @@ func transactionRegister(c *gin.Context, email, hashPassword, inviteCode string)
 		return 0, err
 	}
 
-	// 新注册用户赠送50个积分
+	// 新注册用户赠送30个积分
 	// 判断是否为被邀请用户，如果是则邀请人和被邀请人都增加积分
-	addAmount := 50
+	addAmount := 30
 	inviteUser, err := userapi.GetUserByInviteCode(inviteCode, curDb)
 	if err != nil {
 		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "query user by invite code error")
