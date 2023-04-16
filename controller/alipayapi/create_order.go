@@ -2,6 +2,7 @@ package alipayapi
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/binding"
 	"net/http"
 	"stock-web-be/controller"
 	"stock-web-be/gocommon/consts"
@@ -18,7 +19,7 @@ func CreateOrder(c *gin.Context) {
 	cg := controller.Gin{Ctx: c}
 	var req alipayapi.CreateOrderRequest
 
-	if err := c.ShouldBindJSON(&req); err != nil {
+	if err := c.ShouldBindWith(&req, binding.Form); err != nil {
 		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "request params invalid, error: %s", err.Error())
 		cg.Res(http.StatusBadRequest, controller.ErrnoInvalidPrm)
 		return
