@@ -38,13 +38,13 @@ type FeedbackRequest struct {
 }
 
 type SendPasswordVerificationCodeRequest struct {
-	SubjectType int    `json:"subject_type" default:101` // 可选字段，默认为userapi.ChangePasswordMailCode
-	SubjectName string `json:"subject_name" binding:"required"`
+	SubjectType int    `json:"subjectType" default:101` // 可选字段，默认为userapi.ChangePasswordMailCode
+	SubjectName string `json:"subjectName" binding:"required"`
 }
 
 type ChangePasswordRequest struct {
-	SubjectType      int    `json:"subject_type" default:101` // 可选字段，默认为userapi.ChangePasswordMailCode
-	SubjectName      string `json:"subject_name" binding:"required"`
-	VerificationCode string `json:"verification_code" binding:"required"`
-	NewPassword      string `json:"new_password" binding:"required"`
+	SubjectType      int    `json:"subjectType" default:101` // 可选字段，默认为userapi.ChangePasswordMailCode
+	SubjectName      string `json:"subjectName" binding:"required"`
+	VerificationCode string `json:"verificationCode" binding:"required"`
+	NewPassword      string `json:"newPassword" binding:"required"`
 }
