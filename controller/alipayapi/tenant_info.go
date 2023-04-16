@@ -3,7 +3,6 @@ package alipayapi
 import (
 	"github.com/gin-gonic/gin"
 	"net/http"
-	"stock-web-be/controller"
 	"stock-web-be/idl/alipayapi"
 )
 
@@ -12,7 +11,6 @@ import (
 // @Router		/api/v1/alipay/tenant_info [post]
 // @Response 200 {object} alipayapi.TenantInfoResponse 商户信息
 func TenantInfo(c *gin.Context) {
-	cg := controller.Gin{Ctx: c}
 	response := alipayapi.TenantInfoResponse{
 		MerchantName: "ChatAlpha",
 		MerchantId:   "2021003189689338",
@@ -20,5 +18,7 @@ func TenantInfo(c *gin.Context) {
 		AlipayAppId:  "2021003189689338",
 		AuthRedirect: "https://web-be.stockalpha.top/api/alipay/callback",
 	}
-	cg.Resp(http.StatusOK, controller.ErrnoSuccess, response)
+	c.JSON(http.StatusOK, gin.H{
+		"response": response,
+	})
 }
