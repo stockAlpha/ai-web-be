@@ -25,5 +25,6 @@ func Notify(c *gin.Context) {
 	}
 
 	fmt.Println("req1:", req)
+	fmt.Println("order:", req.OutTradeNo)
 	c.String(http.StatusOK, "success")
 }
