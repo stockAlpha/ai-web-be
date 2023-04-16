@@ -1,64 +1,4 @@
 definitions:
-  alipayapi.CreateOrderRequest:
-    properties:
-      amount:
-        description: 用户支付的金额，精确到小数点后两位
-        type: string
-      auth_code:
-        description: 用户鉴权token，标识用户该次支付身份
-        type: string
-      out_trade_no:
-        description: 外部交易号，用于重复发起创单时的幂等
-        type: string
-      qr_code_id:
-        description: 需创单的聚合收钱码码值
-        type: string
-      remark:
-        description: 用户支付时的备注信息
-        type: string
-      ua:
-        description: 扫码客户端userAgent
-        type: string
-    type: object
-  alipayapi.CreateOrderResponse:
-    properties:
-      alipay_trade_no:
-        description: 该笔交易对应的支付宝交易号
-        type: string
-      amount:
-        description: 实际交易金额，以元为单位
-        type: string
-      merchant_id:
-        description: 商户在支付宝的标识
-        type: string
-      merchant_name:
-        description: 聚合收钱码所属商户名称
-        type: string
-      order_id:
-        description: 服务商商户订单号，与支付宝交易号相对应
-        type: string
-      out_trade_no:
-        description: 创单时传入的外部幂等交易号
-        type: string
-    type: object
-  alipayapi.TenantInfoResponse:
-    properties:
-      alipay_app_id:
-        description: 服务商主体在支付宝的标识
-        type: string
-      auth_redirect:
-        description: 支付宝认证回调地址，为服务商入驻支付宝时与appid绑定的地址
-        type: string
-      merchant_id:
-        description: 商户在支付宝的标识
-        type: string
-      merchant_logo:
-        description: 商家logo图片资源地址
-        type: string
-      merchant_name:
-        description: 商户名称
-        type: string
-    type: object
   integral.BatchGenerateKeyRequest:
     properties:
       count:
@@ -161,6 +101,75 @@ definitions:
       size:
         type: string
       user:
+        type: string
+    type: object
+  payapi.CreateOrderRequest:
+    properties:
+      amount:
+        description: 用户支付的金额，精确到小数点后两位
+        type: string
+      auth_code:
+        description: 用户鉴权token，标识用户该次支付身份
+        type: string
+      out_trade_no:
+        description: 外部交易号，用于重复发起创单时的幂等
+        type: string
+      qr_code_id:
+        description: 需创单的聚合收钱码码值
+        type: string
+      remark:
+        description: 用户支付时的备注信息
+        type: string
+      ua:
+        description: 扫码客户端userAgent
+        type: string
+    type: object
+  payapi.CreateOrderResponse:
+    properties:
+      alipay_trade_no:
+        description: 该笔交易对应的支付宝交易号
+        type: string
+      amount:
+        description: 实际交易金额，以元为单位
+        type: string
+      merchant_id:
+        description: 商户在支付宝的标识
+        type: string
+      merchant_name:
+        description: 聚合收钱码所属商户名称
+        type: string
+      order_id:
+        description: 服务商商户订单号，与支付宝交易号相对应
+        type: string
+      out_trade_no:
+        description: 创单时传入的外部幂等交易号
+        type: string
+    type: object
+  payapi.TenantInfoRequest:
+    properties:
+      qr_code_id:
+        description: 聚合收钱码的码值
+        type: string
+      ua:
+        description: 扫码客户端userAgent
+        type: string
+    type: object
+  payapi.TenantInfoResponse:
+    properties:
+      alipay_app_id:
+        description: 服务商主体在支付宝的标识
+        type: string
+      auth_redirect:
+        description: 支付宝认证回调地址，为服务商入驻支付宝时与appid绑定的地址
+        type: string
+      merchant_id:
+        description: 商户在支付宝的标识
+        type: string
+      merchant_logo:
+        description: 商家logo图片资源地址
+        type: string
+      merchant_name:
+        description: 商户名称
         type: string
     type: object
   user.ChangePasswordRequest:
@@ -287,22 +296,35 @@ paths:
         name: req
         required: true
         schema:
-          $ref: '#/definitions/alipayapi.CreateOrderRequest'
+          $ref: '#/definitions/payapi.CreateOrderRequest'
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/alipayapi.CreateOrderResponse'
+            $ref: '#/definitions/payapi.CreateOrderResponse'
       summary: 创建聚合收钱单
+      tags:
+      - 支付相关接口
+  /api/v1/alipay/notify:
+    post:
+      responses: {}
+      summary: 通知
       tags:
       - 支付相关接口
   /api/v1/alipay/tenant_info:
     post:
+      parameters:
+      - description: 请求参数
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/payapi.TenantInfoRequest'
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/alipayapi.TenantInfoResponse'
+            $ref: '#/definitions/payapi.TenantInfoResponse'
       summary: 聚合收钱码商户信息查询
       tags:
       - 支付相关接口
@@ -412,6 +434,12 @@ paths:
       summary: 生成图片
       tags:
       - 代理OpenAI相关接口
+  /api/v1/pay/pre_create:
+    post:
+      responses: {}
+      summary: 预创建交易订单
+      tags:
+      - 支付相关接口
   /api/v1/user/change_password:
     post:
       parameters:

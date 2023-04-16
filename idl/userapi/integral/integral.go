@@ -17,6 +17,6 @@ type RecordRequest struct {
 }
 
 type BatchGenerateKeyRequest struct {
-	Count int   `json:"count" default:"10"`
-	Type  uint8 `json:"type" default:"1"` // 1代表100积分，2代表500积分，3代表2000积分
+	Count int `json:"count" default:"10"`
+	Type  int `json:"type" default:"1"` // 1代表100积分，2代表500积分，3代表2000积分
 }

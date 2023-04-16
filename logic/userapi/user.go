@@ -1,6 +1,7 @@
 package userapi
 
 import (
+	"github.com/shopspring/decimal"
 	"math/rand"
 	"strconv"
 	"time"
@@ -176,4 +177,21 @@ func GetUserByAuthType(subjectId string, subjectType int) (*db.User, error) {
 		return nil, err
 	}
 	return user, err
+}
+
+func AddOrder(userId uint64, amount decimal.Decimal, productInfo string, transaction *gorm.DB) (uint64, error) {
+	order := &db.Order{
+		FromUserId:  userId,
+		OrderType:   1,
+		Amount:      amount,
+		ProductInfo: productInfo,
+		CreateTime:  time.Now(),
+		UpdateTime:  time.Now(),
+	}
+
+	err := order.InsertOrder(transaction)
+	if err != nil {
+		return 0, err
+	}
+	return order.ID, nil
 }

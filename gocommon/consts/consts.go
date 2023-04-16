@@ -16,11 +16,12 @@ const (
 	SLTagSeverStop           = " _server_stop"
 	SLTagSeverFail           = " _server_fail"
 	SLTagPprofFail           = " _pprof_fail"
-	SLtagJsonMarshal         = " _json_marshal"
+	SLTagJsonMarshal         = " _json_marshal"
 	SLTagNotificationFail    = " _notification_fail"
 	SLTagBrokePipe           = " _broke_pipe"
 	SLTagConnRST             = " _connection_reset_by_peer"
 	SyncStop                 = " _async_ready_stop"
+	SLTagAlipaySuccess       = " _alipay_success"
 )
 
 // for middleware
@@ -80,6 +81,10 @@ const (
 	AlipayPrefix   = "/api/v1/alipay"
 	TenantInfoApi  = "/tenant_info"
 	CreateOrderApi = "/create_order"
+	NotifyApi      = "/notify"
+
+	PayPrefix    = "/api/v1/pay"
+	PreCreateApi = "/pre_create"
 )
 
 // env
