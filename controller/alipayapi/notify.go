@@ -9,6 +9,7 @@ import (
 	"stock-web-be/controller"
 	"stock-web-be/gocommon/consts"
 	"stock-web-be/gocommon/tlog"
+	"stock-web-be/idl/payapi"
 )
 
 // @Tags	alipay支付相关接口
@@ -24,6 +25,20 @@ func Notify(c *gin.Context) {
 		return
 	}
 
-	fmt.Println("notify:", req)
-	cg.Res(http.StatusOK, controller.ErrnoSuccess)
+	fmt.Println("req1:", req)
+
+	if err := c.ShouldBindJSON(&req); err != nil {
+		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "request params invalid, error: %s", err.Error())
+		cg.Res(http.StatusBadRequest, controller.ErrnoInvalidPrm)
+		return
+	}
+
+	fmt.Println("req2:", req)
+	response := payapi.AlipayResponse{
+		Code: "10000",
+		Msg:  "Success",
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"response": response,
+	})
 }
