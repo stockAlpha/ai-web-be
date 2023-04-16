@@ -18,7 +18,7 @@ func Notify(c *gin.Context) {
 	fmt.Println("req body", c.Request.Body)
 	var req alipay.TradeNotification
 
-	if err := c.Bind(&req); err != nil {
+	if err := c.ShouldBind(&req); err != nil {
 		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "request params invalid, error: %s", err.Error())
 		cg.Res(http.StatusBadRequest, controller.ErrnoInvalidPrm)
 		return
