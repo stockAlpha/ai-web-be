@@ -3,11 +3,11 @@ package alipayapi
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"github.com/smartwalle/alipay/v3"
 	"net/http"
 	"stock-web-be/controller"
 	"stock-web-be/gocommon/consts"
 	"stock-web-be/gocommon/tlog"
+	"stock-web-be/idl/payapi"
 )
 
 // @Tags	alipay支付相关接口
@@ -16,7 +16,7 @@ import (
 func Notify(c *gin.Context) {
 	cg := controller.Gin{Ctx: c}
 	fmt.Println("req body", c.Request.Body)
-	var req alipay.TradeNotification
+	var req payapi.NotifyRequest
 
 	if err := c.ShouldBind(&req); err != nil {
 		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "request params invalid, error: %s", err.Error())
