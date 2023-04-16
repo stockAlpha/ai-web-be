@@ -28,9 +28,7 @@ func PreCreate(c *gin.Context) {
 	}
 	client := alipayclient.GetAlipayClient()
 	userId, _ := strconv.ParseUint(c.GetString("user_id"), 10, 64)
-	//amount := utils.GetAmount(req.ProductType)
-	// 测试阶段先都用0.01
-	amount := 0.01
+	amount := utils.GetAmount(req.ProductType)
 	orderId, err := userapi.AddOrder(userId, decimal.NewFromInt(int64(amount)), strconv.Itoa(amount)+"元积分套餐", nil)
 	if err != nil {
 		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "add order error", err.Error())
@@ -39,10 +37,11 @@ func PreCreate(c *gin.Context) {
 	}
 	res, err := client.TradePreCreate(alipay.TradePreCreate{
 		Trade: alipay.Trade{
-			Subject:     "ChatAlpha积分充值",
-			NotifyURL:   "https://web-be-test.stockalpha.top/api/v1/alipay/notify",
-			OutTradeNo:  strconv.FormatUint(orderId, 10),
-			TotalAmount: strconv.Itoa(amount),
+			Subject:    "ChatAlpha积分充值",
+			NotifyURL:  "https://web-be-test.stockalpha.top/api/v1/alipay/notify",
+			OutTradeNo: strconv.FormatUint(orderId, 10),
+			// todo 测试阶段先用0.01
+			TotalAmount: "0.01",
 			ProductCode: "FACE_TO_FACE_PAYMENT",
 		},
 	})
