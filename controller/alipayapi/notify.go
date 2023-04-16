@@ -47,13 +47,8 @@ func Notify(c *gin.Context) {
 		return
 	}
 	existOrder, err := order.GetOrderById(parseOrderId)
-	if err != nil {
-		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "get order error, error: %s", err.Error())
-		c.String(http.StatusOK, "failed")
-		return
-	}
-	if existOrder == nil {
-		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "order not found, orderId: %s", orderId)
+	if err != nil || existOrder == nil {
+		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "order=%s not found, error: %s", orderId, err.Error())
 		c.String(http.StatusOK, "failed")
 		return
 	}
@@ -100,7 +95,7 @@ func Notify(c *gin.Context) {
 		}
 		userId := existOrder.FromUserId
 		user, err := userapi.GetUserById(userId)
-		if err != nil {
+		if err != nil || user == nil {
 			tx.Rollback()
 			tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "userId=%d not found user, error: %s", userId, err.Error())
 			c.String(http.StatusOK, "failed")
