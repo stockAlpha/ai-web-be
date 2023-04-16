@@ -6,4 +6,6 @@ type TenantInfoResponse struct {
 	MerchantId   string `json:"merchant_id"`
 	AlipayAppId  string `json:"alipay_app_id"`
 	AuthRedirect string `json:"auth_redirect"`
+	Code         string `json:"code"`
+	Msg          string `json:"msg"`
 }

@@ -17,10 +17,10 @@ func TenantInfo(c *gin.Context) {
 		MerchantLogo: "https://chatalpha.top/logo.svg",
 		AlipayAppId:  "2021003189689338",
 		AuthRedirect: "https://web-be.stockalpha.top/api/alipay/callback",
+		Code:         "-10000",
+		Msg:          "Success",
 	}
 	c.JSON(http.StatusOK, gin.H{
 		"response": response,
-		"code":     -10000,
-		"msg":      "Success",
 	})
 }
