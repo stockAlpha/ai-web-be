@@ -68,7 +68,10 @@ func (u *UserIntegral) SubAmount(amount int) error {
 	db := DbIns.Table(u.TableName())
 	return db.Transaction(func(tx *gorm.DB) error {
 		if u.Amount >= amount {
-			if err := tx.Model(u).UpdateColumn("amount", gorm.Expr("amount - ?", amount)).Error; err != nil {
+			updateMap := map[string]interface{}{}
+			updateMap["amount"] = gorm.Expr("amount - ?", amount)
+			updateMap["update_time"] = time.Now()
+			if err := tx.Model(u).Updates(updateMap).Error; err != nil {
 				return err
 			}
 			return nil

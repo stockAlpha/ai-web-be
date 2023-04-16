@@ -41,7 +41,25 @@ func (order *Order) UpdateOrderStatus(db *gorm.DB) error {
 	if db == nil {
 		db = DbIns.Table(order.TableName())
 	}
-
+	updateMap := map[string]interface{}{}
+	updateMap["status"] = order.Status
+	updateMap["update_time"] = time.Now()
 	return db.Table(order.TableName()).Where("id = ?", order.ID).
-		Update("status", order.Status).Error
+		Updates(updateMap).Error
+}
+
+func (order *Order) GetOrderById(id uint64) error {
+	db := DbIns.Table(order.TableName())
+
+	err := db.Table(order.TableName()).
+		Where("id = ?", id).
+		Find(order).Error
+
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return nil
+		}
+		return err
+	}
+	return nil
 }

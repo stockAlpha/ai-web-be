@@ -7,10 +7,11 @@ import (
 	"net/http"
 	"stock-web-be/client/alipayclient"
 	"stock-web-be/controller"
+	"stock-web-be/gocommon/conf"
 	"stock-web-be/gocommon/consts"
 	"stock-web-be/gocommon/tlog"
 	"stock-web-be/idl/payapi"
-	"stock-web-be/logic/userapi"
+	"stock-web-be/idl/userapi/order"
 	"stock-web-be/utils"
 	"strconv"
 )
@@ -29,7 +30,7 @@ func PreCreate(c *gin.Context) {
 	client := alipayclient.GetAlipayClient()
 	userId, _ := strconv.ParseUint(c.GetString("user_id"), 10, 64)
 	amount := utils.GetAmount(req.ProductType)
-	orderId, err := userapi.AddOrder(userId, decimal.NewFromInt(int64(amount)), strconv.Itoa(amount)+"元积分套餐", nil)
+	orderId, err := order.AddOrder(userId, decimal.NewFromInt(int64(amount)), strconv.Itoa(amount)+"元积分套餐", nil)
 	if err != nil {
 		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "add order error", err.Error())
 		cg.Resp(http.StatusBadRequest, controller.ErrCreateOrder, "创建订单失败，请重试或者联系客服")
@@ -38,9 +39,9 @@ func PreCreate(c *gin.Context) {
 	res, err := client.TradePreCreate(alipay.TradePreCreate{
 		Trade: alipay.Trade{
 			Subject:    "ChatAlpha积分充值",
-			NotifyURL:  "https://web-be-test.stockalpha.top/api/v1/alipay/notify",
+			NotifyURL:  conf.Handler.GetString("alipay.notify_url"),
 			OutTradeNo: strconv.FormatUint(orderId, 10),
-			// todo 测试阶段先用0.01
+			// todo: 测试阶段先用0.01
 			TotalAmount: "0.01",
 			ProductCode: "FACE_TO_FACE_PAYMENT",
 		},

@@ -13,7 +13,7 @@ idleTimeout = 60000      # Keep-alive timeout(ms), default 60000
 [httpclient]
 maxIdleConns = 10              # MaxIdleConns controls the maximum number of idle (keep-alive) connections across all hosts. Zero means no integral.
 maxIdleConnsPerHost = 10       # MaxIdleConnsPerHost, if non-zero, controls the maximum idle (keep-alive) connections to keep per-host. If zero, DefaultMaxIdleConnsPerHost is used.
-maxConnsPerHost = 20	       # MaxConnsPerHost optionally limits the total number of connections per host, including connections in the dialing, active, and idle states. On integral violation, dials will block. Zero means no integral.
+maxConnsPerHost = 20           # MaxConnsPerHost optionally limits the total number of connections per host, including connections in the dialing, active, and idle states. On integral violation, dials will block. Zero means no integral.
 idleConnTimeout = 120            #IdleConnTimeout is the maximum amount of time an idle (keep-alive) connection will remain idle before closing itself. Zero means no integral.
 timeout = 5000                 #Time(ms) for Establishing tcp connection, sending request, and reading response.
 
@@ -23,7 +23,7 @@ port = ":9090"
 [log]
 filePrefix = "log/info"          # 日志文件前缀
 fileSuffix = ".log"              # 日志文件后缀
-maxHourAge    = 168                    # 默认日志保留168小时（7天）
+maxHourAge = 168                    # 默认日志保留168小时（7天）
 maxHourRotate = 1                      # 默认日志按小时切分
 level = "info"
 
@@ -61,3 +61,6 @@ key = "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"
 host = "localhost"
 password = ""
 port = "10000"
+
+[alipay]
+notify_url = "localhost:8180/api/v1/alipay/notify"

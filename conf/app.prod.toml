@@ -61,3 +61,6 @@ key = "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"
 host = "localhost"
 password = ""
 port = "6789"
+
+[alipay]
+notify_url = "https://web-be.stockalpha.top/api/v1/alipay/notify"

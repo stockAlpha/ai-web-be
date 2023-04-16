@@ -62,39 +62,48 @@ type CreateOrderResponse struct {
 	Amount        string `json:"amount"`          // 实际交易金额，以元为单位
 }
 
+type TradeStatus string
+
+const (
+	TradeStatusWaitBuyerPay TradeStatus = "WAIT_BUYER_PAY" //（交易创建，等待买家付款）
+	TradeStatusClosed       TradeStatus = "TRADE_CLOSED"   //（未付款交易超时关闭，或支付完成后全额退款）
+	TradeStatusSuccess      TradeStatus = "TRADE_SUCCESS"  //（交易支付成功）
+	TradeStatusFinished     TradeStatus = "TRADE_FINISHED" //（交易结束，不可退款）
+)
+
 type NotifyRequest struct {
-	AuthAppId           string `form:"auth_app_id"`           // App Id
-	NotifyTime          string `form:"notify_time"`           // 通知时间
-	NotifyType          string `form:"notify_type"`           // 通知类型
-	NotifyId            string `form:"notify_id"`             // 通知校验ID
-	AppId               string `form:"app_id"`                // 开发者的app_id
-	Charset             string `form:"charset"`               // 编码格式
-	Version             string `form:"version"`               // 接口版本
-	SignType            string `form:"sign_type"`             // 签名类型
-	Sign                string `form:"sign"`                  // 签名
-	TradeNo             string `form:"trade_no"`              // 支付宝交易号
-	OutTradeNo          string `form:"out_trade_no"`          // 商户订单号
-	OutBizNo            string `form:"out_biz_no"`            // 商户业务号
-	BuyerId             string `form:"buyer_id"`              // 买家支付宝用户号
-	BuyerLogonId        string `form:"buyer_logon_id"`        // 买家支付宝账号
-	SellerId            string `form:"seller_id"`             // 卖家支付宝用户号
-	SellerEmail         string `form:"seller_email"`          // 卖家支付宝账号
-	TradeStatus         string `form:"trade_status"`          // 交易状态
-	TotalAmount         string `form:"total_amount"`          // 订单金额
-	ReceiptAmount       string `form:"receipt_amount"`        // 实收金额
-	InvoiceAmount       string `form:"invoice_amount"`        // 开票金额
-	BuyerPayAmount      string `form:"buyer_pay_amount"`      // 付款金额
-	PointAmount         string `form:"point_amount"`          // 集分宝金额
-	RefundFee           string `form:"refund_fee"`            // 总退款金额
-	Subject             string `form:"subject"`               // 商品的标题/交易标题/订单标题/订单关键字等，是请求时对应的参数，原样通知回来。
-	Body                string `form:"body"`                  // 商品描述
-	GmtCreate           string `form:"gmt_create"`            // 交易创建时间
-	GmtPayment          string `form:"gmt_payment"`           // 交易付款时间
-	GmtRefund           string `form:"gmt_refund"`            // 交易退款时间
-	GmtClose            string `form:"gmt_close"`             // 交易结束时间
-	FundBillList        string `form:"fund_bill_list"`        // 支付金额信息
-	PassbackParams      string `form:"passback_params"`       // 回传参数
-	VoucherDetailList   string `form:"voucher_detail_list"`   // 优惠券信息
-	AgreementNo         string `form:"agreement_no"`          //支付宝签约号
-	ExternalAgreementNo string `form:"external_agreement_no"` // 商户自定义签约号
+	AuthAppId           string      `form:"auth_app_id"`           // App Id
+	NotifyTime          string      `form:"notify_time"`           // 通知时间
+	NotifyType          string      `form:"notify_type"`           // 通知类型
+	NotifyId            string      `form:"notify_id"`             // 通知校验ID
+	AppId               string      `form:"app_id"`                // 开发者的app_id
+	Charset             string      `form:"charset"`               // 编码格式
+	Version             string      `form:"version"`               // 接口版本
+	SignType            string      `form:"sign_type"`             // 签名类型
+	Sign                string      `form:"sign"`                  // 签名
+	TradeNo             string      `form:"trade_no"`              // 支付宝交易号
+	OutTradeNo          string      `form:"out_trade_no"`          // 商户订单号
+	OutBizNo            string      `form:"out_biz_no"`            // 商户业务号
+	BuyerId             string      `form:"buyer_id"`              // 买家支付宝用户号
+	BuyerLogonId        string      `form:"buyer_logon_id"`        // 买家支付宝账号
+	SellerId            string      `form:"seller_id"`             // 卖家支付宝用户号
+	SellerEmail         string      `form:"seller_email"`          // 卖家支付宝账号
+	TradeStatus         TradeStatus `form:"trade_status"`          // 交易状态
+	TotalAmount         string      `form:"total_amount"`          // 订单金额
+	ReceiptAmount       string      `form:"receipt_amount"`        // 实收金额
+	InvoiceAmount       string      `form:"invoice_amount"`        // 开票金额
+	BuyerPayAmount      string      `form:"buyer_pay_amount"`      // 付款金额
+	PointAmount         string      `form:"point_amount"`          // 集分宝金额
+	RefundFee           string      `form:"refund_fee"`            // 总退款金额
+	Subject             string      `form:"subject"`               // 商品的标题/交易标题/订单标题/订单关键字等，是请求时对应的参数，原样通知回来。
+	Body                string      `form:"body"`                  // 商品描述
+	GmtCreate           string      `form:"gmt_create"`            // 交易创建时间
+	GmtPayment          string      `form:"gmt_payment"`           // 交易付款时间
+	GmtRefund           string      `form:"gmt_refund"`            // 交易退款时间
+	GmtClose            string      `form:"gmt_close"`             // 交易结束时间
+	FundBillList        string      `form:"fund_bill_list"`        // 支付金额信息
+	PassbackParams      string      `form:"passback_params"`       // 回传参数
+	VoucherDetailList   string      `form:"voucher_detail_list"`   // 优惠券信息
+	AgreementNo         string      `form:"agreement_no"`          //支付宝签约号
+	ExternalAgreementNo string      `form:"external_agreement_no"` // 商户自定义签约号
 }
