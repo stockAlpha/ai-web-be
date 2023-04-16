@@ -28,8 +28,9 @@ func PreCreate(c *gin.Context) {
 	}
 	client := alipayclient.GetAlipayClient()
 	userId, _ := strconv.ParseUint(c.GetString("user_id"), 10, 64)
-	amount := utils.GetAmount(req.ProductType)
-
+	//amount := utils.GetAmount(req.ProductType)
+	// 测试阶段先都用0.01
+	amount := 0.01
 	orderId, err := userapi.AddOrder(userId, decimal.NewFromInt(int64(amount)), strconv.Itoa(amount)+"元积分套餐", nil)
 	if err != nil {
 		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "add order error", err.Error())
