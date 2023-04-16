@@ -80,6 +80,9 @@ const (
 	ErrRegister                 = 40116
 	ErrIntegralNotEnough        = 40117
 	ErrServer                   = 40118
+	ErrUserSubjectIdNotFound    = 40119
+	ErrPasswordNotChange        = 40120
+	ErrChangePassword           = 40121
 )
 
 var ErrMsg = map[int]string{
@@ -106,6 +109,9 @@ var ErrMsg = map[int]string{
 	ErrRegister:                 "注册失败",
 	ErrIntegralNotEnough:        "积分不足，请点击左下角设置进行充值",
 	ErrServer:                   "服务器开小车了～，请重试一次",
+	ErrUserSubjectIdNotFound:    "用户不存在",
+	ErrPasswordNotChange:        "旧密码与新密码相同",
+	ErrChangePassword:           "修改用户密码失败",
 }
 
 // EchoJSON json格式输出

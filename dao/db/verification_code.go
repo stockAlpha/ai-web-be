@@ -2,6 +2,7 @@ package db
 
 import (
 	"errors"
+	"gorm.io/gorm"
 	"time"
 )
 
@@ -41,4 +42,32 @@ func (code *VerificationCode) GetSendCodeByEmailAndCode(email string, realCode s
 		Scan(&list).Error
 
 	return list, err
+}
+
+func (code *VerificationCode) GetSendCodeByCodeType(email string, realCode string, codeType int) ([]*VerificationCode, error) {
+	db := DbIns.Table(code.TableName())
+	var list []*VerificationCode
+	err := db.Where("send_subject_name = ?", email).
+		Where("code = ?", realCode).
+		Where("send_subject_type = ?", codeType).
+		Where("expire_time > ?", time.Now()).
+		Scan(&list).Error
+
+	return list, err
+}
+
+func (code *VerificationCode) UpdateByCode(db *gorm.DB) error {
+	if db == nil {
+		db = DbIns.Table(code.TableName())
+	}
+
+	updateMap := map[string]interface{}{}
+	if !code.ExpireTime.IsZero() {
+		updateMap["expire_time"] = code.ExpireTime
+	}
+	return db.Table(code.TableName()).Where("send_subject_name = ?", code.SendSubjectName).
+		Where("send_subject_type = ?", code.SendSubjectType).
+		Where("code = ?", code.Code).
+		Updates(updateMap).
+		Error
 }

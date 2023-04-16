@@ -49,6 +49,15 @@ func (user *User) UpdateUser() {
 	db.Updates(updateMap)
 }
 
+func (user *User) UpdateUserPassword(db *gorm.DB) error {
+	if db == nil {
+		db = DbIns.Table(user.TableName())
+	}
+
+	return db.Table(user.TableName()).Where("id = ?", user.ID).
+		Update("password", user.Password).Error
+}
+
 func (user *User) GetUserByEmail(email string) error {
 	db := DbIns.Table(user.TableName())
 
