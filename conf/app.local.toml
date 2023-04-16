@@ -45,12 +45,39 @@ max_open_conns = 10
 #log
 log_mode = 4
 
-[mail]
+[mail_outlook]
 from = "chatalpha@outlook.com"
 password = "li197910"
 smtpServer = "smtp.office365.com"
 smtpPort = "587"
 
+[mail_163]
+from = "chatalpha@163.com"
+password = "IVPXQEEDLZZCDMRH"
+auth = "IVPXQEEDLZZCDMRH"
+smtpServer = "smtp.163.com"
+smtpPort = "25"
+
+[mail_qq]
+from = "chatalpha@qq.com"
+password = "li197910"
+auth = ""
+smtpServer = "smtp.qq.com"
+smtpPort = "25"
+
+[mail_sohu]
+from = "chatalpha@sohu.com"
+password = "U8N9S37MAE2R"
+auth = ""
+smtpServer = "smtp.sohu.com"
+smtpPort = "25"
+
+[mail_sina]
+from = "chatalpha@sina.com"
+password = "d97191c491340f68"
+auth = ""
+smtpServer = "smtp.sina.com"
+smtpPort = "25"
 [jwt]
 sign = "your-secret-key"
 
