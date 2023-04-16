@@ -45,8 +45,6 @@ var NotAuthApisMap = map[string]string{
 	UserPrefix + SendPasswordVerificationCodeApi: UserPrefix + SendPasswordVerificationCodeApi,
 	UserPrefix + ChangePasswordApi:               UserPrefix + ChangePasswordApi,
 	IntegralPrefix + ManualRechargeApi:           IntegralPrefix + ManualRechargeApi,
-	AlipayPrefix + TenantInfoApi:                 AlipayPrefix + TenantInfoApi,
-	AlipayPrefix + CreateOrderApi:                AlipayPrefix + CreateOrderApi,
 	AlipayPrefix + NotifyApi:                     AlipayPrefix + NotifyApi,
 	"/public/*filepath":                          "/public/*filepath",
 	"/favicon.ico":                               "/favicon.ico",
@@ -79,10 +77,8 @@ const (
 	ImageApi             = "/v1/image"
 	AudioApi             = "/v1/audio"
 
-	AlipayPrefix   = "/api/v1/alipay"
-	TenantInfoApi  = "/tenant_info"
-	CreateOrderApi = "/create_order"
-	NotifyApi      = "/notify"
+	AlipayPrefix = "/api/v1/alipay"
+	NotifyApi    = "/notify"
 
 	PayPrefix    = "/api/v1/pay"
 	PreCreateApi = "/pre_create"
