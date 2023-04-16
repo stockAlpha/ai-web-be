@@ -13,7 +13,7 @@ type Order struct {
 	OrderType   int             `gorm:"column:order_type" json:"order_type"`     // 充值类型，1为积分
 	Amount      decimal.Decimal `gorm:"column:amount" json:"amount"`             // 订单金额
 	Status      int             `gorm:"column:status" json:"status"`             // 订单状态，1为待支付，2为已支付，3为已取消
-	ProductInfo string          `gorm:"column:product_info" json:"product_info"` // 商品信息
+	ProductInfo string          `gorm:"column:product_info" json:"product_info"` // 商品信息, 目前记录充值积分的数量
 	CreateTime  time.Time       `gorm:"column:create_time" json:"create_time"`
 	UpdateTime  time.Time       `gorm:"column:update_time" json:"update_time"`
 }

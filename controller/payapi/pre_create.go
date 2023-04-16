@@ -5,6 +5,7 @@ import (
 	"github.com/shopspring/decimal"
 	"github.com/smartwalle/alipay/v3"
 	"net/http"
+	"os"
 	"stock-web-be/client/alipayclient"
 	"stock-web-be/controller"
 	"stock-web-be/gocommon/conf"
@@ -12,6 +13,7 @@ import (
 	"stock-web-be/gocommon/tlog"
 	"stock-web-be/idl/payapi"
 	"stock-web-be/idl/userapi/order"
+	"stock-web-be/utils"
 	"strconv"
 )
 
@@ -39,19 +41,23 @@ func PreCreate(c *gin.Context) {
 	default:
 		amount = 10
 	}
-	orderId, err := order.AddOrder(userId, decimal.NewFromInt(int64(amount)), strconv.Itoa(amount), nil)
+	orderId, err := order.AddOrder(userId, decimal.NewFromInt(int64(amount)), strconv.Itoa(utils.GetAmount(req.ProductType)), nil)
 	if err != nil {
 		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "add order error", err.Error())
 		cg.Resp(http.StatusBadRequest, controller.ErrCreateOrder, "创建订单失败，请重试或者联系客服")
 		return
 	}
+	totalAmount := "0.01"
+	if os.Getenv(consts.Env) == "prod" {
+		// 线上环境走真实金额
+		totalAmount = strconv.Itoa(amount)
+	}
 	res, err := client.TradePreCreate(alipay.TradePreCreate{
 		Trade: alipay.Trade{
-			Subject:    "ChatAlpha积分充值",
-			NotifyURL:  conf.Handler.GetString("alipay.notify_url"),
-			OutTradeNo: strconv.FormatUint(orderId, 10),
-			// todo: 测试阶段先用0.01
-			TotalAmount: "0.01",
+			Subject:     "ChatAlpha积分充值",
+			NotifyURL:   conf.Handler.GetString("alipay.notify_url"),
+			OutTradeNo:  strconv.FormatUint(orderId, 10),
+			TotalAmount: totalAmount,
 			ProductCode: "FACE_TO_FACE_PAYMENT",
 		},
 	})

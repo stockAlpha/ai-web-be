@@ -5,6 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/shopspring/decimal"
 	"net/http"
+	"os"
 	"stock-web-be/async"
 	"stock-web-be/client/alipayclient"
 	"stock-web-be/controller"
@@ -62,16 +63,18 @@ func Notify(c *gin.Context) {
 		c.String(http.StatusOK, "failed")
 		return
 	}
-	// 0.01为测试使用
-	if !decimalAmount.Equal(decimal.NewFromFloat(0.01)) && !decimalAmount.Equal(existOrder.Amount) {
-		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "order amount not match req: %v, error: %s", req, err.Error())
-		c.String(http.StatusOK, "failed")
-		return
+	// 线上环境校验金额是否匹配
+	if os.Getenv(consts.Env) == "prod" {
+		if !decimalAmount.Equal(existOrder.Amount) {
+			tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "order amount not match req: %v, error: %s", req, err.Error())
+			c.String(http.StatusOK, "failed")
+			return
+		}
 	}
 
 	tx := db.DbIns.Begin()
 
-	// 修改订单状态
+	// 修改订单状态,充值积分
 	status := req.TradeStatus
 	if status == "TRADE_SUCCESS" || status == "TRADE_FINISHED" {
 		err = order.UpdateOrderStatus(parseOrderId, 1, tx)
