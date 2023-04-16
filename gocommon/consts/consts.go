@@ -83,11 +83,11 @@ const (
 
 const (
 	RechargeNotifySubject = "ChatAlpha 积分充值成功通知"
-	RechargeNotifyContent = "尊敬的 ChatAlpha 用户\n\n您好！感谢您使用 ChatAlpha 服务。\n\n我们很高兴地告诉您，您的账户已经成功充值了 %d 积分，这些积分可以用于对话等操作。充值成功后积分会即时到账，您可以随时查看积分余额。\n\n如有任何问题或疑问，请随时联系我们的客服团队，我们将尽快为您解决问题。\n\n谢谢！\n\nChatAlpha 团队"
+	RechargeNotifyContent = "尊敬的 ChatAlpha 用户\n\n您好！感谢您使用 ChatAlpha 服务。\n\n我们很高兴地告诉您，您的账户已经成功充值了 %d 积分，这些积分可以用于对话等操作。充值成功后积分会即时到账，您可以随时查看积分余额。\n\n如有任何疑问或需要帮助，请随时邮件联系我们。\n\n谢谢！\n\nChatAlpha 团队"
 
 	SendCodeSubject = "ChatAlpha 验证码邮件"
-	SendCodeContent = "尊敬的 ChatAlpha 用户\n\n您好！感谢您使用 ChatAlpha 服务。\n\n为了确保您的账户安全，我们已向您发送了一封验证码邮件，请勿将验证码泄露给他人。验证码用于验证您的身份，并防止恶意攻击。\n\n验证码：【%s】\n\n如果您没有进行任何操作，或者不希望继续使用 ChatAlpha 服务，请忽略此邮件。\n\n如有任何问题或疑问，请随时联系我们的客服团队，我们将尽快为您解决问题。\n\n谢谢！\n\nChatAlpha 团队"
+	SendCodeContent = "尊敬的 ChatAlpha 用户\n\n您好！感谢您使用 ChatAlpha 服务。\n\n为了确保您的账户安全，我们已向您发送了一封验证码邮件，请勿将验证码泄露给他人。验证码用于验证您的身份，并防止恶意攻击。\n\n验证码：【%s】\n\n如果您没有进行任何操作，或者不希望继续使用 ChatAlpha 服务，请忽略此邮件。\n\n如有任何疑问或需要帮助，请随时邮件联系我们。\n\n谢谢！\n\nChatAlpha 团队"
 
 	InviteSubject = "ChatAlpha 邀请注册成功通知"
-	InviteContent = "尊敬的 ChatAlpha 用户，\n\n您好！感谢您使用 ChatAlpha 服务，并成功邀请了新用户加入我们的平台。\n\n我们很高兴地告诉您，您邀请的用户【%s】已经成功进行了注册，我们已经为您的账户充值了 %d 积分作为奖励，这些积分可以用于对话等操作。充值成功后积分会即时到账，您可以随时查看积分余额。\n\n如有任何问题或疑问，请随时联系我们的客服团队，我们将尽快为您解决问题。\n\n谢谢！\n\nChatAlpha 团队"
+	InviteContent = "尊敬的 ChatAlpha 用户\n\n您好！感谢您使用 ChatAlpha 服务，并成功邀请了新用户加入我们的平台。\n\n我们很高兴地告诉您，您邀请的用户【%s】已经成功进行了注册，我们已经为您的账户充值了 %d 积分作为奖励，这些积分可以用于对话等操作。充值成功后积分会即时到账，您可以随时查看积分余额。\n\n如有任何疑问或需要帮助，请随时邮件联系我们。\n\n谢谢！\n\nChatAlpha 团队"
 )

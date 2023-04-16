@@ -8,11 +8,12 @@ import (
 )
 
 type UserIntegral struct {
-	ID         uint64    `gorm:"primary_key" json:"id"`
-	UserId     uint64    `gorm:"column:user_id" json:"user_id"`
-	Amount     int       `gorm:"column:amount" json:"amount"`
-	CreateTime time.Time `gorm:"column:create_time" json:"create_time"`
-	UpdateTime time.Time `gorm:"column:update_time" json:"update_time"`
+	ID          uint64    `gorm:"primary_key" json:"id"`
+	UserId      uint64    `gorm:"column:user_id" json:"user_id"`
+	Amount      int       `gorm:"column:amount" json:"amount"`
+	TotalAmount int       `gorm:"column:total_amount" json:"total_amount"`
+	CreateTime  time.Time `gorm:"column:create_time" json:"create_time"`
+	UpdateTime  time.Time `gorm:"column:update_time" json:"update_time"`
 }
 
 func (u *UserIntegral) TableName() string {
@@ -54,7 +55,10 @@ func (u *UserIntegral) AddAmount(amount int, db *gorm.DB) error {
 	if db == nil {
 		db = DbIns.Table(u.TableName())
 	}
-	if err := db.Model(u).UpdateColumn("amount", gorm.Expr("amount + ?", amount)).Error; err != nil {
+	updateMap := map[string]interface{}{}
+	updateMap["amount"] = gorm.Expr("amount + ?", amount)
+	updateMap["total_amount"] = gorm.Expr("total_amount + ?", amount)
+	if err := db.Model(u).Updates(updateMap).Error; err != nil {
 		return err
 	}
 	return nil

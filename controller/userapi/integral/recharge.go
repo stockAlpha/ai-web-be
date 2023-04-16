@@ -51,11 +51,11 @@ func Recharge(c *gin.Context) {
 	amount := 0
 	switch rechargeKey.Type {
 	case 1:
-		amount = 50
+		amount = 100
 	case 2:
-		amount = 200
+		amount = 500
 	case 3:
-		amount = 1000
+		amount = 2000
 	case 4:
 		amount = 10000
 	default:

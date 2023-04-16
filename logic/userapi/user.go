@@ -54,11 +54,11 @@ func GetUserIntegralByUserId(userId uint64, transaction *gorm.DB) (*db.UserInteg
 
 func CreateUserIntegral(userId uint64, amount int, transaction *gorm.DB) (db.UserIntegral, error) {
 	integral := db.UserIntegral{
-		UserId: userId,
-		// 初始化10积分
-		Amount:     amount,
-		UpdateTime: time.Now(),
-		CreateTime: time.Now(),
+		UserId:      userId,
+		Amount:      amount,
+		TotalAmount: amount,
+		UpdateTime:  time.Now(),
+		CreateTime:  time.Now(),
 	}
 	err := integral.InsertUserIntegral(transaction)
 	if err != nil {
