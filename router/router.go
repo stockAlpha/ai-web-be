@@ -2,6 +2,7 @@ package router
 
 import (
 	"net/http"
+	"stock-web-be/controller/alipayapi"
 
 	"stock-web-be/controller/openaiapi/chat"
 	"stock-web-be/controller/userapi/integral"
@@ -45,6 +46,7 @@ func Register(r *gin.Engine) *gin.Engine {
 	registerUser(r.Group(consts.UserPrefix))
 	registerIntegral(r.Group(consts.IntegralPrefix))
 	registerOpenAI(r.Group(consts.OpenaiPrefix))
+	registerAlipay(r.Group(consts.AlipayPrefix))
 	return r
 }
 
@@ -78,4 +80,8 @@ func registerOpenAI(group *gin.RouterGroup) {
 	group.POST(consts.OpenaiCompletionsApi, chat.Completions)
 	group.POST(consts.ImageApi, chat.Image)
 	group.POST(consts.AudioApi, chat.Audio)
+}
+
+func registerAlipay(group *gin.RouterGroup) {
+	group.POST(consts.TenantInfoApi, alipayapi.TenantInfo)
 }

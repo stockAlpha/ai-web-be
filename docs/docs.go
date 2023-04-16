@@ -16,6 +16,22 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/api/v1/alipay/tenant_info": {
+            "post": {
+                "tags": [
+                    "支付相关接口"
+                ],
+                "summary": "获取商家信息",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/alipayapi.TenantInfoResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/integral/generate_key": {
             "post": {
                 "tags": [
@@ -41,7 +57,7 @@ const docTemplate = `{
                 "tags": [
                     "积分相关接口"
                 ],
-                "summary": "手动充值",
+                "summary": "手动充值(管理员使用)",
                 "parameters": [
                     {
                         "description": "手动充值请求参数",
@@ -172,6 +188,46 @@ const docTemplate = `{
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/openai.ImageRequest"
+                        }
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/api/v1/user/change_password": {
+            "post": {
+                "tags": [
+                    "用户相关接口"
+                ],
+                "summary": "用户修改密码",
+                "parameters": [
+                    {
+                        "description": "发送验证码请求参数(默认为email)",
+                        "name": "req",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/user.ChangePasswordRequest"
+                        }
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/api/v1/user/change_password/verify/code": {
+            "post": {
+                "tags": [
+                    "用户相关接口"
+                ],
+                "summary": "在忘记密码时发送验证码",
+                "parameters": [
+                    {
+                        "description": "发送验证码请求参数(默认为email)",
+                        "name": "req",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/user.SendPasswordVerificationCodeRequest"
                         }
                     }
                 ],
@@ -314,6 +370,26 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "alipayapi.TenantInfoResponse": {
+            "type": "object",
+            "properties": {
+                "alipay_app_id": {
+                    "type": "string"
+                },
+                "auth_redirect": {
+                    "type": "string"
+                },
+                "merchant_id": {
+                    "type": "string"
+                },
+                "merchant_logo": {
+                    "type": "string"
+                },
+                "merchant_name": {
+                    "type": "string"
+                }
+            }
+        },
         "integral.BatchGenerateKeyRequest": {
             "type": "object",
             "properties": {
@@ -322,7 +398,7 @@ const docTemplate = `{
                     "default": 10
                 },
                 "type": {
-                    "description": "1代表100积分，2代表500积分，3代表1000积分",
+                    "description": "1代表100积分，2代表500积分，3代表2000积分",
                     "type": "integer",
                     "default": 1
                 }
@@ -463,6 +539,29 @@ const docTemplate = `{
                 }
             }
         },
+        "user.ChangePasswordRequest": {
+            "type": "object",
+            "required": [
+                "newPassword",
+                "subjectName",
+                "verificationCode"
+            ],
+            "properties": {
+                "newPassword": {
+                    "type": "string"
+                },
+                "subjectName": {
+                    "type": "string"
+                },
+                "subjectType": {
+                    "description": "可选字段，默认为userapi.ChangePasswordMailCode",
+                    "type": "integer"
+                },
+                "verificationCode": {
+                    "type": "string"
+                }
+            }
+        },
         "user.FeedbackRequest": {
             "type": "object",
             "required": [
@@ -566,6 +665,21 @@ const docTemplate = `{
                     "description": "可选字段，默认为email",
                     "type": "string",
                     "default": "email"
+                }
+            }
+        },
+        "user.SendPasswordVerificationCodeRequest": {
+            "type": "object",
+            "required": [
+                "subjectName"
+            ],
+            "properties": {
+                "subjectName": {
+                    "type": "string"
+                },
+                "subjectType": {
+                    "description": "可选字段，默认为userapi.ChangePasswordMailCode",
+                    "type": "integer"
                 }
             }
         },

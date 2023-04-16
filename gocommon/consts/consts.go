@@ -44,6 +44,7 @@ var NotAuthApisMap = map[string]string{
 	UserPrefix + SendPasswordVerificationCodeApi: UserPrefix + SendPasswordVerificationCodeApi,
 	UserPrefix + ChangePasswordApi:               UserPrefix + ChangePasswordApi,
 	IntegralPrefix + ManualRechargeApi:           IntegralPrefix + ManualRechargeApi,
+	AlipayPrefix + TenantInfoApi:                 AlipayPrefix + TenantInfoApi,
 	"/public/*filepath":                          "/public/*filepath",
 	"/favicon.ico":                               "/favicon.ico",
 	"/swagger/*any":                              "/swagger/*any",
@@ -74,6 +75,9 @@ const (
 	OpenaiCompletionsApi = "/v1/chat/completions"
 	ImageApi             = "/v1/image"
 	AudioApi             = "/v1/audio"
+
+	AlipayPrefix  = "/api/v1/alipay"
+	TenantInfoApi = "/tenant_info"
 )
 
 // env
