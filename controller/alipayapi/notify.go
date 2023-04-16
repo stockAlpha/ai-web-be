@@ -3,7 +3,6 @@ package alipayapi
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"github.com/gin-gonic/gin/binding"
 	"github.com/smartwalle/alipay/v3"
 	"net/http"
 	"stock-web-be/controller"
@@ -17,14 +16,10 @@ import (
 // @Router		/api/v1/alipay/notify [post]
 func Notify(c *gin.Context) {
 	cg := controller.Gin{Ctx: c}
-	fmt.Println("req", c.Request)
 	fmt.Println("req body", c.Request.Body)
-	fmt.Println("req form", c.Request.Form)
-	fmt.Println("req url", c.Request.URL)
-	fmt.Println("req postForm", c.Request.PostForm)
 	var req alipay.TradeNotification
 
-	if err := c.ShouldBindWith(&req, binding.FormPost); err != nil {
+	if err := c.Bind(&req); err != nil {
 		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "request params invalid, error: %s", err.Error())
 		cg.Res(http.StatusBadRequest, controller.ErrnoInvalidPrm)
 		return
