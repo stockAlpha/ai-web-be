@@ -19,7 +19,7 @@ func Notify(c *gin.Context) {
 	cg := controller.Gin{Ctx: c}
 	var req alipay.TradeNotification
 
-	if err := c.ShouldBindWith(&req, binding.Form); err != nil {
+	if err := c.ShouldBindWith(&req, binding.FormPost); err != nil {
 		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "request params invalid, error: %s", err.Error())
 		cg.Res(http.StatusBadRequest, controller.ErrnoInvalidPrm)
 		return
@@ -27,13 +27,6 @@ func Notify(c *gin.Context) {
 
 	fmt.Println("req1:", req)
 
-	if err := c.ShouldBindJSON(&req); err != nil {
-		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "request params invalid, error: %s", err.Error())
-		cg.Res(http.StatusBadRequest, controller.ErrnoInvalidPrm)
-		return
-	}
-
-	fmt.Println("req2:", req)
 	response := payapi.AlipayResponse{
 		Code: "10000",
 		Msg:  "Success",
