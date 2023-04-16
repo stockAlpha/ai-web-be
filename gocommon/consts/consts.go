@@ -45,6 +45,7 @@ var NotAuthApisMap = map[string]string{
 	UserPrefix + ChangePasswordApi:               UserPrefix + ChangePasswordApi,
 	IntegralPrefix + ManualRechargeApi:           IntegralPrefix + ManualRechargeApi,
 	AlipayPrefix + TenantInfoApi:                 AlipayPrefix + TenantInfoApi,
+	AlipayPrefix + CreateOrderApi:                AlipayPrefix + CreateOrderApi,
 	"/public/*filepath":                          "/public/*filepath",
 	"/favicon.ico":                               "/favicon.ico",
 	"/swagger/*any":                              "/swagger/*any",
@@ -76,8 +77,9 @@ const (
 	ImageApi             = "/v1/image"
 	AudioApi             = "/v1/audio"
 
-	AlipayPrefix  = "/api/v1/alipay"
-	TenantInfoApi = "/tenant_info"
+	AlipayPrefix   = "/api/v1/alipay"
+	TenantInfoApi  = "/tenant_info"
+	CreateOrderApi = "/create_order"
 )
 
 // env

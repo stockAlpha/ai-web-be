@@ -84,4 +84,5 @@ func registerOpenAI(group *gin.RouterGroup) {
 
 func registerAlipay(group *gin.RouterGroup) {
 	group.POST(consts.TenantInfoApi, alipayapi.TenantInfo)
+	group.POST(consts.CreateOrderApi, alipayapi.CreateOrder)
 }
