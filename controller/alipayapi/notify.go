@@ -8,7 +8,6 @@ import (
 	"stock-web-be/controller"
 	"stock-web-be/gocommon/consts"
 	"stock-web-be/gocommon/tlog"
-	"stock-web-be/idl/payapi"
 )
 
 // @Tags	alipay支付相关接口
@@ -26,12 +25,5 @@ func Notify(c *gin.Context) {
 	}
 
 	fmt.Println("req1:", req)
-
-	response := payapi.AlipayResponse{
-		Code: "10000",
-		Msg:  "Success",
-	}
-	c.JSON(http.StatusOK, gin.H{
-		"response": response,
-	})
+	c.String(http.StatusOK, "success")
 }
