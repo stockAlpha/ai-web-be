@@ -47,6 +47,7 @@ var NotAuthApisMap = map[string]string{
 	IntegralPrefix + ManualRechargeApi:           IntegralPrefix + ManualRechargeApi,
 	AlipayPrefix + TenantInfoApi:                 AlipayPrefix + TenantInfoApi,
 	AlipayPrefix + CreateOrderApi:                AlipayPrefix + CreateOrderApi,
+	AlipayPrefix + NotifyApi:                     AlipayPrefix + NotifyApi,
 	"/public/*filepath":                          "/public/*filepath",
 	"/favicon.ico":                               "/favicon.ico",
 	"/swagger/*any":                              "/swagger/*any",
