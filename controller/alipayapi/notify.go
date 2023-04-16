@@ -13,10 +13,15 @@ import (
 )
 
 // @Tags	alipay支付相关接口
-// @Summary	通知
+// @Summary	异步通知
 // @Router		/api/v1/alipay/notify [post]
 func Notify(c *gin.Context) {
 	cg := controller.Gin{Ctx: c}
+	fmt.Println("req", c.Request)
+	fmt.Println("req body", c.Request.Body)
+	fmt.Println("req form", c.Request.Form)
+	fmt.Println("req url", c.Request.URL)
+	fmt.Println("req postForm", c.Request.PostForm)
 	var req alipay.TradeNotification
 
 	if err := c.ShouldBindWith(&req, binding.FormPost); err != nil {
