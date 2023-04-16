@@ -10,7 +10,7 @@ import (
 	"stock-web-be/idl/payapi"
 )
 
-// @Tags	支付相关接口
+// @Tags	alipay支付相关接口
 // @Summary	聚合收钱码商户信息查询
 // @Router		/api/v1/alipay/tenant_info [post]
 // @param		req	body		payapi.TenantInfoRequest	true	"请求参数"

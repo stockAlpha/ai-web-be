@@ -10,7 +10,7 @@ import (
 	"stock-web-be/idl/payapi"
 )
 
-// @Tags	支付相关接口
+// @Tags	alipay支付相关接口
 // @Summary	创建聚合收钱单
 // @Router		/api/v1/alipay/create_order [post]
 // @param		req	body		payapi.CreateOrderRequest	true	"请求参数"

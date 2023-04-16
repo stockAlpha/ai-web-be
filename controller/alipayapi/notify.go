@@ -11,7 +11,7 @@ import (
 	"stock-web-be/gocommon/tlog"
 )
 
-// @Tags	支付相关接口
+// @Tags	alipay支付相关接口
 // @Summary	通知
 // @Router		/api/v1/alipay/notify [post]
 func Notify(c *gin.Context) {
