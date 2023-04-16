@@ -75,6 +75,7 @@ func InitDB() {
 	db.AutoMigrate(&VerificationCode{})
 	db.AutoMigrate(&InviteRelation{})
 	db.AutoMigrate(&Feedback{})
+	db.AutoMigrate(&Order{})
 	DbIns = &DB{
 		db,
 	}
