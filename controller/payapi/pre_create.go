@@ -12,7 +12,6 @@ import (
 	"stock-web-be/gocommon/tlog"
 	"stock-web-be/idl/payapi"
 	"stock-web-be/idl/userapi/order"
-	"stock-web-be/utils"
 	"strconv"
 )
 
@@ -29,7 +28,17 @@ func PreCreate(c *gin.Context) {
 	}
 	client := alipayclient.GetAlipayClient()
 	userId, _ := strconv.ParseUint(c.GetString("user_id"), 10, 64)
-	amount := utils.GetAmount(req.ProductType)
+	amount := 0
+	switch req.ProductType {
+	case 1:
+		amount = 10
+	case 2:
+		amount = 30
+	case 3:
+		amount = 100
+	default:
+		amount = 10
+	}
 	orderId, err := order.AddOrder(userId, decimal.NewFromInt(int64(amount)), strconv.Itoa(amount), nil)
 	if err != nil {
 		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "add order error", err.Error())
