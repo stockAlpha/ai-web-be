@@ -20,5 +20,7 @@ func TenantInfo(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{
 		"response": response,
+		"code":     -10000,
+		"msg":      "Success",
 	})
 }
