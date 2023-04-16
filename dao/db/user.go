@@ -74,6 +74,22 @@ func (user *User) GetUserByEmail(email string) error {
 	return nil
 }
 
+func (user *User) GetUserById(id uint64) error {
+	db := DbIns.Table(user.TableName())
+
+	err := db.Table(user.TableName()).
+		Where("id = ?", id).
+		Find(user).Error
+
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return nil
+		}
+		return err
+	}
+	return nil
+}
+
 func (user *User) GetUserByInviteCode(inviteCode string, db *gorm.DB) error {
 	if db == nil {
 		db = DbIns.Table(user.TableName())

@@ -1,15 +1,19 @@
 package alipayapi
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/shopspring/decimal"
 	"net/http"
+	"stock-web-be/async"
 	"stock-web-be/client/alipayclient"
 	"stock-web-be/controller"
+	"stock-web-be/dao/db"
 	"stock-web-be/gocommon/consts"
 	"stock-web-be/gocommon/tlog"
 	"stock-web-be/idl/payapi"
 	"stock-web-be/idl/userapi/order"
+	"stock-web-be/logic/userapi"
 	"strconv"
 )
 
@@ -58,21 +62,48 @@ func Notify(c *gin.Context) {
 		c.String(http.StatusOK, "failed")
 		return
 	}
-	if decimalAmount != existOrder.Amount {
+	if !decimalAmount.Equal(existOrder.Amount) {
 		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "order amount not match req: %v, error: %s", req, err.Error())
 		c.String(http.StatusOK, "failed")
 		return
 	}
 
+	tx := db.DbIns.Begin()
+
 	// 修改订单状态
 	status := req.TradeStatus
 	if status == "TRADE_SUCCESS" || status == "TRADE_FINISHED" {
-		err = order.UpdateOrderStatus(parseOrderId, 1, nil)
+		err = order.UpdateOrderStatus(parseOrderId, 1, tx)
 		if err != nil {
+			tx.Rollback()
 			tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "update order status error, error: %s", err.Error())
 			c.String(http.StatusOK, "failed")
 			return
 		}
+		integralAmount, err := strconv.Atoi(existOrder.ProductInfo)
+		if err != nil {
+			tx.Rollback()
+			tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "parse integral amount=%s error, error: %s", existOrder.ProductInfo, err.Error())
+			c.String(http.StatusOK, "failed")
+			return
+		}
+		err = userapi.AddUserIntegral(existOrder.FromUserId, integralAmount, tx)
+		if err != nil {
+			tx.Rollback()
+			tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "add user integral error, error: %s", err.Error())
+			c.String(http.StatusOK, "failed")
+			return
+		}
+		userId := existOrder.FromUserId
+		user, err := userapi.GetUserById(userId)
+		if err != nil {
+			tx.Rollback()
+			tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "userId=%d not found user, error: %s", userId, err.Error())
+			c.String(http.StatusOK, "failed")
+			return
+		}
+		tx.Commit()
+		async.MailChan <- async.MailChanType{To: user.Email, Subject: consts.RechargeNotifySubject, Body: fmt.Sprintf(consts.RechargeNotifyContent, integralAmount)}
 	}
 
 	c.String(http.StatusOK, "success")

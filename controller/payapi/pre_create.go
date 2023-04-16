@@ -30,7 +30,7 @@ func PreCreate(c *gin.Context) {
 	client := alipayclient.GetAlipayClient()
 	userId, _ := strconv.ParseUint(c.GetString("user_id"), 10, 64)
 	amount := utils.GetAmount(req.ProductType)
-	orderId, err := order.AddOrder(userId, decimal.NewFromInt(int64(amount)), strconv.Itoa(amount)+"元积分套餐", nil)
+	orderId, err := order.AddOrder(userId, decimal.NewFromInt(int64(amount)), strconv.Itoa(amount), nil)
 	if err != nil {
 		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "add order error", err.Error())
 		cg.Resp(http.StatusBadRequest, controller.ErrCreateOrder, "创建订单失败，请重试或者联系客服")
