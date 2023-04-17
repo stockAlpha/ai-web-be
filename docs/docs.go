@@ -16,67 +16,13 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/api/v1/alipay/create_order": {
-            "post": {
-                "tags": [
-                    "支付相关接口"
-                ],
-                "summary": "创建聚合收钱单",
-                "parameters": [
-                    {
-                        "description": "请求参数",
-                        "name": "req",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/payapi.CreateOrderRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/payapi.CreateOrderResponse"
-                        }
-                    }
-                }
-            }
-        },
         "/api/v1/alipay/notify": {
             "post": {
                 "tags": [
-                    "支付相关接口"
+                    "alipay支付相关接口"
                 ],
-                "summary": "通知",
+                "summary": "异步通知",
                 "responses": {}
-            }
-        },
-        "/api/v1/alipay/tenant_info": {
-            "post": {
-                "tags": [
-                    "支付相关接口"
-                ],
-                "summary": "聚合收钱码商户信息查询",
-                "parameters": [
-                    {
-                        "description": "请求参数",
-                        "name": "req",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/payapi.TenantInfoRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/payapi.TenantInfoResponse"
-                        }
-                    }
-                }
             }
         },
         "/api/v1/integral/generate_key": {
@@ -247,7 +193,25 @@ const docTemplate = `{
                     "支付相关接口"
                 ],
                 "summary": "预创建交易订单",
-                "responses": {}
+                "parameters": [
+                    {
+                        "description": "订单请求参数",
+                        "name": "req",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/payapi.PreCreateRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "创建订单返回参数",
+                        "schema": {
+                            "$ref": "#/definitions/payapi.PreCreateResponse"
+                        }
+                    }
+                }
             }
         },
         "/api/v1/user/change_password": {
@@ -575,98 +539,32 @@ const docTemplate = `{
                 }
             }
         },
-        "payapi.CreateOrderRequest": {
+        "payapi.PreCreateRequest": {
             "type": "object",
+            "required": [
+                "productType"
+            ],
             "properties": {
-                "amount": {
-                    "description": "用户支付的金额，精确到小数点后两位",
-                    "type": "string"
+                "payType": {
+                    "description": "支付类型，目前只支持alipay",
+                    "type": "string",
+                    "default": "alipay"
                 },
-                "auth_code": {
-                    "description": "用户鉴权token，标识用户该次支付身份",
-                    "type": "string"
-                },
-                "out_trade_no": {
-                    "description": "外部交易号，用于重复发起创单时的幂等",
-                    "type": "string"
-                },
-                "qr_code_id": {
-                    "description": "需创单的聚合收钱码码值",
-                    "type": "string"
-                },
-                "remark": {
-                    "description": "用户支付时的备注信息",
-                    "type": "string"
-                },
-                "ua": {
-                    "description": "扫码客户端userAgent",
-                    "type": "string"
+                "productType": {
+                    "description": "商品类型，1-10元,2-30元,3-100元",
+                    "type": "integer"
                 }
             }
         },
-        "payapi.CreateOrderResponse": {
+        "payapi.PreCreateResponse": {
             "type": "object",
             "properties": {
-                "alipay_trade_no": {
-                    "description": "该笔交易对应的支付宝交易号",
-                    "type": "string"
-                },
-                "amount": {
-                    "description": "实际交易金额，以元为单位",
-                    "type": "string"
-                },
-                "merchant_id": {
-                    "description": "商户在支付宝的标识",
-                    "type": "string"
-                },
-                "merchant_name": {
-                    "description": "聚合收钱码所属商户名称",
-                    "type": "string"
-                },
                 "order_id": {
-                    "description": "服务商商户订单号，与支付宝交易号相对应",
+                    "description": "订单id",
                     "type": "string"
                 },
-                "out_trade_no": {
-                    "description": "创单时传入的外部幂等交易号",
-                    "type": "string"
-                }
-            }
-        },
-        "payapi.TenantInfoRequest": {
-            "type": "object",
-            "properties": {
-                "qr_code_id": {
-                    "description": "聚合收钱码的码值",
-                    "type": "string"
-                },
-                "ua": {
-                    "description": "扫码客户端userAgent",
-                    "type": "string"
-                }
-            }
-        },
-        "payapi.TenantInfoResponse": {
-            "type": "object",
-            "properties": {
-                "alipay_app_id": {
-                    "description": "服务商主体在支付宝的标识",
-                    "type": "string"
-                },
-                "auth_redirect": {
-                    "description": "支付宝认证回调地址，为服务商入驻支付宝时与appid绑定的地址",
-                    "type": "string"
-                },
-                "merchant_id": {
-                    "description": "商户在支付宝的标识",
-                    "type": "string"
-                },
-                "merchant_logo": {
-                    "description": "商家logo图片资源地址",
-                    "type": "string"
-                },
-                "merchant_name": {
-                    "description": "商户名称",
+                "qr_code": {
+                    "description": "二维码串",
                     "type": "string"
                 }
             }

@@ -20,6 +20,8 @@ import (
 // @Tags	支付相关接口
 // @Summary	预创建交易订单
 // @Router		/api/v1/pay/pre_create [post]
+// @param		req	body		payapi.PreCreateRequest	true	"订单请求参数"
+// @Success 200 {object} payapi.PreCreateResponse "创建订单返回参数"
 func PreCreate(c *gin.Context) {
 	cg := controller.Gin{Ctx: c}
 	var req payapi.PreCreateRequest
@@ -66,6 +68,10 @@ func PreCreate(c *gin.Context) {
 		cg.Resp(http.StatusBadRequest, controller.ErrServer, res)
 		return
 	}
-	c.JSON(http.StatusOK, res.Content)
+	ret := &payapi.PreCreateResponse{
+		OrderId: res.Content.OutTradeNo,
+		QRCode:  res.Content.QRCode,
+	}
+	cg.Resp(http.StatusOK, controller.ErrnoSuccess, ret)
 	return
 }
