@@ -7,9 +7,9 @@ import (
 	"net/http"
 	"os"
 	"stock-web-be/async"
-	"stock-web-be/client/alipayclient"
 	"stock-web-be/controller"
 	"stock-web-be/dao/db"
+	"stock-web-be/gocommon/conf"
 	"stock-web-be/gocommon/consts"
 	"stock-web-be/gocommon/tlog"
 	"stock-web-be/idl/payapi"
@@ -35,7 +35,7 @@ func Notify(c *gin.Context) {
 	orderId := req.OutTradeNo
 	amount := req.TotalAmount
 	appId := req.AppId
-	if appId != alipayclient.APPID {
+	if appId != conf.Handler.GetString("alipay.app_id") {
 		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "appId not match req: %v", req)
 		c.String(http.StatusOK, "failed")
 		return
