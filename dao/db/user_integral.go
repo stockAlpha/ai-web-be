@@ -58,7 +58,7 @@ func (u *UserIntegral) AddAmount(amount int, db *gorm.DB) error {
 	updateMap := map[string]interface{}{}
 	updateMap["amount"] = gorm.Expr("amount + ?", amount)
 	updateMap["total_amount"] = gorm.Expr("total_amount + ?", amount)
-	if err := db.Model(u).Updates(updateMap).Set("gorm:query_option", "FOR UPDATE").Error; err != nil {
+	if err := db.Model(u).Updates(updateMap).Set("gorm:query_option", "FOR UPDATE timeout=1000ms").Error; err != nil {
 		return err
 	}
 	return nil
@@ -71,7 +71,7 @@ func (u *UserIntegral) SubAmount(amount int) error {
 			updateMap := map[string]interface{}{}
 			updateMap["amount"] = gorm.Expr("amount - ?", amount)
 			updateMap["update_time"] = time.Now()
-			if err := tx.Model(u).Updates(updateMap).Set("gorm:query_option", "FOR UPDATE").Error; err != nil {
+			if err := tx.Model(u).Updates(updateMap).Set("gorm:query_option", "FOR UPDATE timeout=1000ms").Error; err != nil {
 				return err
 			}
 			return nil
