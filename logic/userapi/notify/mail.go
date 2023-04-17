@@ -108,11 +108,19 @@ func SendEmail(to, subject, body string) error {
 		return errors.New("not enough alive mail")
 	}
 	var mailType MailType
-	for k := range Mails.Maps {
-		mailType = k
-		break
+	var err error
+	// 只重试一次
+	for i := 0; i < 2; i++ {
+		for k := range Mails.Maps {
+			mailType = k
+			break
+		}
+		err = sendEmails(mailType, to, subject, body)
+		if err == nil {
+			return nil
+		}
 	}
-	return sendEmails(mailType, to, subject, body)
+	return err
 }
 func sendEmails(mailType MailType, to, subject, body string) error {
 	mail := Mails.Maps[mailType]
@@ -129,6 +137,7 @@ func sendEmails(mailType MailType, to, subject, body string) error {
 	fmt.Println("send email success to: ", to, " subject: ", subject, " body: ", body, " message: ", msgStr)
 	if err != nil {
 		Mails.mu.Lock()
+		mail.Life = 0
 		Mails.FailMaps[mailType] = mail
 		delete(Mails.Maps, mailType)
 		Mails.mu.Unlock()

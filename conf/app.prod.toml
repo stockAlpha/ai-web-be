@@ -78,8 +78,6 @@ password = "d97191c491340f68"
 auth = ""
 smtpServer = "smtp.sina.com"
 smtpPort = "25"
-[jwt]
-sign = "your-secret-key"
 
 [jwt]
 sign = "chat_alpha_20220408"

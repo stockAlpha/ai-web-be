@@ -22,3 +22,11 @@ func TestNetease(t *testing.T) {
 		t.Fatal(err)
 	}
 }
+func TestMail(t *testing.T) {
+	conf.Init("../../../conf/app.prod.toml")
+	Init()
+	err := SendEmail("260721735@qq.com", "testOutLook", "testOutLook")
+	if err != nil {
+		t.Fatal(err)
+	}
+}
