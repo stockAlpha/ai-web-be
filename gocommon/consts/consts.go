@@ -21,6 +21,7 @@ const (
 	SLTagBrokePipe           = " _broke_pipe"
 	SLTagConnRST             = " _connection_reset_by_peer"
 	SyncStop                 = " _async_ready_stop"
+	MailSyncFailRetry        = " _mail_sync_fail_retry"
 )
 
 // for middleware
