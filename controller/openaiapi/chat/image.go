@@ -36,7 +36,6 @@ func Image(c *gin.Context) {
 		cg.Res(http.StatusBadRequest, controller.ErrnoInvalidPrm)
 		return
 	}
-	cg.Resp(http.StatusOK, controller.ErrnoSuccess, respUrl.Data[0].URL)
 	// 计费
 	amount := req.N
 	switch req.Size {
@@ -55,5 +54,5 @@ func Image(c *gin.Context) {
 		cg.Res(http.StatusBadRequest, controller.ErrServer)
 		return
 	}
-	cg.Resp(http.StatusOK, controller.ErrnoSuccess, respUrl.Data[0].URL)
+	cg.Resp(http.StatusOK, controller.ErrnoSuccess, respUrl.Data)
 }
