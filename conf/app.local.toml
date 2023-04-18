@@ -78,6 +78,13 @@ password = "d97191c491340f68"
 auth = ""
 smtpServer = "smtp.sina.com"
 smtpPort = "25"
+
+[mail_gmail]
+from = "chatalpha0@gmail.com"
+password = "esofkrcqmwmufvku"
+auth = ""
+smtpServer = "smtp.gmail.com"
+smtpPort = "25"
 [jwt]
 sign = "your-secret-key"
 

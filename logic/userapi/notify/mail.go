@@ -42,6 +42,7 @@ type MailType string
 const (
 	MailTypeOutLook MailType = "outlook"
 	MailType163     MailType = "163"
+	MailTypeGmail   MailType = "gmail"
 	MailTypeQQ      MailType = "qq"
 	MailTypeSOHU    MailType = "sohu"
 	MailTypeSINA    MailType = "sina"
@@ -65,6 +66,14 @@ func Init() {
 		SendPassword: conf.Handler.GetString("mail_163.password"),
 		SmtpServer:   conf.Handler.GetString("mail_163.smtpServer"),
 		SmtpPort:     conf.Handler.GetString("mail_163.smtpPort"),
+		AppendMsg:    "",
+		Life:         3,
+	}
+	Mails.Maps[MailTypeGmail] = MailClient{
+		SendMail:     conf.Handler.GetString("mail_gmail.from"),
+		SendPassword: conf.Handler.GetString("mail_gmail.password"),
+		SmtpServer:   conf.Handler.GetString("mail_gmail.smtpServer"),
+		SmtpPort:     conf.Handler.GetString("mail_gmail.smtpPort"),
 		AppendMsg:    "",
 		Life:         3,
 	}
