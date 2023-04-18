@@ -11,8 +11,7 @@ COPY . /go/stock-web-be
 RUN go env -w GOPRIVATE=github.com/stockAlpha
 RUN git config --global url."https://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@github.com/".insteadOf "https://github.com/"
 # swagger重新生成
-RUN go clean -modcache
-RUN go install github.com/swaggo/swag/cmd/swag@latest
+RUN go install github.com/swaggo/swag/cmd/swag@v1.8.12
 RUN sh swag.gen
 # 编译，关闭CGO，防止编译后的文件有动态链接，而alpine镜像里有些c库没有，直接没有文件的错误
 RUN GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build main.go
