@@ -78,7 +78,6 @@ func Login(c *gin.Context) {
 
 // @Tags	用户相关接口
 // @Summary	登出
-// @param
 // @Success	200	{string}	string					"返回token"
 // @Router		/api/v1/user/logout [post]
 func Logout(c *gin.Context) {
