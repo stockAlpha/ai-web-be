@@ -59,6 +59,7 @@ const (
 	SendVerificationCodeApi         = "/verify/send_code"
 	RegisterApi                     = "/register"
 	LoginApi                        = "/login"
+	LogoutApi                       = "/logout"
 	ProfileApi                      = "/profile"
 	FeedbackApi                     = "/feedback"
 	ChangePasswordApi               = "/change_password"

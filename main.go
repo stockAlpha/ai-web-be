@@ -3,6 +3,7 @@ package main
 import (
 	"os"
 	"os/signal"
+	"stock-web-be/dao/redis"
 	"syscall"
 	"time"
 
@@ -32,6 +33,8 @@ func main() {
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 	<-quit
 	tlog.Handler.Infof(nil, consts.SLTagSeverStop, "Quit the stock web be !")
+	//释放资源
+	redis.Close()
 	// 停止async的所有线程
 	async.PreStop()
 	safego.SafeGoWait()
