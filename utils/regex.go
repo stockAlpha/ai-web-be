@@ -6,7 +6,14 @@ import "regexp"
 func IsEmailValid(email string) bool {
 	// 定义电子邮件地址的正则表达式
 	regex := regexp.MustCompile(`^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$`)
-	return regex.MatchString(email)
+	if !regex.MatchString(email) {
+		return false
+	}
+	matched, err := regexp.MatchString(`@gmail\.com|@163\.com|@qq\.com|@outlook\.com|@sina\.com|@foxmail\.com|@126\.com|@aliyun\.com$`, email)
+	if err != nil {
+		return false
+	}
+	return matched
 }
 
 // 检查密码格式是否合法

@@ -90,7 +90,7 @@ var ErrMsg = map[int]string{
 	ErrnoError:   "error",
 
 	ErrnoInvalidPrm:             "非法的参数",
-	ErrNotFormatEmail:           "邮件格式非法",
+	ErrNotFormatEmail:           "邮箱格式非法",
 	ErrEmailAlreadyExists:       "此邮箱已注册",
 	ErrSendMailFail:             "发送验证码失败",
 	ErrStoreEmailCode:           "存储验证码失败",
