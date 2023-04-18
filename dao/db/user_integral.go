@@ -39,8 +39,7 @@ func (u *UserIntegral) GetUserIntegralByUserId(userId uint64, db *gorm.DB) error
 		db = DbIns.Table(u.TableName())
 	}
 	err := db.Table(u.TableName()).
-		Where("user_id = ?", userId).
-		Find(u).Error
+		Where("user_id = ?", userId).Set("gorm:query_option", "FOR UPDATE timeout=1000ms").Find(u).Error
 
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
@@ -68,7 +67,10 @@ func (u *UserIntegral) SubAmount(amount int) error {
 	db := DbIns.Table(u.TableName())
 	return db.Transaction(func(tx *gorm.DB) error {
 		if u.Amount >= amount {
-			if err := tx.Model(u).UpdateColumn("amount", gorm.Expr("amount - ?", amount)).Error; err != nil {
+			updateMap := map[string]interface{}{}
+			updateMap["amount"] = gorm.Expr("amount - ?", amount)
+			updateMap["update_time"] = time.Now()
+			if err := tx.Model(u).Updates(updateMap).Error; err != nil {
 				return err
 			}
 			return nil

@@ -7,6 +7,7 @@ import (
 	"os"
 	"runtime"
 	"runtime/debug"
+	"stock-web-be/client/alipayclient"
 	"strconv"
 
 	"stock-web-be/dao/db"
@@ -35,6 +36,7 @@ func Init() {
 	initPProf()
 	db.InitDB()
 	redis.Init()
+	alipayclient.Init()
 }
 
 func initPProf() {

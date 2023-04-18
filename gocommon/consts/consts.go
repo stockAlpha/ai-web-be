@@ -16,11 +16,12 @@ const (
 	SLTagSeverStop           = " _server_stop"
 	SLTagSeverFail           = " _server_fail"
 	SLTagPprofFail           = " _pprof_fail"
-	SLtagJsonMarshal         = " _json_marshal"
+	SLTagJsonMarshal         = " _json_marshal"
 	SLTagNotificationFail    = " _notification_fail"
 	SLTagBrokePipe           = " _broke_pipe"
 	SLTagConnRST             = " _connection_reset_by_peer"
 	SyncStop                 = " _async_ready_stop"
+	SLTagAlipaySuccess       = " _alipay_success"
 )
 
 // for middleware
@@ -44,6 +45,7 @@ var NotAuthApisMap = map[string]string{
 	UserPrefix + SendPasswordVerificationCodeApi: UserPrefix + SendPasswordVerificationCodeApi,
 	UserPrefix + ChangePasswordApi:               UserPrefix + ChangePasswordApi,
 	IntegralPrefix + ManualRechargeApi:           IntegralPrefix + ManualRechargeApi,
+	AlipayPrefix + NotifyApi:                     AlipayPrefix + NotifyApi,
 	"/public/*filepath":                          "/public/*filepath",
 	"/favicon.ico":                               "/favicon.ico",
 	"/swagger/*any":                              "/swagger/*any",
@@ -75,6 +77,12 @@ const (
 	OpenaiCompletionsApi = "/v1/chat/completions"
 	ImageApi             = "/v1/image"
 	AudioApi             = "/v1/audio"
+
+	AlipayPrefix = "/api/v1/alipay"
+	NotifyApi    = "/notify"
+
+	PayPrefix    = "/api/v1/pay"
+	PreCreateApi = "/pre_create"
 )
 
 // env

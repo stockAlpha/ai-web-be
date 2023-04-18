@@ -3,6 +3,7 @@ package integral
 import (
 	"fmt"
 	"net/http"
+	"stock-web-be/utils"
 
 	"stock-web-be/async"
 	"stock-web-be/controller"
@@ -67,17 +68,7 @@ func ManualRecharge(c *gin.Context) {
 		return
 	}
 
-	amount := 0
-	switch rechargeKey.Type {
-	case 1:
-		amount = 30
-	case 2:
-		amount = 100
-	case 3:
-		amount = 500
-	default:
-		amount = 30
-	}
+	amount := utils.GetAmount(rechargeKey.Type)
 	// 添加积分
 	tx := db.DbIns.Begin()
 	err = userapi.AddUserIntegral(userId, amount, tx)

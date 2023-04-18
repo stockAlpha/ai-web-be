@@ -3,7 +3,7 @@ version = "1.0.0"
 
 
 [http]
-addr = ":8180"           # 默认agent启动端口，可以修改
+addr = ":8080"           # 默认agent启动端口，可以修改
 handlerTimeout = 60000   # Handler timeout(ms), default 5000
 readHeaderTimeout = 2000 # Request header timeout(ms), default 2000
 readTimeout = 5000       # Recieve http request timeout(ms), including the body, default 5000
@@ -13,7 +13,7 @@ idleTimeout = 60000      # Keep-alive timeout(ms), default 60000
 [httpclient]
 maxIdleConns = 10              # MaxIdleConns controls the maximum number of idle (keep-alive) connections across all hosts. Zero means no integral.
 maxIdleConnsPerHost = 10       # MaxIdleConnsPerHost, if non-zero, controls the maximum idle (keep-alive) connections to keep per-host. If zero, DefaultMaxIdleConnsPerHost is used.
-maxConnsPerHost = 20           # MaxConnsPerHost optionally limits the total number of connections per host, including connections in the dialing, active, and idle states. On integral violation, dials will block. Zero means no integral.
+maxConnsPerHost = 20	       # MaxConnsPerHost optionally limits the total number of connections per host, including connections in the dialing, active, and idle states. On integral violation, dials will block. Zero means no integral.
 idleConnTimeout = 120            #IdleConnTimeout is the maximum amount of time an idle (keep-alive) connection will remain idle before closing itself. Zero means no integral.
 timeout = 5000                 #Time(ms) for Establishing tcp connection, sending request, and reading response.
 
@@ -23,14 +23,14 @@ port = ":9090"
 [log]
 filePrefix = "log/info"          # 日志文件前缀
 fileSuffix = ".log"              # 日志文件后缀
-maxHourAge = 168                    # 默认日志保留168小时（7天）
+maxHourAge    = 168                    # 默认日志保留168小时（7天）
 maxHourRotate = 1                      # 默认日志按小时切分
 level = "info"
 
 [mysql]
-auth = "stock"
-password = "stock"
-addr = "localhost:3306"
+auth = "root"
+password = "ISsYBFqvktJsmbSa8EfA"
+addr = "containers-us-west-203.railway.app:7806"
 database = "stock"
 charset = "utf8mb4"
 parseTime = true
@@ -40,8 +40,8 @@ readTimeout = "200ms"
 writeTimeout = "200ms"
 #conn_max_lifetime millsecond
 conn_max_lifetime = 60 #minute
-max_idle_conns = 1
-max_open_conns = 10
+max_idle_conns = 5
+max_open_conns = 100
 #log
 log_mode = 4
 
@@ -52,7 +52,7 @@ smtpServer = "smtp.office365.com"
 smtpPort = "587"
 
 [jwt]
-sign = "your-secret-key"
+sign = "chat_alpha_20220408"
 
 [openai]
 key = "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"
@@ -60,10 +60,10 @@ key = "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"
 [redis]
 host = "localhost"
 password = ""
-port = "10000"
+port = "6789"
 
 [alipay]
-notify_url = "localhost:8180/api/v1/alipay/notify"
+notify_url = "https://web-be-test.stockalpha.top/api/v1/alipay/notify"
 app_private_key = "MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDNnHMn3qgthmg1aUeXM9/KP8+cOF44lgZL5YC3295Ur900VPpN3EmNH9xZGb5XKDtLA027IEfpSCIAGzEoYrXeeguD28eR29eF6H1WwT3ys/CgtnGPf5O6bNX9IvEOB3bg2djperRJhXll5lJFElnp24E25hWg/PtTVFJADUNXd6MMx0b465tH0ys4TXslq4CajYH5nZ0JmU+sDDcnDfz+PMw/yQhNbCihQf/Uclw5IMA4p05EIE8SKipkWigEKUNQJNSIuCLSw30+y4KAdi44pe7e0GSBsA4RnUH9bzQ5vQc80RcS9jrs+ilGtqqyo8Yx6HYiA2JYXCzJvspCYM5BAgMBAAECggEACRn0yv4DKci6Uirv3VSRgm1irkKcgRq6+p8VHI5iABOs0gU08z9eDh4r7dHC6C7CuSZTSYY7SKtFvgV2HpiH/moeml6fLeiyWJ4a9j0lldm7PBH3Yue9zVHGAyeJzhose/WIsYUZ9+stnYIdgCs4ya5KwPhcWrz4Dw87eNRdd8CipFYQAuGIPLLXuTHSNRdDAQ99Ww+q9vgFoerMbcik1AbWF9JeZ9ViCrp8I7gnixmSvNuNdNuAFAguGdGHsHv4jJC3NgQfHFL6g6b2K9MeQXpOzM8DKB4NE0YL7P2M7Wz3BnRdWiRDJ8d1//pD8byQvjjYrAChXRkDFulN5s948QKBgQDwstbXjkNqHGuRak968Cs86YwaNwb+K676NvXG0UcsMJTnLBikM1x3TlkvC+EQ4np4hfR9mfuuhHz5z2V7+0hN3LKlDeRWKeKFDAz+xK68EhvQEjjCcOKnQwR0CVk1QMO/NtX1TyCOHSENk5qfJZMPXL14cvnRX1E8VI1NnbR+bQKBgQDarpe3yGn391U1YMjXcoaFfnxLYnysk7O+vVKXdvNTWO/N5gZ/ndSUSAI97M978HN3DD3zTxPdv7Ba2f8KR5AffyjI9ldzUOPlWKXSSnJILm6QLy3UcTx8T2yqCMgVH8+tjozuL1oEWQPtPmz5G4lkQPOroPrMCHPYuf1wR11apQKBgQDEduU/2qISGZJ/hgvL5/8S3/p4Z1Pw4M0Y9QVVu/phCmJv8qFGXZnq0+udqA+UDZgziftPDgHNp9yutuc59JhG3Y5/hMBMyDFZscVlqjqJziofgtALfcKzDdOztvG2st9T0zl+2pBTD1msUD+UCUJo9qS8jPR2Plv7Z3RS1xe9XQKBgAjqdWUY1rk1bFPwzj96e+GVdpvcOBkRLJLqRSPHxcPwLFbIuhsZ5EDnbq/3p731379K0HvLDZRM7HPHz44rvMSL+q223XnmImSHaLtaLa6jtf5K7iNrOnwXAOct1HqIAX+iADz10UW8G1zg3rCJXuCnhUfKGG+ZKJ/9dUfOoQ/BAoGBAKS+7NjoNOqWoVqic2GASBZGYo/omASYtk1liHDYJLX+aSPVCH5E/7WEGTsGeZ5mAM0un5yxgLmTZniHLr0QsFUcFUCQCsk56GwNBBKIt22TXqesRF8L5UNy7h2TZ++xpvQ0Zl7nVs3RTSrvaHLYdinxI9Cphj+ggZn3/76MBIbr"
 app_public_cert = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzZxzJ96oLYZoNWlHlzPfyj/PnDheOJYGS+WAt9veVK/dNFT6TdxJjR/cWRm+Vyg7SwNNuyBH6UgiABsxKGK13noLg9vHkdvXheh9VsE98rPwoLZxj3+TumzV/SLxDgd24NnY6Xq0SYV5ZeZSRRJZ6duBNuYVoPz7U1RSQA1DV3ejDMdG+OubR9MrOE17JauAmo2B+Z2dCZlPrAw3Jw38/jzMP8kITWwooUH/1HJcOSDAOKdORCBPEioqZFooBClDUCTUiLgi0sN9PsuCgHYuOKXu3tBkgbAOEZ1B/W80Ob0HPNEXEvY67PopRraqsqPGMeh2IgNiWFwsyb7KQmDOQQIDAQAB"
 alipay_public_key = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAoCc4rE2TC+wvqkHRn11WQmRnTJRgiP+WR7NmCH1vSuMlG1jyzVd3/bMBrGM1Q+gkJx0/1Qo2L5SpaVO9LHbKR2yOpUevhwRXzgTskMZAp4itedRmIVlJt5DoERmRYQeiI4gAiPfG8LowR1TuAWxoUcguW422zmlpuZbGEqhmzcPNuJ+ImtziefkEK5X4mOwkDfOslU/HGiPTn0EaRfZZOx0CJbHTFftcvJ/ibeg9jHV2x0Q+RVuxJGeOe8VYkoV24Jp7EvVQm4RQq922Ij0Y0JkXPSYMjavBU+Uc5fhvRndvbS+k70Pn0Xrz9cAtlarv/p23QeLNQeZ8gZbHyj23LwIDAQAB"
