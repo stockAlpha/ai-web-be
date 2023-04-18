@@ -84,6 +84,9 @@ const (
 	ErrPasswordNotChange        = 40120
 	ErrChangePassword           = 40121
 	ErrCreateOrder              = 40122
+	ErrNotExistToken            = 40123
+	ErrTokenNotExistTime        = 40124
+	ErrTokenAddBlackList        = 40125
 )
 
 var ErrMsg = map[int]string{
@@ -113,6 +116,9 @@ var ErrMsg = map[int]string{
 	ErrUserSubjectIdNotFound:    "用户不存在",
 	ErrPasswordNotChange:        "旧密码与新密码相同",
 	ErrChangePassword:           "修改用户密码失败",
+	ErrNotExistToken:            "token不存在",
+	ErrTokenNotExistTime:        "token解析后不存在失效时间",
+	ErrTokenAddBlackList:        "token加入黑名单失败",
 	ErrCreateOrder:              "创建订单失败",
 }
 

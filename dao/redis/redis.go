@@ -2,12 +2,10 @@ package redis
 
 import (
 	"context"
-
+	"github.com/redis/go-redis/v9"
 	"stock-web-be/gocommon/conf"
 	"stock-web-be/gocommon/consts"
 	"stock-web-be/gocommon/tlog"
-
-	"github.com/redis/go-redis/v9"
 )
 
 var redisClient *redis.Client
@@ -23,11 +21,19 @@ func Init() {
 	if conf.Handler.GetString("redis.password") != "" {
 		redisOption.Password = conf.Handler.GetString("redis.password")
 	}
+	if conf.Handler.GetString("redis.default_db") != "" {
+		redisOption.DB = conf.Handler.GetInt("redis.default_db")
+	}
+
 	tlog.Handler.Infof(nil, consts.SLTagRedisSuccess, redisOption.Addr+","+redisOption.Password)
 	redisClient = redis.NewClient(redisOption)
-	defer redisClient.Close()
 	if resp := redisClient.Ping(context.Background()); resp.Err() != nil {
 		panic("redis init error," + redisOption.Addr + "," + redisOption.Password)
 	}
+
 	tlog.Handler.Infof(nil, consts.SLTagRedisSuccess, redisOption.Addr+","+redisOption.Password)
+}
+
+func Close() {
+	_ = redisClient.Close()
 }

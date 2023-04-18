@@ -63,6 +63,8 @@ func registerUser(group *gin.RouterGroup) {
 	group.POST(consts.SendVerificationCodeApi, user.SendVerificationCode)
 	group.POST(consts.RegisterApi, user.Register)
 	group.POST(consts.LoginApi, user.Login)
+	group.POST(consts.LogoutApi, user.Logout)
+
 	group.GET(consts.ProfileApi, user.Profile)
 	group.POST(consts.ProfileApi, user.UpdateProfile)
 	group.POST(consts.FeedbackApi, user.Feedback)

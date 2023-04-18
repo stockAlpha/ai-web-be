@@ -10,10 +10,16 @@ package middleware
 
 import (
 	"bytes"
+	"fmt"
 	"io/ioutil"
+	"log"
+	"regexp"
+	"strconv"
+	"time"
+
 	"stock-web-be/gocommon/consts"
 	"stock-web-be/gocommon/tlog"
-	"time"
+	"stock-web-be/utils"
 
 	"github.com/gin-gonic/gin"
 )
@@ -86,7 +92,8 @@ func GinLogger(config LoggerConfig) gin.HandlerFunc {
 				args = string(body)
 			}
 		}
-
+		//尝试脱敏
+		args = makeSensitive(args)
 		// 处理请求
 		c.Next()
 
@@ -109,4 +116,25 @@ func GinLogger(config LoggerConfig) gin.HandlerFunc {
 			res,
 			latency)
 	}
+}
+
+var (
+	//PasswordReg = regexp.MustCompile(`^(.*\"password\")(\s*:\s*\")(.*)(\".*)$`)
+	passwordReg = regexp.MustCompile(`"password"\s*:\s*"(.*?)"`)
+)
+
+// makeSensitive 日志脱敏
+func makeSensitive(source string) (destination string) {
+	// password脱敏
+	destination = passwordReg.ReplaceAllStringFunc(source, func(s string) string {
+		pass := passwordReg.FindStringSubmatch(s)[1]
+		hash, err := utils.HashPassword(pass)
+		if err != nil {
+			log.Println("error in hash", err)
+			return source
+		}
+		return fmt.Sprintf(`"password":"%s"`, "len:"+strconv.Itoa(len(pass))+",hash:"+hash)
+	})
+	//其他的脱敏也可以放这里
+	return destination
 }
