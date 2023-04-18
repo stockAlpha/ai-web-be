@@ -43,7 +43,7 @@ conn_max_lifetime = 60 #minute
 max_idle_conns = 5
 max_open_conns = 100
 #log
-log_mode = 4
+log_mode = 2
 
 [mail]
 from = "chatalpha@outlook.com"
