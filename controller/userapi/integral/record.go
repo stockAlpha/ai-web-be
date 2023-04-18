@@ -41,7 +41,7 @@ func Record(c *gin.Context) {
 	err := userapi.SubUserIntegral(userId, amount)
 	if err != nil {
 		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "record user integral error: %s", err.Error())
-		cg.Res(http.StatusBadRequest, controller.ErrServer)
+		cg.Res(http.StatusBadRequest, controller.ErrIntegralNotEnough)
 		return
 	}
 	cg.Res(http.StatusOK, controller.ErrnoSuccess)

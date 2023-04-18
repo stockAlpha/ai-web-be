@@ -107,7 +107,7 @@ var ErrMsg = map[int]string{
 	ErrRechargeKeyUsed:          "充值密钥已使用",
 	ErrAddIntegral:              "添加积分错误",
 	ErrRegister:                 "注册失败",
-	ErrIntegralNotEnough:        "积分不足，请点击左下角设置进行充值",
+	ErrIntegralNotEnough:        "积分不足，请在设置中进行充值",
 	ErrServer:                   "服务器开小车了～，请重试一次",
 	ErrUserSubjectIdNotFound:    "用户不存在",
 	ErrPasswordNotChange:        "旧密码与新密码相同",
