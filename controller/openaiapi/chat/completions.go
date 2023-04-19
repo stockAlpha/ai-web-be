@@ -40,15 +40,18 @@ func Completions(c *gin.Context) {
 	// 计费，对话次数目前都按照1来计费
 	err = userapi.SubUserIntegral(userId, 1)
 	if err != nil {
+		c.Header("content-type", "application/json")
 		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "record user integral error: %s", err.Error())
-		cg.Res(http.StatusBadRequest, controller.ErrServer)
+		cg.Res(http.StatusBadRequest, controller.ErrIntegralNotEnough)
 		return
 	}
 	if req.Stream {
 		c.Header("Transfer-Encoding", "chunked")
 		stream, err := client.CreateChatCompletionStream(ctx, req)
 		if err != nil {
-			fmt.Printf("ChatCompletionStream error: %v\n", err)
+			c.Header("content-type", "application/json")
+			tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "ChatCompletionStream error: %s", err.Error())
+			cg.Res(http.StatusBadRequest, controller.ErrServer)
 			return
 		}
 		defer stream.Close()
@@ -60,7 +63,9 @@ func Completions(c *gin.Context) {
 			}
 
 			if err != nil {
-				fmt.Printf("\nStream error: %v\n", err)
+				c.Header("content-type", "application/json")
+				tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "Stream error: %s", err.Error())
+				cg.Res(http.StatusBadRequest, controller.ErrServer)
 				return
 			}
 
