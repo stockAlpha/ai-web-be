@@ -22,6 +22,7 @@ const (
 	SLTagConnRST             = " _connection_reset_by_peer"
 	SyncStop                 = " _async_ready_stop"
 	SLTagAlipaySuccess       = " _alipay_success"
+	MailSyncFailRetry        = " _mail_sync_fail_retry"
 )
 
 // for middleware
