@@ -7,6 +7,7 @@ import (
 	"github.com/sashabaranov/go-openai"
 	"net/http"
 	"stock-web-be/controller"
+	"stock-web-be/dao/db"
 	"stock-web-be/gocommon/conf"
 	"stock-web-be/gocommon/consts"
 	"stock-web-be/gocommon/tlog"
@@ -48,11 +49,14 @@ func Image(c *gin.Context) {
 	default:
 		amount = amount * 2
 	}
-	err = userapi.SubUserIntegral(userId, amount)
+	tx := db.DbIns.Begin()
+	err = userapi.SubUserIntegral(userId, amount, tx)
 	if err != nil {
 		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "record user integral error: %s", err.Error())
 		cg.Res(http.StatusBadRequest, controller.ErrServer)
+		tx.Rollback()
 		return
 	}
 	cg.Resp(http.StatusOK, controller.ErrnoSuccess, respUrl.Data)
+	tx.Commit()
 }

@@ -91,8 +91,8 @@ func AddUserIntegral(userId uint64, amount int, transaction *gorm.DB) error {
 	return nil
 }
 
-func SubUserIntegral(userId uint64, amount int) error {
-	integral, err := GetUserIntegralByUserId(userId, nil)
+func SubUserIntegral(userId uint64, amount int, transaction *gorm.DB) error {
+	integral, err := GetUserIntegralByUserId(userId, transaction)
 	if err != nil {
 		return err
 	}
