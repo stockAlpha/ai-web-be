@@ -27,7 +27,6 @@ func Record(c *gin.Context) {
 		cg.Res(http.StatusBadRequest, controller.ErrnoInvalidPrm)
 		return
 	}
-	// todo:暂时先简单计
 	amount := 0
 	switch req.Type {
 	case "chat":
@@ -43,7 +42,11 @@ func Record(c *gin.Context) {
 	err := userapi.SubUserIntegral(userId, amount, tx)
 	if err != nil {
 		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "record user integral error: %s", err.Error())
-		cg.Res(http.StatusBadRequest, controller.ErrIntegralNotEnough)
+		if err.Error() == "余额不足" {
+			cg.Res(http.StatusBadRequest, controller.ErrIntegralNotEnough)
+		} else {
+			cg.Res(http.StatusBadRequest, controller.ErrServer)
+		}
 		tx.Rollback()
 		return
 	}

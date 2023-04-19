@@ -3,7 +3,6 @@ package chat
 import (
 	"context"
 	"errors"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	openai "github.com/sashabaranov/go-openai"
 	"io"
@@ -32,7 +31,6 @@ func Completions(c *gin.Context) {
 		cg.Res(http.StatusBadRequest, controller.ErrnoInvalidPrm)
 		return
 	}
-	fmt.Println("req", req)
 	ctx := context.Background()
 	tx := db.DbIns.Begin()
 
@@ -41,7 +39,11 @@ func Completions(c *gin.Context) {
 	if err != nil {
 		c.Header("content-type", "application/json")
 		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "record user integral error: %s", err.Error())
-		cg.Res(http.StatusBadRequest, controller.ErrIntegralNotEnough)
+		if err.Error() == "余额不足" {
+			cg.Res(http.StatusBadRequest, controller.ErrIntegralNotEnough)
+		} else {
+			cg.Res(http.StatusBadRequest, controller.ErrServer)
+		}
 		tx.Rollback()
 		return
 	}
