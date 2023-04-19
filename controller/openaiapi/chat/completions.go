@@ -9,6 +9,7 @@ import (
 	"io"
 	"net/http"
 	"stock-web-be/controller"
+	"stock-web-be/dao/db"
 	"stock-web-be/gocommon/conf"
 	"stock-web-be/gocommon/consts"
 	"stock-web-be/gocommon/tlog"
@@ -33,16 +34,15 @@ func Completions(c *gin.Context) {
 	}
 	fmt.Println("req", req)
 	ctx := context.Background()
-	resp, err := client.CreateChatCompletion(
-		ctx,
-		req,
-	)
+	tx := db.DbIns.Begin()
+
 	// 计费，对话次数目前都按照1来计费
-	err = userapi.SubUserIntegral(userId, 1)
+	err := userapi.SubUserIntegral(userId, 1, tx)
 	if err != nil {
 		c.Header("content-type", "application/json")
 		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "record user integral error: %s", err.Error())
 		cg.Res(http.StatusBadRequest, controller.ErrIntegralNotEnough)
+		tx.Rollback()
 		return
 	}
 	if req.Stream {
@@ -52,6 +52,7 @@ func Completions(c *gin.Context) {
 			c.Header("content-type", "application/json")
 			tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "ChatCompletionStream error: %s", err.Error())
 			cg.Res(http.StatusBadRequest, controller.ErrServer)
+			tx.Rollback()
 			return
 		}
 		defer stream.Close()
@@ -66,6 +67,7 @@ func Completions(c *gin.Context) {
 				c.Header("content-type", "application/json")
 				tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "Stream error: %s", err.Error())
 				cg.Res(http.StatusBadRequest, controller.ErrServer)
+				tx.Rollback()
 				return
 			}
 
@@ -78,11 +80,17 @@ func Completions(c *gin.Context) {
 			c.Writer.(http.Flusher).Flush()
 		}
 	} else {
+		resp, err := client.CreateChatCompletion(
+			ctx,
+			req,
+		)
 		if err != nil {
 			tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "request openai error: %s", err.Error())
 			cg.Res(http.StatusBadRequest, controller.ErrnoInvalidPrm)
+			tx.Rollback()
 			return
 		}
 		cg.Resp(http.StatusOK, controller.ErrnoSuccess, resp.Choices[0].Message.Content)
 	}
+	tx.Commit()
 }

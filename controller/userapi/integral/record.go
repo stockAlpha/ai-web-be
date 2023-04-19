@@ -2,6 +2,7 @@ package integral
 
 import (
 	"net/http"
+	"stock-web-be/dao/db"
 	"strconv"
 
 	"stock-web-be/controller"
@@ -38,11 +39,14 @@ func Record(c *gin.Context) {
 	default:
 		amount = 1
 	}
-	err := userapi.SubUserIntegral(userId, amount)
+	tx := db.DbIns.Begin()
+	err := userapi.SubUserIntegral(userId, amount, tx)
 	if err != nil {
 		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "record user integral error: %s", err.Error())
 		cg.Res(http.StatusBadRequest, controller.ErrIntegralNotEnough)
+		tx.Rollback()
 		return
 	}
 	cg.Res(http.StatusOK, controller.ErrnoSuccess)
+	tx.Commit()
 }

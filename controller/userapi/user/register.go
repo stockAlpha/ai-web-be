@@ -107,22 +107,22 @@ func Register(c *gin.Context) {
 // 开启事务注册
 func transactionRegister(c *gin.Context, email, hashPassword, inviteCode string) (uint64, error) {
 	// 声明个db，做事务回滚
-	curDb := db.DbIns.Begin()
+	tx := db.DbIns.Begin()
 	// 注册新用户
-	userId, err := userapi.AddUser(email, hashPassword, curDb)
+	userId, err := userapi.AddUser(email, hashPassword, tx)
 	if err != nil {
 		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "add user error")
-		curDb.Rollback()
+		tx.Rollback()
 		return 0, err
 	}
 
 	// 新注册用户赠送30个积分
 	// 判断是否为被邀请用户，如果是则邀请人和被邀请人都增加积分
 	addAmount := 30
-	inviteUser, err := userapi.GetUserByInviteCode(inviteCode, curDb)
+	inviteUser, err := userapi.GetUserByInviteCode(inviteCode, tx)
 	if err != nil {
 		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "query user by invite code error")
-		curDb.Rollback()
+		tx.Rollback()
 		return 0, err
 	}
 	if inviteUser != nil {
@@ -130,26 +130,26 @@ func transactionRegister(c *gin.Context, email, hashPassword, inviteCode string)
 		fromAddAmount := 20
 		fromUserId := inviteUser.ID
 		fromEmail := inviteUser.Email
-		err := userapi.AddUserIntegral(fromUserId, fromAddAmount, curDb)
+		err := userapi.AddUserIntegral(fromUserId, fromAddAmount, tx)
 		if err != nil {
-			curDb.Rollback()
+			tx.Rollback()
 			return 0, err
 		}
 		// 插入邀请关系
-		err = userapi.AddInviteRelation(fromUserId, userId, inviteCode, curDb)
+		err = userapi.AddInviteRelation(fromUserId, userId, inviteCode, tx)
 		if err != nil {
-			curDb.Rollback()
+			tx.Rollback()
 			return 0, err
 		}
 		// 当前用户增加积分
 		addAmount += 20
 		async.MailChan <- async.MailChanType{To: fromEmail, Subject: consts.InviteSubject, Body: fmt.Sprintf(consts.InviteContent, email, fromAddAmount)}
 	}
-	_, err = userapi.CreateUserIntegral(userId, addAmount, curDb)
+	_, err = userapi.CreateUserIntegral(userId, addAmount, tx)
 	if err != nil {
-		curDb.Rollback()
+		tx.Rollback()
 		return 0, err
 	}
-	curDb.Commit()
+	tx.Commit()
 	return userId, nil
 }
