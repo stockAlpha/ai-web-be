@@ -28,6 +28,18 @@ func GetUserByEmail(email string) (*db.User, error) {
 	return user, nil
 }
 
+func GetUserById(id uint64) (*db.User, error) {
+	user := &db.User{}
+	err := user.GetUserById(id)
+	if err != nil {
+		return nil, err
+	}
+	if user.ID == 0 {
+		return nil, nil
+	}
+	return user, nil
+}
+
 func GetUserByInviteCode(inviteCode string, transaction *gorm.DB) (*db.User, error) {
 	user := &db.User{}
 	err := user.GetUserByInviteCode(inviteCode, transaction)

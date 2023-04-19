@@ -9,6 +9,8 @@ require (
 	github.com/lestrrat-go/file-rotatelogs v2.4.0+incompatible
 	github.com/redis/go-redis/v9 v9.0.3
 	github.com/sashabaranov/go-openai v1.7.0
+	github.com/shopspring/decimal v1.3.1
+	github.com/smartwalle/alipay/v3 v3.2.1
 	github.com/spf13/viper v1.15.0
 	github.com/stockAlpha/gopkg/common/safego v0.0.0-20230331033607-14017625792a
 	github.com/swaggo/gin-swagger v1.3.0
@@ -54,6 +56,7 @@ require (
 	github.com/pelletier/go-toml/v2 v2.0.7 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/sirupsen/logrus v1.9.0 // indirect
+	github.com/smartwalle/ncrypto v1.0.0 // indirect
 	github.com/spf13/afero v1.9.3 // indirect
 	github.com/spf13/cast v1.5.0 // indirect
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect

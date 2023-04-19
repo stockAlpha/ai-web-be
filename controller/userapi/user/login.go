@@ -3,6 +3,7 @@ package user
 import (
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
+	"math"
 	"net/http"
 	"stock-web-be/controller"
 	"stock-web-be/gocommon/consts"
@@ -11,6 +12,7 @@ import (
 	"stock-web-be/logic/userapi"
 	"stock-web-be/utils"
 	"strconv"
+	"time"
 )
 
 // @Tags	用户相关接口
@@ -72,4 +74,38 @@ func Login(c *gin.Context) {
 		return
 	}
 	cg.Resp(http.StatusOK, controller.ErrnoSuccess, token)
+}
+
+// @Tags	用户相关接口
+// @Summary	登出
+// @Success	200	{string}	string					"返回token"
+// @Router		/api/v1/user/logout [post]
+func Logout(c *gin.Context) {
+	cg := controller.Gin{Ctx: c}
+
+	//1.获取当前token
+	token, exist := c.Get("token")
+	if !exist {
+		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "token is not exist")
+		cg.Res(http.StatusBadRequest, controller.ErrNotExistToken)
+		return
+	}
+
+	//2.计算exp时间
+	tokenExp, exist := c.Get("exp")
+	if !exist {
+		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "token is not exp time")
+		cg.Res(http.StatusBadRequest, controller.ErrTokenNotExistTime)
+		return
+	}
+	tokenBlackExp := time.Unix(int64(math.Round(tokenExp.(float64))), 0).Sub(time.Now())
+
+	//3.将token放入redis中
+	err := userapi.AddTokenToBlackList(token.(string), tokenBlackExp)
+	if err != nil {
+		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "add token to black list error", err)
+		cg.Res(http.StatusBadRequest, controller.ErrTokenAddBlackList)
+		return
+	}
+	cg.Res(http.StatusOK, controller.ErrnoSuccess)
 }

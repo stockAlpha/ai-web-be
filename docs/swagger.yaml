@@ -6,7 +6,7 @@ definitions:
         type: integer
       type:
         default: 1
-        description: 1代表100积分，2代表500积分，3代表1000积分
+        description: 1代表100积分，2代表500积分，3代表2000积分
         type: integer
     type: object
   integral.ManualRechargeRequest:
@@ -103,6 +103,43 @@ definitions:
       user:
         type: string
     type: object
+  payapi.PreCreateRequest:
+    properties:
+      payType:
+        default: alipay
+        description: 支付类型，目前只支持alipay
+        type: string
+      productType:
+        description: 商品类型，1-10元,2-30元,3-100元
+        type: integer
+    required:
+    - productType
+    type: object
+  payapi.PreCreateResponse:
+    properties:
+      order_id:
+        description: 订单id
+        type: string
+      qr_code:
+        description: 二维码串
+        type: string
+    type: object
+  user.ChangePasswordRequest:
+    properties:
+      newPassword:
+        type: string
+      subjectName:
+        type: string
+      subjectType:
+        description: 可选字段，默认为userapi.ChangePasswordMailCode
+        type: integer
+      verificationCode:
+        type: string
+    required:
+    - newPassword
+    - subjectName
+    - verificationCode
+    type: object
   user.FeedbackRequest:
     properties:
       content:
@@ -179,6 +216,16 @@ definitions:
     - email
     - password
     type: object
+  user.SendPasswordVerificationCodeRequest:
+    properties:
+      subjectName:
+        type: string
+      subjectType:
+        description: 可选字段，默认为userapi.ChangePasswordMailCode
+        type: integer
+    required:
+    - subjectName
+    type: object
   user.SendVerificationCodeRequest:
     properties:
       email:
@@ -193,6 +240,12 @@ definitions:
 info:
   contact: {}
 paths:
+  /api/v1/alipay/notify:
+    post:
+      responses: {}
+      summary: 异步通知
+      tags:
+      - alipay支付相关接口
   /api/v1/integral/generate_key:
     post:
       parameters:
@@ -216,7 +269,7 @@ paths:
         schema:
           $ref: '#/definitions/integral.ManualRechargeRequest'
       responses: {}
-      summary: 手动充值
+      summary: 手动充值(管理员使用)
       tags:
       - 积分相关接口
   /api/v1/integral/recharge:
@@ -299,6 +352,49 @@ paths:
       summary: 生成图片
       tags:
       - 代理OpenAI相关接口
+  /api/v1/pay/pre_create:
+    post:
+      parameters:
+      - description: 订单请求参数
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/payapi.PreCreateRequest'
+      responses:
+        "200":
+          description: 创建订单返回参数
+          schema:
+            $ref: '#/definitions/payapi.PreCreateResponse'
+      summary: 预创建交易订单
+      tags:
+      - 支付相关接口
+  /api/v1/user/change_password:
+    post:
+      parameters:
+      - description: 发送验证码请求参数(默认为email)
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/user.ChangePasswordRequest'
+      responses: {}
+      summary: 用户修改密码
+      tags:
+      - 用户相关接口
+  /api/v1/user/change_password/verify/code:
+    post:
+      parameters:
+      - description: 发送验证码请求参数(默认为email)
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/user.SendPasswordVerificationCodeRequest'
+      responses: {}
+      summary: 在忘记密码时发送验证码
+      tags:
+      - 用户相关接口
   /api/v1/user/feedback:
     post:
       parameters:

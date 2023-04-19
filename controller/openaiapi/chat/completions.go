@@ -12,6 +12,8 @@ import (
 	"stock-web-be/gocommon/conf"
 	"stock-web-be/gocommon/consts"
 	"stock-web-be/gocommon/tlog"
+	"stock-web-be/logic/userapi"
+	"strconv"
 )
 
 // @Tags	代理OpenAI相关接口
@@ -22,6 +24,7 @@ func Completions(c *gin.Context) {
 	cg := controller.Gin{Ctx: c}
 	apiKey := conf.Handler.GetString(`openai.key`)
 	client := openai.NewClient(apiKey)
+	userId, _ := strconv.ParseUint(c.GetString("user_id"), 10, 64)
 	var req openai.ChatCompletionRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "request params invalid, error: %s", err.Error())
@@ -34,7 +37,13 @@ func Completions(c *gin.Context) {
 		ctx,
 		req,
 	)
-
+	// 计费，对话次数目前都按照1来计费
+	err = userapi.SubUserIntegral(userId, 1)
+	if err != nil {
+		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "record user integral error: %s", err.Error())
+		cg.Res(http.StatusBadRequest, controller.ErrServer)
+		return
+	}
 	if req.Stream {
 		c.Header("Transfer-Encoding", "chunked")
 		stream, err := client.CreateChatCompletionStream(ctx, req)
@@ -63,7 +72,6 @@ func Completions(c *gin.Context) {
 			// 强制刷新响应缓冲区，将数据发送给客户端
 			c.Writer.(http.Flusher).Flush()
 		}
-
 	} else {
 		if err != nil {
 			tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "request openai error: %s", err.Error())
