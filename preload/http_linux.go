@@ -1,12 +1,14 @@
 package preload
 
 import (
-	"github.com/gin-gonic/gin"
 	"net/http"
+
 	"stock-web-be/gocommon/conf"
 	"stock-web-be/gocommon/consts"
 	"stock-web-be/gocommon/tlog"
 	"stock-web-be/middleware"
+
+	"github.com/gin-gonic/gin"
 )
 
 type server struct {
@@ -24,6 +26,7 @@ func Run(inner func(r *gin.Engine) *gin.Engine) error {
 
 	tlog.Handler.Infof(nil, consts.SLTagSeverStart, "HttpServer starting from  ....%s", s.Address)
 	appEngine := gin.New()
+	appEngine.GET("ping", public.Ping)
 	appEngine.Use(middleware.Recovery())
 	appEngine.Use(middleware.GinLogger(middleware.LoggerConfig{}))
 	appEngine.Use(middleware.ValidUser())
