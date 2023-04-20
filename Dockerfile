@@ -19,6 +19,12 @@ RUN GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build main.go
 
 # 使用alpine这个轻量级镜像为基础镜像--运行阶段
 FROM alpine AS runner
+# 设置东八区
+RUN apk --update add tzdata && \
+    cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \
+    echo "Asia/Shanghai" > /etc/timezone && \
+    apk del tzdata && \
+    rm -rf /var/cache/apk/*
 # 全局工作目录
 WORKDIR /go/stock-web-be
 # 复制编译阶段编译出来的运行文件到目标目录
