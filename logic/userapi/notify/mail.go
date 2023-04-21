@@ -169,7 +169,7 @@ func RetryFailMail() {
 					Mails.mu.Unlock()
 					fmt.Println("retry success " + string(k) + ",life mail len" + strconv.Itoa(len(Mails.Maps)))
 				} else {
-					fmt.Println("retry error " + string(k) + ",life mail len" + strconv.Itoa(len(Mails.Maps)))
+					fmt.Println("retry error " + string(k) + ",life mail len" + strconv.Itoa(len(Mails.Maps)) + ",error:" + err.Error())
 				}
 				time.Sleep(time.Second * 5)
 			}
