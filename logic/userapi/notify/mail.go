@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"net/smtp"
+	"strconv"
 	"sync"
 	"time"
 
@@ -160,12 +161,15 @@ func RetryFailMail() {
 			// todo 暂定5min刷新一次
 			time.Sleep(time.Minute * 5)
 			for k, v := range Mails.FailMaps {
-				err := sendEmails(k, "260721735@qq.com", "retry mail", "retry mail")
+				err := sendEmails(k, "260721735@qq.com", "error retry fail mail", "retry k:"+string(k))
 				if err == nil {
 					Mails.mu.Lock()
 					Mails.Maps[k] = v
 					delete(Mails.FailMaps, k)
 					Mails.mu.Unlock()
+					fmt.Println("retry success " + string(k) + ",life mail len" + strconv.Itoa(len(Mails.Maps)))
+				} else {
+					fmt.Println("retry error " + string(k) + ",life mail len" + strconv.Itoa(len(Mails.Maps)))
 				}
 				time.Sleep(time.Second * 5)
 			}
