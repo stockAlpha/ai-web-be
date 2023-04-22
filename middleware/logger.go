@@ -15,6 +15,7 @@ import (
 	"log"
 	"regexp"
 	"strconv"
+	"strings"
 	"time"
 
 	"stock-web-be/gocommon/consts"
@@ -106,15 +107,17 @@ func GinLogger(config LoggerConfig) gin.HandlerFunc {
 		if len(res) > 1000 {
 			res = ""
 		}
-
-		tlog.Handler.Accessf(c, consts.SLTagRequest,
-			"method=%s||uri=%s||args=%s||errno=%d||response=%s||proc_time=%v",
-			c.Request.Method,
-			c.Request.URL.Path,
-			args,
-			c.Writer.Status(),
-			res,
-			latency)
+		// 没接nginx，主页/favicon.ico无需记录
+		if !(c.Request.URL.Path == "/favicon.ico" && strings.ToLower(c.Request.Method) == "get") {
+			tlog.Handler.Accessf(c, consts.SLTagRequest,
+				"method=%s||uri=%s||args=%s||errno=%d||response=%s||proc_time=%v",
+				c.Request.Method,
+				c.Request.URL.Path,
+				args,
+				c.Writer.Status(),
+				res,
+				latency)
+		}
 	}
 }
 

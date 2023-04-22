@@ -7,6 +7,7 @@ import (
 	"os"
 	"runtime"
 	"runtime/debug"
+	"stock-web-be/async"
 	"stock-web-be/client/alipayclient"
 	"strconv"
 
@@ -37,6 +38,8 @@ func Init() {
 	db.InitDB()
 	redis.Init()
 	alipayclient.Init()
+	//cronjob
+	async.StartCron()
 }
 
 func initPProf() {
