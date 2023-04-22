@@ -40,11 +40,11 @@ func Image(c *gin.Context) {
 	// 计费
 	amount := req.N
 	switch req.Size {
-	case "256×256":
+	case "256x256":
 		amount = amount * 2
-	case "512×512":
+	case "512x512":
 		amount = amount * 3
-	case "1024×1024":
+	case "1024x1024":
 		amount = amount * 4
 	default:
 		amount = amount * 2
