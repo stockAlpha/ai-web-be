@@ -13,7 +13,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var timeout = time.Second
+var timeout = time.Second * 2
 
 func Check(c *gin.Context) {
 	cg := controller.Gin{Ctx: c}
@@ -40,11 +40,14 @@ func checkRedis(wg *sync.WaitGroup, res *string) {
 	redisCLient := redis.GetRedisClient()
 	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(timeout))
 	defer cancel()
-	go redisCLient.Ping(ctx)
+	go func() {
+		redisCLient.Ping(ctx)
+		ctx.Done()
+	}()
 	select {
 	case <-ctx.Done():
 		resp = "redis done"
-	case <-time.After(time.Duration(timeout + time.Nanosecond*10)):
+	case <-time.After(time.Duration(2 * timeout)):
 		resp = "redis timeout"
 	}
 	*res = resp + " with time " + time.Now().Sub(firstDate).String()
@@ -56,11 +59,14 @@ func checkMysql(wg *sync.WaitGroup, res *string) {
 	mysql, _ := db.DbIns.DB.DB()
 	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(timeout))
 	defer cancel()
-	go mysql.PingContext(ctx)
+	go func() {
+		mysql.PingContext(ctx)
+		ctx.Done()
+	}()
 	select {
 	case <-ctx.Done():
 		resp = "mysql done"
-	case <-time.After(time.Duration(timeout + time.Nanosecond*10)):
+	case <-time.After(time.Duration(2 * timeout)):
 		resp = "mysql timeout"
 	}
 	*res = resp + " with time " + time.Now().Sub(firstDate).String()
