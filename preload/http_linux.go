@@ -1,6 +1,7 @@
 package preload
 
 import (
+	"github.com/gin-contrib/pprof"
 	"net/http"
 
 	"stock-web-be/controller/public"
@@ -28,6 +29,8 @@ func Run(inner func(r *gin.Engine) *gin.Engine) error {
 	tlog.Handler.Infof(nil, consts.SLTagSeverStart, "HttpServer starting from  ....%s", s.Address)
 	appEngine := gin.New()
 	appEngine.GET("ping", public.Ping)
+	appEngine.GET("check/aalcsekudqkqgskctkjowuvhbiixmujd", public.Check)
+	pprof.Register(appEngine, "pprof/aalcsekudqkqgskctkjowuvhbiixmujd")
 	appEngine.Use(middleware.Recovery())
 	appEngine.Use(middleware.GinLogger(middleware.LoggerConfig{}))
 	appEngine.Use(middleware.ValidUser())

@@ -4,10 +4,12 @@ go 1.19
 
 require (
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
+	github.com/gin-contrib/pprof v1.4.0
 	github.com/gin-gonic/gin v1.9.0
 	github.com/google/uuid v1.1.2
 	github.com/lestrrat-go/file-rotatelogs v2.4.0+incompatible
 	github.com/redis/go-redis/v9 v9.0.3
+	github.com/robfig/cron/v3 v3.0.1
 	github.com/sashabaranov/go-openai v1.7.0
 	github.com/shopspring/decimal v1.3.1
 	github.com/smartwalle/alipay/v3 v3.2.1
