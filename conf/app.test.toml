@@ -58,9 +58,9 @@ sign = "chat_alpha_20220408"
 key = "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"
 
 [redis]
-host = "localhost"
-password = ""
-port = "6789"
+host = "containers-us-west-190.railway.app"
+password = "NKlIqaDyL3kxUCZrBtF1"
+port = "7304"
 
 [alipay]
 notify_url = "https://web-be-test.stockalpha.top/api/v1/alipay/notify"
