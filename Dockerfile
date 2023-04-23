@@ -34,14 +34,10 @@ COPY --from=builder /go/stock-web-be/conf ./conf
 # 拷贝所有静态文件
 COPY --from=builder /go/stock-web-be/disk ./disk
 # 需暴露的端口
-RUN if [ -z "$PORT" ]; then \
-        export PORT=8080; \
-    fi
+ENV PORT=${PORT:-8080}
 EXPOSE $PORT
 # 设置环境变量
-RUN if [ -z "ENV" ]; then \
-        export ENV="prod"; \
-    fi
-ENV ENV=prod
+ENV ENV=${ENV:-prod}
+RUN echo "cur port=$PORT,cur env=$ENV"
 # docker run命令触发的真实命令(相当于直接运行编译后的可运行文件)
 ENTRYPOINT ["./main"]
