@@ -2,7 +2,9 @@ package redis
 
 import (
 	"context"
+	"fmt"
 	"github.com/redis/go-redis/v9"
+	"net/url"
 	"stock-web-be/gocommon/conf"
 	"stock-web-be/gocommon/consts"
 	"stock-web-be/gocommon/tlog"
@@ -14,9 +16,13 @@ func GetRedisClient() *redis.Client {
 	return redisClient
 }
 func Init() {
-	dsn := conf.Handler.GetString("redis.host") + ":" + conf.Handler.GetString("redis.port")
+	dsn, err := url.Parse(conf.Handler.GetString("redis.uri"))
+	if err != nil {
+		panic("redis init error," + err.Error())
+	}
+	fmt.Println("dsn.host", dsn.Host)
 	redisOption := &redis.Options{
-		Addr: dsn,
+		Addr: dsn.Host,
 	}
 	if conf.Handler.GetString("redis.password") != "" {
 		redisOption.Password = conf.Handler.GetString("redis.password")

@@ -13,7 +13,7 @@ idleTimeout = 60000      # Keep-alive timeout(ms), default 60000
 [httpclient]
 maxIdleConns = 10              # MaxIdleConns controls the maximum number of idle (keep-alive) connections across all hosts. Zero means no integral.
 maxIdleConnsPerHost = 10       # MaxIdleConnsPerHost, if non-zero, controls the maximum idle (keep-alive) connections to keep per-host. If zero, DefaultMaxIdleConnsPerHost is used.
-maxConnsPerHost = 20	       # MaxConnsPerHost optionally limits the total number of connections per host, including connections in the dialing, active, and idle states. On integral violation, dials will block. Zero means no integral.
+maxConnsPerHost = 20           # MaxConnsPerHost optionally limits the total number of connections per host, including connections in the dialing, active, and idle states. On integral violation, dials will block. Zero means no integral.
 idleConnTimeout = 120            #IdleConnTimeout is the maximum amount of time an idle (keep-alive) connection will remain idle before closing itself. Zero means no integral.
 timeout = 5000                 #Time(ms) for Establishing tcp connection, sending request, and reading response.
 
@@ -23,15 +23,17 @@ port = ":9090"
 [log]
 filePrefix = "log/info"          # 日志文件前缀
 fileSuffix = ".log"              # 日志文件后缀
-maxHourAge    = 168                    # 默认日志保留168小时（7天）
+maxHourAge = 168                    # 默认日志保留168小时（7天）
 maxHourRotate = 1                      # 默认日志按小时切分
 level = "info"
 
 [mysql]
-auth = "root"
-password = "ISsYBFqvktJsmbSa8EfA"
 addr = "containers-us-west-203.railway.app:7806"
-database = "stock"
+username = "stock"
+password = "stock"
+host = "localhost"
+port = "3306"
+database = "chat"
 charset = "utf8mb4"
 parseTime = true
 loc = "Local"
@@ -92,6 +94,7 @@ sign = "chat_alpha_20220408"
 key = "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"
 
 [redis]
+uri = "redis://:@localhost:10000"
 host = "localhost"
 password = ""
 port = "6789"

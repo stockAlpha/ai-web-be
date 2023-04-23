@@ -28,9 +28,10 @@ maxHourRotate = 1                      # 默认日志按小时切分
 level = "info"
 
 [mysql]
-auth = "stock"
+username = "stock"
 password = "stock"
-addr = "localhost:3306"
+host = "localhost"
+port = "3306"
 database = "stock"
 charset = "utf8mb4"
 parseTime = true
@@ -92,6 +93,7 @@ sign = "your-secret-key"
 key = "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"
 
 [redis]
+uri = "redis://:@localhost:10000"
 host = "localhost"
 password = ""
 port = "10000"

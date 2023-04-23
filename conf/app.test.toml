@@ -28,10 +28,12 @@ maxHourRotate = 1                      # 默认日志按小时切分
 level = "info"
 
 [mysql]
-auth = "root"
-password = "ISsYBFqvktJsmbSa8EfA"
 addr = "containers-us-west-203.railway.app:7806"
-database = "stock"
+username = "stock"
+password = "stock"
+host = "localhost"
+port = "3306"
+database = "chat"
 charset = "utf8mb4"
 parseTime = true
 loc = "Local"
@@ -58,6 +60,7 @@ sign = "chat_alpha_20220408"
 key = "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"
 
 [redis]
+uri = "redis://:@localhost:10000"
 host = "containers-us-west-190.railway.app"
 password = "NKlIqaDyL3kxUCZrBtF1"
 port = "7304"
@@ -69,3 +72,23 @@ app_public_cert = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzZxzJ96oLYZoNWlHl
 alipay_public_key = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAoCc4rE2TC+wvqkHRn11WQmRnTJRgiP+WR7NmCH1vSuMlG1jyzVd3/bMBrGM1Q+gkJx0/1Qo2L5SpaVO9LHbKR2yOpUevhwRXzgTskMZAp4itedRmIVlJt5DoERmRYQeiI4gAiPfG8LowR1TuAWxoUcguW422zmlpuZbGEqhmzcPNuJ+ImtziefkEK5X4mOwkDfOslU/HGiPTn0EaRfZZOx0CJbHTFftcvJ/ibeg9jHV2x0Q+RVuxJGeOe8VYkoV24Jp7EvVQm4RQq922Ij0Y0JkXPSYMjavBU+Uc5fhvRndvbS+k70Pn0Xrz9cAtlarv/p23QeLNQeZ8gZbHyj23LwIDAQAB"
 encrypt_key = "ThlHClWx+ktjKHqG+fSMMg=="
 app_id = "2021003189689338"
+
+[mail_outlook]
+from = "chatalpha@outlook.com"
+password = "li197910"
+smtpServer = "smtp.office365.com"
+smtpPort = "587"
+
+[mail_163]
+from = "chatalpha@163.com"
+password = "IVPXQEEDLZZCDMRH"
+auth = "IVPXQEEDLZZCDMRH"
+smtpServer = "smtp.163.com"
+smtpPort = "25"
+
+[mail_gmail]
+from = "chatalpha0@gmail.com"
+password = "esofkrcqmwmufvku"
+auth = ""
+smtpServer = "smtp.gmail.com"
+smtpPort = "25"
