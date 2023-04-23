@@ -53,7 +53,17 @@ func LoadConfig(confPath string) *viper.Viper {
 			handler.Set(key, flag)
 			continue
 		}
+		upperKey := strings.ToUpper(key)
+		if flag := os.Getenv(upperKey); flag != "" {
+			handler.Set(key, flag)
+			continue
+		}
 		newkey := strings.Replace(key, ".", "_", -1)
+		if flag := os.Getenv(newkey); flag != "" {
+			handler.Set(key, flag)
+			continue
+		}
+		newkey = strings.Replace(upperKey, ".", "_", -1)
 		if flag := os.Getenv(newkey); flag != "" {
 			handler.Set(key, flag)
 			continue
