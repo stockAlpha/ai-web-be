@@ -58,8 +58,10 @@ var CanGenerateRechargeKeyUserMap = map[string]string{
 }
 
 var SensitiveWordReplaceMap = map[string]string{
-	"chatgpt": "chatalpha",
-	"openai":  "chatalpha",
+	"chatGpt": "chatAlpha",
+	"openAi":  "chatAlpha",
+	"ChatGPT": "chatAlpha",
+	"OpenAI":  "chatAlpha",
 }
 
 const (
