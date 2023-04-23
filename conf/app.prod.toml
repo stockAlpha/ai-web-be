@@ -29,6 +29,10 @@ level = "info"
 
 [mysql]
 addr = "containers-us-west-203.railway.app:7806"
+username = "stock"
+password = "stock"
+host = "localhost"
+port = "3306"
 database = "chat"
 charset = "utf8mb4"
 parseTime = true
@@ -90,6 +94,7 @@ sign = "chat_alpha_20220408"
 key = "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"
 
 [redis]
+uri = "redis://:@localhost:10000"
 host = "localhost"
 password = ""
 port = "6789"
