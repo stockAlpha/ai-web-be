@@ -23,24 +23,11 @@ type DB struct {
 
 func InitDB() {
 	var dsn string
-	//if os.Getenv("RAILWAY_ENVIRONMENT") == "production" {
-	//	dsn = fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=%s&parseTime=%t&loc=%s&timeout=%s&readTimeout=%s&writeTimeout=%s",
-	//		os.Getenv("MYSQLUSER"),
-	//		os.Getenv("MYSQLPASSWORD"),
-	//		os.Getenv("MYSQLHOST")+":"+os.Getenv("MYSQLPORT"),
-	//		os.Getenv("MYSQLDATABASE"),
-	//		conf.Handler.GetString("mysql.charset"),
-	//		conf.Handler.GetBool("mysql.parseTime"),
-	//		conf.Handler.GetString("mysql.loc"),
-	//		conf.Handler.GetString("mysql.timeout"),
-	//		conf.Handler.GetString("mysql.readTimeout"),
-	//		conf.Handler.GetString("mysql.writeTimeout"),
-	//	)
-	//} else {
-	dsn = fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=%s&parseTime=%t&loc=%s&timeout=%s&readTimeout=%s&writeTimeout=%s",
-		conf.Handler.GetString("mysql.auth"),
+	dsn = fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=%s&parseTime=%t&loc=%s&timeout=%s&readTimeout=%s&writeTimeout=%s",
+		conf.Handler.GetString("mysql.username"),
 		conf.Handler.GetString("mysql.password"),
-		conf.Handler.GetString("mysql.addr"),
+		conf.Handler.GetString("mysql.host"),
+		conf.Handler.GetString("mysql.port"),
 		conf.Handler.GetString("mysql.database"),
 		conf.Handler.GetString("mysql.charset"),
 		conf.Handler.GetBool("mysql.parseTime"),
@@ -49,7 +36,6 @@ func InitDB() {
 		conf.Handler.GetString("mysql.readTimeout"),
 		conf.Handler.GetString("mysql.writeTimeout"),
 	)
-	//}
 	fmt.Println("dsn=", dsn)
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{Logger: logger.Default.LogMode(logger.LogLevel(conf.Handler.GetInt("mysql.log_mode")))})
 	if err != nil {

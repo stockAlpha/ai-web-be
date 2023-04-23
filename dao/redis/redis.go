@@ -2,6 +2,7 @@ package redis
 
 import (
 	"context"
+	"fmt"
 	"github.com/redis/go-redis/v9"
 	"stock-web-be/gocommon/conf"
 	"stock-web-be/gocommon/consts"
@@ -14,7 +15,8 @@ func GetRedisClient() *redis.Client {
 	return redisClient
 }
 func Init() {
-	dsn := conf.Handler.GetString("redis.host") + ":" + conf.Handler.GetString("redis.port")
+	dsn := conf.Handler.GetString("redis.uri")
+	fmt.Println("dsn", dsn)
 	redisOption := &redis.Options{
 		Addr: dsn,
 	}

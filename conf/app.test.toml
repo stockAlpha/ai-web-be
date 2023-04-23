@@ -28,10 +28,8 @@ maxHourRotate = 1                      # 默认日志按小时切分
 level = "info"
 
 [mysql]
-auth = "root"
-password = "ISsYBFqvktJsmbSa8EfA"
 addr = "containers-us-west-203.railway.app:7806"
-database = "stock"
+database = "chat"
 charset = "utf8mb4"
 parseTime = true
 loc = "Local"
