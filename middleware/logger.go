@@ -109,10 +109,14 @@ func GinLogger(config LoggerConfig) gin.HandlerFunc {
 		}
 		// 没接nginx，主页/favicon.ico无需记录
 		if !(c.Request.URL.Path == "/favicon.ico" && strings.ToLower(c.Request.Method) == "get") {
+			email := c.GetString("email")
+			userId, _ := strconv.ParseUint(c.GetString("user_id"), 10, 64)
 			tlog.Handler.Accessf(c, consts.SLTagRequest,
-				"method=%s||uri=%s||args=%s||errno=%d||response=%s||proc_time=%v",
+				"method=%s||uri=%s||userId=%d||email=%s||args=%s||errno=%d||response=%s||proc_time=%v",
 				c.Request.Method,
 				c.Request.URL.Path,
+				userId,
+				email,
 				args,
 				c.Writer.Status(),
 				res,
