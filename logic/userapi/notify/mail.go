@@ -144,13 +144,15 @@ func sendEmails(mailType MailType, to, subject, body string) error {
 	}
 	msg := []byte(msgStr)
 	err := smtp.SendMail(mail.SmtpServer+":"+mail.SmtpPort, auth, mail.SendMail, []string{to}, msg)
-	fmt.Println("send email success to: ", to, " subject: ", subject, " body: ", body, " message: ", msgStr)
 	if err != nil {
+		fmt.Println("send email error for: ", err.Error(), " from: ", mail.SmtpServer+":"+mail.SmtpPort, " to: ", to, " subject: ", subject, " body: ", body, " message: ", msgStr)
 		Mails.mu.Lock()
 		mail.Life = 0
 		Mails.FailMaps[mailType] = mail
 		delete(Mails.Maps, mailType)
 		Mails.mu.Unlock()
+	} else {
+		fmt.Println("send email success from:", mail.SmtpServer+":"+mail.SmtpPort, " to: ", to, " subject: ", subject, " body: ", body, " message: ", msgStr)
 	}
 	return err
 }
