@@ -93,7 +93,7 @@ sign = "your-secret-key"
 key = "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"
 
 [redis]
-uri = "localhost:10000"
+uri = "redis://:@localhost:10000"
 host = "localhost"
 password = ""
 port = "10000"

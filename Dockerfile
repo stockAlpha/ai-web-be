@@ -38,6 +38,5 @@ ENV PORT=${PORT:-8080}
 EXPOSE $PORT
 # 设置环境变量
 ENV ENV=${ENV:-prod}
-RUN echo "cur port=$PORT,cur env=$ENV"
 # docker run命令触发的真实命令(相当于直接运行编译后的可运行文件)
 ENTRYPOINT ["./main"]
