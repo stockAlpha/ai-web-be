@@ -13,6 +13,7 @@ import (
 	"stock-web-be/gocommon/consts"
 	"stock-web-be/gocommon/tlog"
 	"stock-web-be/logic/userapi"
+	"stock-web-be/utils"
 	"strconv"
 )
 
@@ -73,11 +74,13 @@ func Completions(c *gin.Context) {
 				return
 			}
 
-			if _, err := c.Writer.Write([]byte(response.Choices[0].Delta.Content)); err != nil {
+			content := response.Choices[0].Delta.Content
+			content = utils.ReplaceSensitiveWord(content, consts.SensitiveWordReplaceMap)
+
+			if _, err := c.Writer.Write([]byte(content)); err != nil {
 				// 发送失败，退出协程
 				return
 			}
-
 			// 强制刷新响应缓冲区，将数据发送给客户端
 			c.Writer.(http.Flusher).Flush()
 		}

@@ -13,6 +13,7 @@ import (
 	"stock-web-be/gocommon/conf"
 	"stock-web-be/gocommon/consts"
 	"stock-web-be/gocommon/tlog"
+	"stock-web-be/utils"
 	"strconv"
 )
 
@@ -62,6 +63,8 @@ func Audio(c *gin.Context) {
 		cg.Res(http.StatusBadRequest, controller.ErrnoInvalidPrm)
 		return
 	}
+
+	resp.Text = utils.ReplaceSensitiveWord(resp.Text, consts.SensitiveWordReplaceMap)
 	cg.Resp(http.StatusOK, controller.ErrnoSuccess, resp.Text)
 }
 

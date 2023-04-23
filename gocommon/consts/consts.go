@@ -57,6 +57,13 @@ var CanGenerateRechargeKeyUserMap = map[string]string{
 	"vinson_neo@163.com": "vinson_neo@163.com",
 }
 
+var SensitiveWordReplaceMap = map[string]string{
+	"chatGpt": "chatAlpha",
+	"openAi":  "chatAlpha",
+	"ChatGPT": "chatAlpha",
+	"OpenAI":  "chatAlpha",
+}
+
 const (
 	UserPrefix                      = "/api/v1/user"
 	SendVerificationCodeApi         = "/verify/send_code"
