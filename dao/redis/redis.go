@@ -2,12 +2,11 @@ package redis
 
 import (
 	"context"
-	"fmt"
 	"github.com/redis/go-redis/v9"
-	"net/url"
 	"stock-web-be/gocommon/conf"
 	"stock-web-be/gocommon/consts"
 	"stock-web-be/gocommon/tlog"
+	"strings"
 )
 
 var redisClient *redis.Client
@@ -16,13 +15,16 @@ func GetRedisClient() *redis.Client {
 	return redisClient
 }
 func Init() {
-	dsn, err := url.Parse(conf.Handler.GetString("redis.uri"))
-	if err != nil {
-		panic("redis init error," + err.Error())
-	}
-	fmt.Println("dsn.host", dsn.Host)
+
+	str := conf.Handler.GetString("redis.uri")
+	// 分割字符串
+	splitStr := strings.Split(str, "@")
+	// 获取密码和地址
+	password := strings.TrimPrefix(splitStr[0], "redis://:")
+	address := splitStr[1]
 	redisOption := &redis.Options{
-		Addr: dsn.Host,
+		Addr:     address,
+		Password: password,
 	}
 	if conf.Handler.GetString("redis.password") != "" {
 		redisOption.Password = conf.Handler.GetString("redis.password")
