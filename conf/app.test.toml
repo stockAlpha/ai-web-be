@@ -62,7 +62,7 @@ key = "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"
 [redis]
 uri = "redis://:@localhost:10000"
 host = "containers-us-west-190.railway.app"
-password = "NKlIqaDyL3kxUCZrBtF1"
+password = "2P5YUI76GW90"
 port = "7304"
 
 [alipay]
