@@ -37,7 +37,7 @@ database = "chat"
 charset = "utf8mb4"
 parseTime = true
 loc = "Local"
-timeout = "5000ms"
+timeout = "500ms"
 readTimeout = "200ms"
 writeTimeout = "200ms"
 #conn_max_lifetime millsecond
