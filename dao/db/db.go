@@ -45,7 +45,7 @@ func InitDB() {
 	sqldb, _ := db.DB()
 	sqldb.SetMaxIdleConns(conf.Handler.GetInt("mysql.max_idle_conns"))
 	sqldb.SetMaxOpenConns(conf.Handler.GetInt("mysql.max_open_conns"))
-	sqldb.SetConnMaxLifetime(time.Duration(conf.Handler.GetInt("mysql.conn_max_lifetime")) * time.Minute)
+	sqldb.SetConnMaxLifetime(time.Duration(conf.Handler.GetInt("mysql.conn_max_lifetime")) * time.Second)
 	cancelPing, cancel := context.WithTimeout(context.Background(), 15*time.Second)
 	defer cancel()
 	sqldb.PingContext(cancelPing)

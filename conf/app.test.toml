@@ -41,9 +41,9 @@ timeout = "5000ms"
 readTimeout = "200ms"
 writeTimeout = "200ms"
 #conn_max_lifetime millsecond
-conn_max_lifetime = 60 #minute
+conn_max_lifetime = 60 #s
 max_idle_conns = 5
-max_open_conns = 100
+max_open_conns = 20
 #log
 log_mode = 4
 
