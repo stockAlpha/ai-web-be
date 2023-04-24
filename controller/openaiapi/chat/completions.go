@@ -3,17 +3,19 @@ package chat
 import (
 	"context"
 	"errors"
-	"github.com/gin-gonic/gin"
-	openai "github.com/sashabaranov/go-openai"
 	"io"
 	"net/http"
+	"strconv"
+
 	"stock-web-be/controller"
 	"stock-web-be/dao/db"
 	"stock-web-be/gocommon/conf"
 	"stock-web-be/gocommon/consts"
 	"stock-web-be/gocommon/tlog"
 	"stock-web-be/logic/userapi"
-	"strconv"
+
+	"github.com/gin-gonic/gin"
+	"github.com/sashabaranov/go-openai"
 )
 
 // @Tags	代理OpenAI相关接口
@@ -74,6 +76,7 @@ func Completions(c *gin.Context) {
 			}
 
 			if _, err := c.Writer.Write([]byte(response.Choices[0].Delta.Content)); err != nil {
+				tx.Rollback()
 				// 发送失败，退出协程
 				return
 			}

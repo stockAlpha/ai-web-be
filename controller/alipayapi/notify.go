@@ -2,10 +2,10 @@ package alipayapi
 
 import (
 	"fmt"
-	"github.com/gin-gonic/gin"
-	"github.com/shopspring/decimal"
 	"net/http"
 	"os"
+	"strconv"
+
 	"stock-web-be/async"
 	"stock-web-be/controller"
 	"stock-web-be/dao/db"
@@ -15,7 +15,9 @@ import (
 	"stock-web-be/idl/payapi"
 	"stock-web-be/idl/userapi/order"
 	"stock-web-be/logic/userapi"
-	"strconv"
+
+	"github.com/gin-gonic/gin"
+	"github.com/shopspring/decimal"
 )
 
 // @Tags	alipay支付相关接口
@@ -72,11 +74,10 @@ func Notify(c *gin.Context) {
 		}
 	}
 
-	tx := db.DbIns.Begin()
-
 	// 修改订单状态,充值积分
 	status := req.TradeStatus
 	if status == "TRADE_SUCCESS" || status == "TRADE_FINISHED" {
+		tx := db.DbIns.Begin()
 		err = order.UpdateOrderStatus(parseOrderId, 1, tx)
 		if err != nil {
 			tx.Rollback()
