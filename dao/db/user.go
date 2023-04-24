@@ -13,10 +13,17 @@ type User struct {
 	Password   string    `gorm:"column:password" json:"password"`
 	NickName   string    `gorm:"column:nick_name" json:"nick_name"`
 	Avatar     string    `gorm:"column:avatar" json:"avatar"`
+	UserType   int32     `gorm:"column:user_type" json:"user_type"` //普通用户0 付费用户1 vip2
 	InviteCode string    `gorm:"column:invite_code" json:"invite_code"`
 	CreateTime time.Time `gorm:"column:create_time" json:"create_time"`
 	UpdateTime time.Time `gorm:"column:update_time" json:"update_time"`
 }
+
+const (
+	UserTypeCommon = int32(0)
+	UserTypePay    = int32(1)
+	UserTypeVip    = int32(2)
+)
 
 func (user *User) TableName() string {
 	return "users"
