@@ -60,7 +60,6 @@ func Completions(c *gin.Context) {
 			return
 		}
 		defer stream.Close()
-
 		for {
 			response, err := stream.Recv()
 			if errors.Is(err, io.EOF) {
