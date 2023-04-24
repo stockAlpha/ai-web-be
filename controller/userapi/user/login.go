@@ -23,7 +23,6 @@ import (
 func Login(c *gin.Context) {
 	cg := controller.Gin{Ctx: c}
 	var req user.LoginRequest
-	time.Sleep(10 * time.Second)
 	if err := c.ShouldBindJSON(&req); err != nil {
 		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "request params invalid, error: %s", err.Error())
 		cg.Res(http.StatusBadRequest, controller.ErrnoInvalidPrm)
