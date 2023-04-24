@@ -3,6 +3,7 @@ package chat
 import (
 	"context"
 	"errors"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	openai "github.com/sashabaranov/go-openai"
 	"io"
@@ -75,7 +76,10 @@ func Completions(c *gin.Context) {
 			}
 
 			content := response.Choices[0].Delta.Content
+
+			fmt.Printf("openai return content:%s, response:%s", content, response)
 			content = utils.ReplaceSensitiveWord(content, consts.SensitiveWordReplaceMap)
+			fmt.Printf("openai replace return content:%s", content)
 
 			if _, err := c.Writer.Write([]byte(content)); err != nil {
 				// 发送失败，退出协程
