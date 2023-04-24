@@ -38,7 +38,7 @@ charset = "utf8mb4"
 parseTime = true
 loc = "Local"
 timeout = "500ms"
-readTimeout = "200ms"
+readTimeout = "100ms"
 writeTimeout = "200ms"
 #conn_max_lifetime millsecond
 conn_max_lifetime = 10 #s
