@@ -70,6 +70,14 @@ func Recharge(c *gin.Context) {
 		cg.Res(http.StatusBadRequest, controller.ErrRechargeKeyUsed)
 		return
 	}
+	// 设置vip状态
+	err = userapi.SetVipUser(userId, tx)
+	if err != nil {
+		tx.Rollback()
+		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "set vip user error, error: %s", err.Error())
+		cg.Res(http.StatusBadRequest, controller.ErrServer)
+		return
+	}
 	tx.Commit()
 	async.MailChan <- async.MailChanType{To: email, Subject: consts.RechargeNotifySubject, Body: fmt.Sprintf(consts.RechargeNotifyContent, amount)}
 	cg.Res(http.StatusOK, controller.ErrnoSuccess)

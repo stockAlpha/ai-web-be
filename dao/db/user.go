@@ -14,6 +14,7 @@ type User struct {
 	NickName   string    `gorm:"column:nick_name" json:"nick_name"`
 	Avatar     string    `gorm:"column:avatar" json:"avatar"`
 	InviteCode string    `gorm:"column:invite_code" json:"invite_code"`
+	VipUser    bool      `gorm:"column:vip_user" json:"vip_user"`
 	CreateTime time.Time `gorm:"column:create_time" json:"create_time"`
 	UpdateTime time.Time `gorm:"column:update_time" json:"update_time"`
 }
@@ -46,6 +47,7 @@ func (user *User) UpdateUser() {
 	if user.Avatar != "" {
 		updateMap["avatar"] = user.Avatar
 	}
+	updateMap["update_time"] = time.Now()
 	db.Updates(updateMap)
 }
 
@@ -53,9 +55,11 @@ func (user *User) UpdateUserPassword(db *gorm.DB) error {
 	if db == nil {
 		db = DbIns.Table(user.TableName())
 	}
-
-	return db.Table(user.TableName()).Where("id = ?", user.ID).
-		Update("password", user.Password).Error
+	updateMap := map[string]interface{}{}
+	updateMap["password"] = user.Password
+	updateMap["update_time"] = time.Now()
+	return db.Where("id = ?", user.ID).
+		Updates(updateMap).Error
 }
 
 func (user *User) GetUserByEmail(email string) error {
@@ -90,13 +94,19 @@ func (user *User) GetUserById(id uint64) error {
 	return nil
 }
 
+func (user *User) SetVipUser(db *gorm.DB) error {
+	if db == nil {
+		db = DbIns.Table(user.TableName())
+	}
+	return db.Where("id = ?", user.ID).Update("vip_user", true).Error
+}
+
 func (user *User) GetUserByInviteCode(inviteCode string, db *gorm.DB) error {
 	if db == nil {
 		db = DbIns.Table(user.TableName())
 	}
 
-	err := db.Table(user.TableName()).
-		Where("invite_code = ?", inviteCode).
+	err := db.Where("invite_code = ?", inviteCode).
 		Find(user).Error
 
 	if err != nil {

@@ -72,7 +72,6 @@ const (
 	GenerateRechargeKeyApi = "/generate_key"
 	RechargeApi            = "/recharge"
 	ManualRechargeApi      = "/manual/recharge"
-	RecordApi              = "/record"
 
 	OpenaiPrefix         = "/api/v1/openai"
 	OpenaiCompletionsApi = "/v1/chat/completions"

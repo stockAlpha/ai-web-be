@@ -3,6 +3,7 @@ package chat
 import (
 	"context"
 	"errors"
+	"fmt"
 	"io"
 	"net/http"
 	"strconv"
@@ -32,6 +33,14 @@ func Completions(c *gin.Context) {
 		cg.Res(http.StatusBadRequest, controller.ErrnoInvalidPrm)
 		return
 	}
+	// 根据用户是否位vip来控制max_tokens
+	user, _ := userapi.GetUserById(userId)
+	if user.VipUser {
+		req.MaxTokens = 4096
+	} else {
+		req.MaxTokens = 1024
+	}
+	fmt.Println("maxTokens", req.MaxTokens)
 	ctx := context.Background()
 	// 计费，避免长事务，先扣减积分，再对话
 	amount := 1
@@ -45,7 +54,7 @@ func Completions(c *gin.Context) {
 			cg.Res(http.StatusBadRequest, controller.ErrServer)
 		}
 		// 补回积分
-		userapi.AddUserIntegral(userId, amount, nil)
+		_ = userapi.AddUserIntegral(userId, amount, nil)
 		return
 	}
 	if req.Stream {

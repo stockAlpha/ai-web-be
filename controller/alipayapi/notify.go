@@ -113,6 +113,14 @@ func Notify(c *gin.Context) {
 			c.String(http.StatusOK, "failed")
 			return
 		}
+		// 设置vip状态
+		err = userapi.SetVipUser(userId, tx)
+		if err != nil {
+			tx.Rollback()
+			tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "set userId=%d vip user error, error: %s", userId, err.Error())
+			c.String(http.StatusOK, "failed")
+			return
+		}
 		tx.Commit()
 		async.MailChan <- async.MailChanType{To: user.Email, Subject: consts.RechargeNotifySubject, Body: fmt.Sprintf(consts.RechargeNotifyContent, integralAmount)}
 	}

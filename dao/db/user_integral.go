@@ -57,6 +57,7 @@ func (u *UserIntegral) AddAmount(amount int, db *gorm.DB) error {
 	updateMap := map[string]interface{}{}
 	updateMap["amount"] = gorm.Expr("amount + ?", amount)
 	updateMap["total_amount"] = gorm.Expr("total_amount + ?", amount)
+	updateMap["update_time"] = time.Now()
 	if err := db.Model(u).Updates(updateMap).Error; err != nil {
 		return err
 	}
