@@ -7,6 +7,7 @@ import (
 	"io"
 	"math"
 	"net/http"
+	"stock-web-be/idl/openaiapi"
 	"strconv"
 
 	"stock-web-be/controller"
@@ -21,14 +22,14 @@ import (
 
 // @Tags	代理OpenAI相关接口
 // @Summary	对话
-// @param		req	body	openai.ChatCompletionRequest	true	"openai请求参数"
+// @param		req	body	openaiapi.ChatCompletionRequest	true	"openai请求参数"
 // @Router		/api/v1/openai/v1/chat/completions [post]
 func Completions(c *gin.Context) {
 	cg := controller.Gin{Ctx: c}
 	apiKey := conf.Handler.GetString(`openai.key`)
 	client := openai.NewClient(apiKey)
 	userId, _ := strconv.ParseUint(c.GetString("user_id"), 10, 64)
-	var req openai.ChatCompletionRequest
+	var req openaiapi.ChatCompletionRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "request params invalid, error: %s", err.Error())
 		cg.Res(http.StatusBadRequest, controller.ErrnoInvalidPrm)
@@ -50,23 +51,45 @@ func Completions(c *gin.Context) {
 	userTokens := 0
 	var messages []openai.ChatCompletionMessage
 	for i := len(req.Messages) - 1; i >= 0; i-- {
-		if userTokens+len(req.Messages[i].Content) < maxRequestTokens {
-			userTokens += len(req.Messages[i].Content)
+		curMessage := req.Messages[i]
+		if userTokens+len(curMessage.Content) < maxRequestTokens {
+			userTokens += len(curMessage.Content)
 			messages = append([]openai.ChatCompletionMessage{req.Messages[i]}, messages...)
 		} else {
 			// 最后一个总会要保留
 			if userTokens == 0 {
-				userTokens += len(req.Messages[i].Content)
+				userTokens += len(curMessage.Content)
 				messages = append([]openai.ChatCompletionMessage{req.Messages[i]}, messages...)
 			}
 			break
 		}
 	}
+	// 判断第一个内容是不是system的，如果是删掉
+	if messages[0].Role == "system" {
+		messages = messages[1:]
+	}
+	if req.Role != "" {
+		messages = append([]openai.ChatCompletionMessage{
+			{
+				Role:    "assistant",
+				Content: "你现在是一个专业的对话助手",
+			},
+		}, messages...)
+	}
+	// todo：支持按角色的prompt
+
 	maxTokens := int(math.Max(1, math.Min(float64(maxModelTokens-userTokens), float64(maxResponseTokens))))
 
 	fmt.Printf("maxRequestTokens=%d, maxResponseTokens=%d, userTokens=%d, maxTokens=%d, message=%v",
 		maxRequestTokens, maxResponseTokens, userTokens, maxTokens, messages)
-	// todo：支持system的prompt
+	openaiReq := openai.ChatCompletionRequest{
+		Model:            req.Model,
+		Messages:         messages,
+		MaxTokens:        maxTokens,
+		Temperature:      req.Temperature,
+		Stream:           req.Stream,
+		FrequencyPenalty: req.FrequencyPenalty,
+	}
 	req.Messages = messages
 	req.MaxTokens = maxTokens
 	ctx := context.Background()
@@ -87,7 +110,7 @@ func Completions(c *gin.Context) {
 	}
 	if req.Stream {
 		c.Header("Transfer-Encoding", "chunked")
-		stream, err := client.CreateChatCompletionStream(ctx, req)
+		stream, err := client.CreateChatCompletionStream(ctx, openaiReq)
 		if err != nil {
 			c.Header("content-type", "application/json")
 			tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "ChatCompletionStream error: %s", err.Error())
@@ -127,7 +150,7 @@ func Completions(c *gin.Context) {
 	} else {
 		resp, err := client.CreateChatCompletion(
 			ctx,
-			req,
+			openaiReq,
 		)
 		if err != nil {
 			tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "request openai error: %s", err.Error())
