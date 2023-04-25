@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/pkoukk/tiktoken-go"
 	"io"
 	"math"
 	"net/http"
@@ -50,19 +51,22 @@ func Completions(c *gin.Context) {
 	maxModelTokens := 4096
 	userTokens := 0
 	var messages []openai.ChatCompletionMessage
+	encoding, _ := tiktoken.EncodingForModel(req.Model)
 	for i := len(req.Messages) - 1; i >= 0; i-- {
 		curMessage := req.Messages[i]
 		// 跳过system的数据
 		if curMessage.Role == "system" {
 			break
 		}
-		if userTokens+len(curMessage.Content) < maxRequestTokens {
-			userTokens += len(curMessage.Content)
+		content := curMessage.Content
+		curLen := len(encoding.Encode(content, nil, nil))
+		if userTokens+curLen < maxRequestTokens {
+			userTokens += curLen
 			messages = append([]openai.ChatCompletionMessage{req.Messages[i]}, messages...)
 		} else {
 			// 最后一个总会要保留
 			if userTokens == 0 {
-				userTokens += len(curMessage.Content)
+				userTokens += curLen
 				messages = append([]openai.ChatCompletionMessage{req.Messages[i]}, messages...)
 			}
 			break
