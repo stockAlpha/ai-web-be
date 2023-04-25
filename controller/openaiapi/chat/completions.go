@@ -36,9 +36,9 @@ func Completions(c *gin.Context) {
 	// 根据用户是否位vip来控制max_tokens
 	user, _ := userapi.GetUserById(userId)
 	if user.VipUser {
-		req.MaxTokens = 4096
+		req.MaxTokens = 4000
 	} else {
-		req.MaxTokens = 1024
+		req.MaxTokens = 1000
 	}
 	fmt.Println("maxTokens", req.MaxTokens)
 	ctx := context.Background()
