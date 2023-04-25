@@ -34,7 +34,7 @@ func Completions(c *gin.Context) {
 	}
 	// 根据用户是否位vip来控制max_tokens
 	//user, _ := userapi.GetUserById(userId)
-	req.MaxTokens = 10
+	req.MaxTokens = 1
 	ctx := context.Background()
 	// 计费，避免长事务，先扣减积分，再对话
 	amount := 1
