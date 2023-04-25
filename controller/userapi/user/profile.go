@@ -39,5 +39,6 @@ func Profile(c *gin.Context) {
 	res.Avatar = userProfile.Avatar
 	res.InviteCode = userProfile.InviteCode
 	res.Email = email
+	res.VipUser = userProfile.VipUser
 	cg.Resp(http.StatusOK, controller.ErrnoSuccess, res)
 }

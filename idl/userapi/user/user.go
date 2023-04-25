@@ -25,6 +25,7 @@ type ProfileResponse struct {
 	Avatar     string `json:"avatar"`     // 头像
 	InviteCode string `json:"inviteCode"` // 邀请码
 	Integral   int    `json:"integral"`   // 用户当前积分
+	VipUser    bool   `json:"vipUser"`    // 是否是vip用户
 }
 
 type ProfileRequest struct {
