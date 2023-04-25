@@ -3,7 +3,9 @@ package chat
 import (
 	"context"
 	"errors"
+	"fmt"
 	"io"
+	"math"
 	"net/http"
 	"strconv"
 
@@ -22,9 +24,9 @@ import (
 // @param		req	body	openai.ChatCompletionRequest	true	"openai请求参数"
 // @Router		/api/v1/openai/v1/chat/completions [post]
 func Completions(c *gin.Context) {
+	cg := controller.Gin{Ctx: c}
 	apiKey := conf.Handler.GetString(`openai.key`)
 	client := openai.NewClient(apiKey)
-	cg := controller.Gin{Ctx: c}
 	userId, _ := strconv.ParseUint(c.GetString("user_id"), 10, 64)
 	var req openai.ChatCompletionRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -32,9 +34,36 @@ func Completions(c *gin.Context) {
 		cg.Res(http.StatusBadRequest, controller.ErrnoInvalidPrm)
 		return
 	}
+
 	// 根据用户是否位vip来控制max_tokens
-	//user, _ := userapi.GetUserById(userId)
-	req.MaxTokens = 1
+	user, _ := userapi.GetUserById(userId)
+	// 普通用户的请求和返回只支持1000
+	maxRequestTokens := 1000
+	maxResponseTokens := 1000
+	// vip用户可以支持更多的数量
+	if user.VipUser {
+		maxRequestTokens = 2000
+		maxResponseTokens = 2000
+	}
+	// 模型最大tokens
+	maxModelTokens := 4096
+	userTokens := 0
+	var messages []openai.ChatCompletionMessage
+	for i := len(req.Messages) - 1; i >= 1; i-- {
+		if userTokens+len(req.Messages[i].Content) < maxRequestTokens {
+			userTokens += len(req.Messages[i].Content)
+			messages = append([]openai.ChatCompletionMessage{req.Messages[i]}, messages...)
+		} else {
+			break
+		}
+	}
+	maxTokens := int(math.Max(1, math.Min(float64(maxModelTokens-userTokens), float64(maxResponseTokens))))
+
+	fmt.Printf("maxRequestTokens=%d, maxResponseTokens=%d, userTokens=%d, maxTokens=%d, message=%v",
+		maxRequestTokens, maxResponseTokens, userTokens, maxTokens, messages)
+	// todo：支持system的prompt
+	req.Messages = messages
+	req.MaxTokens = maxTokens
 	ctx := context.Background()
 	// 计费，避免长事务，先扣减积分，再对话
 	amount := 1
@@ -97,7 +126,7 @@ func Completions(c *gin.Context) {
 		)
 		if err != nil {
 			tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "request openai error: %s", err.Error())
-			cg.Res(http.StatusBadRequest, controller.ErrnoInvalidPrm)
+			cg.Res(http.StatusBadRequest, controller.ErrServer)
 			// 补回积分
 			_ = userapi.AddUserIntegral(userId, amount, nil)
 			return
