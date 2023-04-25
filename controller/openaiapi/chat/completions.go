@@ -38,8 +38,8 @@ func Completions(c *gin.Context) {
 	// 根据用户是否位vip来控制max_tokens
 	user, _ := userapi.GetUserById(userId)
 	// 普通用户的请求和返回只支持1000
-	maxRequestTokens := 100
-	maxResponseTokens := 100
+	maxRequestTokens := 1000
+	maxResponseTokens := 1000
 	// vip用户可以支持更多的数量
 	if user.VipUser {
 		maxRequestTokens = 2000
