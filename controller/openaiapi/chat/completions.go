@@ -3,7 +3,6 @@ package chat
 import (
 	"context"
 	"errors"
-	"fmt"
 	"io"
 	"net/http"
 	"strconv"
@@ -23,9 +22,9 @@ import (
 // @param		req	body	openai.ChatCompletionRequest	true	"openai请求参数"
 // @Router		/api/v1/openai/v1/chat/completions [post]
 func Completions(c *gin.Context) {
-	cg := controller.Gin{Ctx: c}
 	apiKey := conf.Handler.GetString(`openai.key`)
 	client := openai.NewClient(apiKey)
+	cg := controller.Gin{Ctx: c}
 	userId, _ := strconv.ParseUint(c.GetString("user_id"), 10, 64)
 	var req openai.ChatCompletionRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -34,13 +33,8 @@ func Completions(c *gin.Context) {
 		return
 	}
 	// 根据用户是否位vip来控制max_tokens
-	user, _ := userapi.GetUserById(userId)
-	if user.VipUser {
-		req.MaxTokens = 4000
-	} else {
-		req.MaxTokens = 1000
-	}
-	fmt.Println("maxTokens", req.MaxTokens)
+	//user, _ := userapi.GetUserById(userId)
+	req.MaxTokens = 10
 	ctx := context.Background()
 	// 计费，避免长事务，先扣减积分，再对话
 	amount := 1
