@@ -52,6 +52,10 @@ func Completions(c *gin.Context) {
 	var messages []openai.ChatCompletionMessage
 	for i := len(req.Messages) - 1; i >= 0; i-- {
 		curMessage := req.Messages[i]
+		// 跳过system的数据
+		if curMessage.Role == "system" {
+			break
+		}
 		if userTokens+len(curMessage.Content) < maxRequestTokens {
 			userTokens += len(curMessage.Content)
 			messages = append([]openai.ChatCompletionMessage{req.Messages[i]}, messages...)
@@ -64,15 +68,11 @@ func Completions(c *gin.Context) {
 			break
 		}
 	}
-	// 判断第一个内容是不是system的，如果是删掉
-	if messages[0].Role == "system" {
-		messages = messages[1:]
-	}
 	if req.Role != "" {
 		messages = append([]openai.ChatCompletionMessage{
 			{
 				Role:    "assistant",
-				Content: "你现在是一个专业的对话助手",
+				Content: "你现在是一个专业的AI对话助手",
 			},
 		}, messages...)
 	}
