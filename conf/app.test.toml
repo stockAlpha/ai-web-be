@@ -38,8 +38,8 @@ charset = "utf8mb4"
 parseTime = true
 loc = "Local"
 timeout = "5000ms"
-readTimeout = "200ms"
-writeTimeout = "200ms"
+readTimeout = "1000ms"
+writeTimeout = "1000ms"
 #conn_max_lifetime millsecond
 conn_max_lifetime = 60 #s
 max_idle_conns = 5

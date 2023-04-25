@@ -48,7 +48,7 @@ func (user *User) UpdateUser() {
 		updateMap["avatar"] = user.Avatar
 	}
 	updateMap["update_time"] = time.Now()
-	db.Updates(updateMap)
+	db.Table(user.TableName()).Updates(updateMap)
 }
 
 func (user *User) UpdateUserPassword(db *gorm.DB) error {
@@ -58,7 +58,7 @@ func (user *User) UpdateUserPassword(db *gorm.DB) error {
 	updateMap := map[string]interface{}{}
 	updateMap["password"] = user.Password
 	updateMap["update_time"] = time.Now()
-	return db.Where("id = ?", user.ID).
+	return db.Table(user.TableName()).Where("id = ?", user.ID).
 		Updates(updateMap).Error
 }
 
@@ -98,7 +98,7 @@ func (user *User) SetVipUser(db *gorm.DB) error {
 	if db == nil {
 		db = DbIns.Table(user.TableName())
 	}
-	return db.Where("id = ?", user.ID).Update("vip_user", true).Error
+	return db.Table(user.TableName()).Where("id = ?", user.ID).Update("vip_user", true).Error
 }
 
 func (user *User) GetUserByInviteCode(inviteCode string, db *gorm.DB) error {
@@ -106,7 +106,7 @@ func (user *User) GetUserByInviteCode(inviteCode string, db *gorm.DB) error {
 		db = DbIns.Table(user.TableName())
 	}
 
-	err := db.Where("invite_code = ?", inviteCode).
+	err := db.Table(user.TableName()).Where("invite_code = ?", inviteCode).
 		Find(user).Error
 
 	if err != nil {
