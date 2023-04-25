@@ -38,8 +38,8 @@ func Completions(c *gin.Context) {
 	// 根据用户是否位vip来控制max_tokens
 	user, _ := userapi.GetUserById(userId)
 	// 普通用户的请求和返回只支持1000
-	maxRequestTokens := 1000
-	maxResponseTokens := 1000
+	maxRequestTokens := 100
+	maxResponseTokens := 100
 	// vip用户可以支持更多的数量
 	if user.VipUser {
 		maxRequestTokens = 2000
@@ -49,11 +49,16 @@ func Completions(c *gin.Context) {
 	maxModelTokens := 4096
 	userTokens := 0
 	var messages []openai.ChatCompletionMessage
-	for i := len(req.Messages) - 1; i >= 1; i-- {
+	for i := len(req.Messages) - 1; i >= 0; i-- {
 		if userTokens+len(req.Messages[i].Content) < maxRequestTokens {
 			userTokens += len(req.Messages[i].Content)
 			messages = append([]openai.ChatCompletionMessage{req.Messages[i]}, messages...)
 		} else {
+			// 最后一个总会要保留
+			if userTokens == 0 {
+				userTokens += len(req.Messages[i].Content)
+				messages = append([]openai.ChatCompletionMessage{req.Messages[i]}, messages...)
+			}
 			break
 		}
 	}
