@@ -3,7 +3,6 @@ package openaiapi
 import (
 	"context"
 	"errors"
-	"fmt"
 	"github.com/pkoukk/tiktoken-go"
 	"io"
 	"math"
@@ -39,16 +38,14 @@ func Completions(c *gin.Context) {
 
 	// 根据用户是否位vip来控制max_tokens
 	user, _ := userapi.GetUserById(userId)
-	// 普通用户的请求和返回只支持1000
-	maxRequestTokens := 1000
-	maxResponseTokens := 1000
+	// 普通用户只支持2k tokens
+	maxModelTokens := 2000
+
 	// vip用户可以支持更多的数量
 	if user.VipUser {
-		maxRequestTokens = 2000
-		maxResponseTokens = 2000
+		maxModelTokens = 4000
 	}
 	// 模型最大tokens
-	maxModelTokens := 4096
 	userTokens := 0
 	var messages []openai.ChatCompletionMessage
 	encoding, _ := tiktoken.EncodingForModel(req.Model)
@@ -60,7 +57,7 @@ func Completions(c *gin.Context) {
 		}
 		content := curMessage.Content
 		curLen := len(encoding.Encode(content, nil, nil))
-		if userTokens+curLen < maxRequestTokens {
+		if userTokens+curLen < maxModelTokens/2 {
 			userTokens += curLen
 			messages = append([]openai.ChatCompletionMessage{req.Messages[i]}, messages...)
 		} else {
@@ -82,10 +79,8 @@ func Completions(c *gin.Context) {
 	}
 	// todo：支持按角色的prompt
 
-	maxTokens := int(math.Max(1, math.Min(float64(maxModelTokens-userTokens), float64(maxResponseTokens))))
+	maxTokens := int(math.Max(1, math.Min(float64(maxModelTokens-userTokens), float64(maxModelTokens/2))))
 
-	fmt.Printf("maxRequestTokens=%d, maxResponseTokens=%d, userTokens=%d, maxTokens=%d, message=%v",
-		maxRequestTokens, maxResponseTokens, userTokens, maxTokens, messages)
 	openaiReq := openai.ChatCompletionRequest{
 		Model:            req.Model,
 		Messages:         messages,

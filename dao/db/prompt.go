@@ -11,7 +11,8 @@ type Prompt struct {
 	ID         uint64          `gorm:"primary_key" json:"id"`
 	Name       string          `gorm:"column:name" json:"name"` // 提示名称
 	UserId     uint64          `gorm:"column:user_id" json:"user_id"`
-	PromptType int             `gorm:"column:prompt_type" json:"prompt_type"` // 提示类型，role/tool
+	Category   string          `gorm:"column:category" json:"category"`       // 提示分类，工具/角色
+	PromptType int             `gorm:"column:prompt_type" json:"prompt_type"` // 提示类型，chat/image/audio
 	Amount     decimal.Decimal `gorm:"column:amount" json:"amount"`           // 订单金额
 	Status     int             `gorm:"column:status" json:"status"`           // 提示状态，0已上线，1审核中，2已下线
 	CreateTime time.Time       `gorm:"column:create_time" json:"create_time"`

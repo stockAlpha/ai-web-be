@@ -17,7 +17,8 @@ import (
 // @Success 200 {int} int "支付状态：1-待支付,2-已支付,3-已取消"
 func Status(c *gin.Context) {
 	cg := controller.Gin{Ctx: c}
-	orderId, _ := strconv.ParseUint(c.GetString("orderId"), 10, 64)
+
+	orderId, _ := strconv.ParseUint(c.Query("orderId"), 10, 64)
 	orderStatus, err := order.GetOrderById(orderId)
 	if err != nil {
 		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "find order error orderId=%s", orderId, err.Error())
