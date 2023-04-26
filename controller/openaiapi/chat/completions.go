@@ -76,7 +76,7 @@ func Completions(c *gin.Context) {
 		messages = append([]openai.ChatCompletionMessage{
 			{
 				Role:    "system",
-				Content: "你现在是一个专业的AI对话助手",
+				Content: "你现在是一个专业的AI对话助手,你的名字叫ChatAlpha",
 			},
 		}, messages...)
 	}
