@@ -123,7 +123,9 @@ func Notify(c *gin.Context) {
 		}
 		tx.Commit()
 		async.MailChan <- async.MailChanType{To: user.Email, Subject: consts.RechargeNotifySubject, Body: fmt.Sprintf(consts.RechargeNotifyContent, integralAmount)}
+	} else if status == "TRADE_CLOSED" {
+		// 订单取消
+		err = order.UpdateOrderStatus(parseOrderId, 3, nil)
 	}
-
 	c.String(http.StatusOK, "success")
 }
