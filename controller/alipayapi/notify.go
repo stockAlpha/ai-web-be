@@ -78,7 +78,7 @@ func Notify(c *gin.Context) {
 	status := req.TradeStatus
 	if status == "TRADE_SUCCESS" || status == "TRADE_FINISHED" {
 		tx := db.DbIns.Begin()
-		err = order.UpdateOrderStatus(parseOrderId, 1, tx)
+		err = order.UpdateOrderStatus(parseOrderId, 2, tx)
 		if err != nil {
 			tx.Rollback()
 			tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "update order status error, error: %s", err.Error())

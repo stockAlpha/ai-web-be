@@ -50,6 +50,7 @@ var NotAuthApisMap = map[string]string{
 	"/public/*filepath":                          "/public/*filepath",
 	"/favicon.ico":                               "/favicon.ico",
 	"/swagger/*any":                              "/swagger/*any",
+	"/swagger/index.html":                        "/swagger/index.html",
 }
 
 var CanGenerateRechargeKeyUserMap = map[string]string{
