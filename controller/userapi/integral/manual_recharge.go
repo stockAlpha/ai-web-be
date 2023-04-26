@@ -81,7 +81,7 @@ func ManualRecharge(c *gin.Context) {
 
 	// 修改状态
 	rechargeKey.Status = 1
-	rechargeKey.UseAccount = userId
+	rechargeKey.UserId = userId
 	rechargeKey.UpdateTime = time.Now()
 	err = rechargeKey.UpdateRechargeKey(tx)
 	if err != nil {

@@ -92,14 +92,14 @@ func Notify(c *gin.Context) {
 			c.String(http.StatusOK, "failed")
 			return
 		}
-		err = userapi.AddUserIntegral(existOrder.FromUserId, integralAmount, tx)
+		err = userapi.AddUserIntegral(existOrder.UserId, integralAmount, tx)
 		if err != nil {
 			tx.Rollback()
 			tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "add user integral error, error: %s", err.Error())
 			c.String(http.StatusOK, "failed")
 			return
 		}
-		userId := existOrder.FromUserId
+		userId := existOrder.UserId
 		user, err := userapi.GetUserById(userId)
 		if err != nil {
 			tx.Rollback()

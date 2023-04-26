@@ -173,9 +173,9 @@ func AddInviteRelation(fromUserId uint64, toUserId uint64, inviteCode string, tr
 	return nil
 }
 
-func AddFeedback(fromUserId uint64, feedbackType int, content string) error {
+func AddFeedback(userId uint64, feedbackType int, content string) error {
 	feedback := &db.Feedback{
-		FromUserId:   fromUserId,
+		UserId:       userId,
 		FeedbackType: feedbackType,
 		Content:      content,
 		CreateTime:   time.Now(),

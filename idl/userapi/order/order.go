@@ -9,7 +9,7 @@ import (
 
 func AddOrder(userId uint64, amount decimal.Decimal, productInfo string, transaction *gorm.DB) (uint64, error) {
 	order := &db.Order{
-		FromUserId:  userId,
+		UserId:      userId,
 		OrderType:   1,
 		Amount:      amount,
 		ProductInfo: productInfo,
@@ -27,6 +27,18 @@ func AddOrder(userId uint64, amount decimal.Decimal, productInfo string, transac
 func GetOrderById(id uint64) (*db.Order, error) {
 	order := &db.Order{}
 	err := order.GetOrderById(id)
+	if err != nil {
+		return nil, err
+	}
+	if order.ID == 0 {
+		return nil, nil
+	}
+	return order, nil
+}
+
+func GetOrderByUserId(userId uint64) (*db.Order, error) {
+	order := &db.Order{}
+	err := order.GetOrderByUserId(userId)
 	if err != nil {
 		return nil, err
 	}

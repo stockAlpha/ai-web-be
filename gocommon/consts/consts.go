@@ -83,6 +83,7 @@ const (
 
 	PayPrefix    = "/api/v1/pay"
 	PreCreateApi = "/pre_create"
+	StatusApi    = "/status"
 )
 
 // env
