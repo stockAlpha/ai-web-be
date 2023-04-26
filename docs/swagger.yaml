@@ -28,6 +28,34 @@ definitions:
     required:
     - key
     type: object
+  menu.Item:
+    properties:
+      name:
+        description: 名称
+        type: string
+      type:
+        description: 类型：chat/image/audio
+        type: string
+    type: object
+  menu.Menu:
+    properties:
+      tabs:
+        description: 菜单tab
+        items:
+          $ref: '#/definitions/menu.Tab'
+        type: array
+    type: object
+  menu.Tab:
+    properties:
+      category:
+        description: 菜单分类：角色/工具
+        type: string
+      items:
+        description: 菜单项
+        items:
+          $ref: '#/definitions/menu.Item'
+        type: array
+    type: object
   openai.ChatCompletionMessage:
     properties:
       content:
@@ -456,7 +484,11 @@ paths:
       - 用户相关接口
   /api/v1/user/menu:
     get:
-      responses: {}
+      responses:
+        "200":
+          description: 主菜单信息
+          schema:
+            $ref: '#/definitions/menu.Menu'
       summary: 获取主菜单信息
       tags:
       - 用户相关接口

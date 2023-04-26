@@ -316,7 +316,14 @@
                     "用户相关接口"
                 ],
                 "summary": "获取主菜单信息",
-                "responses": {}
+                "responses": {
+                    "200": {
+                        "description": "主菜单信息",
+                        "schema": {
+                            "$ref": "#/definitions/menu.Menu"
+                        }
+                    }
+                }
             }
         },
         "/api/v1/user/profile": {
@@ -448,6 +455,47 @@
             "properties": {
                 "key": {
                     "type": "string"
+                }
+            }
+        },
+        "menu.Item": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "description": "名称",
+                    "type": "string"
+                },
+                "type": {
+                    "description": "类型：chat/image/audio",
+                    "type": "string"
+                }
+            }
+        },
+        "menu.Menu": {
+            "type": "object",
+            "properties": {
+                "tabs": {
+                    "description": "菜单tab",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/menu.Tab"
+                    }
+                }
+            }
+        },
+        "menu.Tab": {
+            "type": "object",
+            "properties": {
+                "category": {
+                    "description": "菜单分类：角色/工具",
+                    "type": "string"
+                },
+                "items": {
+                    "description": "菜单项",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/menu.Item"
+                    }
                 }
             }
         },

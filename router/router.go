@@ -55,7 +55,7 @@ func swagger(r *gin.Engine) {
 	docs.SwaggerInfo.Title = "Stock Web API"
 	docs.SwaggerInfo.Description = "This is stock web server api."
 	docs.SwaggerInfo.Version = "1.0"
-	docs.SwaggerInfo.Schemes = []string{"http", "https"}
+	docs.SwaggerInfo.Schemes = []string{"https"}
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 }
 
@@ -64,6 +64,7 @@ func registerUser(group *gin.RouterGroup) {
 	group.POST(consts.RegisterApi, user.Register)
 	group.POST(consts.LoginApi, user.Login)
 	group.POST(consts.LogoutApi, user.Logout)
+	group.GET(consts.MenuApi, user.Menu)
 
 	group.GET(consts.ProfileApi, user.Profile)
 	group.POST(consts.ProfileApi, user.UpdateProfile)

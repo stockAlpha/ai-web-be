@@ -10,6 +10,7 @@ import (
 // @Tags	用户相关接口
 // @Summary	获取主菜单信息
 // @Router		/api/v1/user/menu [get]
+// @Success 200 {object} menu.Menu "主菜单信息"
 func Menu(c *gin.Context) {
 	cg := controller.Gin{Ctx: c}
 	var toolItems []menu.Item
@@ -23,5 +24,10 @@ func Menu(c *gin.Context) {
 	roleItems = append(roleItems, menu.Item{Type: "chat", Name: "小说家"})
 	roleItems = append(roleItems, menu.Item{Type: "chat", Name: "数学家"})
 	roleItems = append(roleItems, menu.Item{Type: "chat", Name: "导游"})
-	cg.Res(http.StatusOK, controller.ErrnoSuccess)
+
+	var tables []menu.Tab
+	tables = append(tables, menu.Tab{Category: "工具", Items: toolItems})
+	tables = append(tables, menu.Tab{Category: "角色", Items: roleItems})
+
+	cg.Resp(http.StatusOK, controller.ErrnoSuccess, menu.Menu{Tabs: tables})
 }

@@ -5,7 +5,7 @@ type Menu struct {
 }
 
 type Tab struct {
-	Category string `json:"category"` // 菜单分类：默认/角色/工具
+	Category string `json:"category"` // 菜单分类：角色/工具
 	Items    []Item `json:"items"`    // 菜单项
 }
 

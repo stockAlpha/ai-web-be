@@ -67,6 +67,7 @@ const (
 	FeedbackApi                     = "/feedback"
 	ChangePasswordApi               = "/change_password"
 	SendPasswordVerificationCodeApi = "/change_password/verify/code"
+	MenuApi                         = "/menu"
 
 	IntegralPrefix         = "/api/v1/integral"
 	GenerateRechargeKeyApi = "/generate_key"
