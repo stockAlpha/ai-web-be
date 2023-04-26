@@ -11,6 +11,7 @@ func AddOrder(userId uint64, amount decimal.Decimal, productInfo string, transac
 	order := &db.Order{
 		UserId:      userId,
 		OrderType:   1,
+		Status:      1,
 		Amount:      amount,
 		ProductInfo: productInfo,
 		CreateTime:  time.Now(),
