@@ -7,7 +7,6 @@ import (
 	"stock-web-be/gocommon/consts"
 	"stock-web-be/gocommon/tlog"
 	"stock-web-be/idl/userapi/order"
-	"strconv"
 )
 
 // @Tags	支付相关接口
@@ -17,8 +16,7 @@ import (
 // @Success 200 {int} int "支付状态：1-待支付,2-已支付,3-已取消"
 func Status(c *gin.Context) {
 	cg := controller.Gin{Ctx: c}
-
-	orderId, _ := strconv.ParseUint(c.Query("orderId"), 10, 64)
+	orderId := c.Query("orderId")
 	orderStatus, err := order.GetOrderById(orderId)
 	if err != nil {
 		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "find order error orderId=%s", orderId, err.Error())

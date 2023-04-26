@@ -25,9 +25,9 @@ func AddOrder(userId uint64, amount decimal.Decimal, productInfo string, transac
 	return order.ID, nil
 }
 
-func GetOrderById(id uint64) (*db.Order, error) {
+func GetOrderById(orderId string) (*db.Order, error) {
 	order := &db.Order{}
-	err := order.GetOrderById(id)
+	err := order.GetOrderById(orderId)
 	if err != nil {
 		return nil, err
 	}
@@ -49,10 +49,10 @@ func GetOrderByUserId(userId uint64) (*db.Order, error) {
 	return order, nil
 }
 
-func UpdateOrderStatus(id uint64, status int, transaction *gorm.DB) error {
+func UpdateOrderStatus(orderId string, status int, transaction *gorm.DB) error {
 	order := &db.Order{
-		ID:     id,
-		Status: status,
+		OrderId: orderId,
+		Status:  status,
 	}
 	return order.UpdateOrderStatus(transaction)
 }

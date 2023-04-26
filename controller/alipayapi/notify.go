@@ -42,13 +42,7 @@ func Notify(c *gin.Context) {
 		c.String(http.StatusOK, "failed")
 		return
 	}
-	parseOrderId, err := strconv.ParseUint(orderId, 10, 64)
-	if err != nil {
-		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "orderId：%s parse error: %s", orderId, err.Error())
-		c.String(http.StatusOK, "failed")
-		return
-	}
-	existOrder, err := order.GetOrderById(parseOrderId)
+	existOrder, err := order.GetOrderById(orderId)
 	if err != nil {
 		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "get order error, error: %s", err.Error())
 		c.String(http.StatusOK, "failed")
@@ -78,7 +72,7 @@ func Notify(c *gin.Context) {
 	status := req.TradeStatus
 	if status == "TRADE_SUCCESS" || status == "TRADE_FINISHED" {
 		tx := db.DbIns.Begin()
-		err = order.UpdateOrderStatus(parseOrderId, 2, tx)
+		err = order.UpdateOrderStatus(orderId, 2, tx)
 		if err != nil {
 			tx.Rollback()
 			tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "update order status error, error: %s", err.Error())
@@ -125,7 +119,7 @@ func Notify(c *gin.Context) {
 		async.MailChan <- async.MailChanType{To: user.Email, Subject: consts.RechargeNotifySubject, Body: fmt.Sprintf(consts.RechargeNotifyContent, integralAmount)}
 	} else if status == "TRADE_CLOSED" {
 		// 订单取消
-		err = order.UpdateOrderStatus(parseOrderId, 3, nil)
+		err = order.UpdateOrderStatus(orderId, 3, nil)
 	}
 	c.String(http.StatusOK, "success")
 }
