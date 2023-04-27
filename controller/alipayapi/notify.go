@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"strings"
 
 	"stock-web-be/async"
 	"stock-web-be/controller"
@@ -34,7 +35,7 @@ func Notify(c *gin.Context) {
 	}
 
 	// 校验订单
-	orderId := req.OutTradeNo
+	orderId, _ := strconv.ParseUint(strings.Split(req.OutTradeNo, "_")[1], 10, 64)
 	amount := req.TotalAmount
 	appId := req.AppId
 	if appId != conf.Handler.GetString("alipay.app_id") {

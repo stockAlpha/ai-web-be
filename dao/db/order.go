@@ -9,7 +9,6 @@ import (
 
 type Order struct {
 	ID          uint64          `gorm:"primary_key" json:"id"`
-	OrderId     string          `gorm:"column:order_id" json:"order_id"` // 订单id
 	UserId      uint64          `gorm:"column:user_id" json:"user_id"`
 	OrderType   int             `gorm:"column:order_type" json:"order_type"`     // 充值类型，1为积分
 	Amount      decimal.Decimal `gorm:"column:amount" json:"amount"`             // 订单金额
@@ -45,7 +44,7 @@ func (order *Order) UpdateOrderStatus(db *gorm.DB) error {
 	updateMap := map[string]interface{}{}
 	updateMap["status"] = order.Status
 	updateMap["update_time"] = time.Now()
-	return db.Table(order.TableName()).Where("order_id = ?", order.OrderId).
+	return db.Table(order.TableName()).Where("id = ?", order.ID).
 		Updates(updateMap).Error
 }
 
@@ -65,11 +64,11 @@ func (order *Order) GetOrderByUserId(userId uint64) error {
 	return nil
 }
 
-func (order *Order) GetOrderById(orderId string) error {
+func (order *Order) GetOrderById(id uint64) error {
 	db := DbIns.Table(order.TableName())
 
 	err := db.Table(order.TableName()).
-		Where("order_id = ?", orderId).
+		Where("id = ?", id).
 		Find(order).Error
 
 	if err != nil {

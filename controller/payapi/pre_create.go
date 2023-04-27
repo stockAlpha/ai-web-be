@@ -54,12 +54,12 @@ func PreCreate(c *gin.Context) {
 		// 线上环境走真实金额
 		totalAmount = strconv.Itoa(amount)
 	}
-	orderId := os.Getenv(consts.Env) + "_" + strconv.FormatUint(id, 10)
+	orderId := strconv.FormatUint(id, 10)
 	res, err := client.TradePreCreate(alipay.TradePreCreate{
 		Trade: alipay.Trade{
 			Subject:     "ChatAlpha积分充值",
 			NotifyURL:   conf.Handler.GetString("alipay.notify_url"),
-			OutTradeNo:  orderId,
+			OutTradeNo:  os.Getenv(consts.Env) + "_" + orderId,
 			TotalAmount: totalAmount,
 			ProductCode: "FACE_TO_FACE_PAYMENT",
 		},
