@@ -3,6 +3,7 @@ package conf
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"stock-web-be/gocommon/consts"
 
@@ -52,11 +53,21 @@ func LoadConfig(confPath string) *viper.Viper {
 			handler.Set(key, flag)
 			continue
 		}
-		//key = strings.Replace(key, ".", "_", -1)
-		//if flag := os.Getenv(key); flag != "" {
-		//	handler.Set(key, flag)
-		//	continue
-		//}
+		upperKey := strings.ToUpper(key)
+		if flag := os.Getenv(upperKey); flag != "" {
+			handler.Set(key, flag)
+			continue
+		}
+		newKey := strings.Replace(key, ".", "_", -1)
+		if flag := os.Getenv(newKey); flag != "" {
+			handler.Set(key, flag)
+			continue
+		}
+		newKey = strings.Replace(upperKey, ".", "_", -1)
+		if flag := os.Getenv(newKey); flag != "" {
+			handler.Set(key, flag)
+			continue
+		}
 	}
 	return handler
 }

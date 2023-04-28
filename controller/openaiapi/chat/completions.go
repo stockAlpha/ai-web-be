@@ -3,17 +3,18 @@ package chat
 import (
 	"context"
 	"errors"
-	"github.com/gin-gonic/gin"
-	openai "github.com/sashabaranov/go-openai"
 	"io"
 	"net/http"
+	"strconv"
+
 	"stock-web-be/controller"
-	"stock-web-be/dao/db"
 	"stock-web-be/gocommon/conf"
 	"stock-web-be/gocommon/consts"
 	"stock-web-be/gocommon/tlog"
 	"stock-web-be/logic/userapi"
-	"strconv"
+
+	"github.com/gin-gonic/gin"
+	"github.com/sashabaranov/go-openai"
 )
 
 // @Tags	代理OpenAI相关接口
@@ -32,10 +33,9 @@ func Completions(c *gin.Context) {
 		return
 	}
 	ctx := context.Background()
-	tx := db.DbIns.Begin()
-
-	// 计费，对话次数目前都按照1来计费
-	err := userapi.SubUserIntegral(userId, 1, tx)
+	// 计费，避免长事务，先扣减积分，再对话
+	amount := 1
+	err := userapi.SubUserIntegral(userId, amount, nil)
 	if err != nil {
 		c.Header("content-type", "application/json")
 		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "record user integral error: %s", err.Error())
@@ -44,7 +44,8 @@ func Completions(c *gin.Context) {
 		} else {
 			cg.Res(http.StatusBadRequest, controller.ErrServer)
 		}
-		tx.Rollback()
+		// 补回积分
+		userapi.AddUserIntegral(userId, amount, nil)
 		return
 	}
 	if req.Stream {
@@ -54,11 +55,11 @@ func Completions(c *gin.Context) {
 			c.Header("content-type", "application/json")
 			tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "ChatCompletionStream error: %s", err.Error())
 			cg.Res(http.StatusBadRequest, controller.ErrServer)
-			tx.Rollback()
+			// 补回积分
+			_ = userapi.AddUserIntegral(userId, amount, nil)
 			return
 		}
 		defer stream.Close()
-
 		for {
 			response, err := stream.Recv()
 			if errors.Is(err, io.EOF) {
@@ -69,12 +70,17 @@ func Completions(c *gin.Context) {
 				c.Header("content-type", "application/json")
 				tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "Stream error: %s", err.Error())
 				cg.Res(http.StatusBadRequest, controller.ErrServer)
-				tx.Rollback()
+				// 补回积分
+				_ = userapi.AddUserIntegral(userId, amount, nil)
 				return
 			}
 
 			if _, err := c.Writer.Write([]byte(response.Choices[0].Delta.Content)); err != nil {
-				// 发送失败，退出协程
+				c.Header("content-type", "application/json")
+				tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "Write content error: %s", err.Error())
+				cg.Res(http.StatusBadRequest, controller.ErrServer)
+				// 补回积分
+				_ = userapi.AddUserIntegral(userId, amount, nil)
 				return
 			}
 
@@ -89,10 +95,10 @@ func Completions(c *gin.Context) {
 		if err != nil {
 			tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "request openai error: %s", err.Error())
 			cg.Res(http.StatusBadRequest, controller.ErrnoInvalidPrm)
-			tx.Rollback()
+			// 补回积分
+			_ = userapi.AddUserIntegral(userId, amount, nil)
 			return
 		}
 		cg.Resp(http.StatusOK, controller.ErrnoSuccess, resp.Choices[0].Message.Content)
 	}
-	tx.Commit()
 }

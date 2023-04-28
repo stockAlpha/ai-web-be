@@ -7,7 +7,6 @@ import (
 	"github.com/sashabaranov/go-openai"
 	"net/http"
 	"stock-web-be/controller"
-	"stock-web-be/dao/db"
 	"stock-web-be/gocommon/conf"
 	"stock-web-be/gocommon/consts"
 	"stock-web-be/gocommon/tlog"
@@ -49,8 +48,8 @@ func Image(c *gin.Context) {
 	default:
 		amount = amount * 2
 	}
-	tx := db.DbIns.Begin()
-	err = userapi.SubUserIntegral(userId, amount, tx)
+	// 先扣减积分，后面失败了再补回来
+	err = userapi.SubUserIntegral(userId, amount, nil)
 	if err != nil {
 		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "record user integral error: %s", err.Error())
 		if err.Error() == "余额不足" {
@@ -58,9 +57,9 @@ func Image(c *gin.Context) {
 		} else {
 			cg.Res(http.StatusBadRequest, controller.ErrServer)
 		}
-		tx.Rollback()
+		// 补回积分
+		_ = userapi.AddUserIntegral(userId, amount, nil)
 		return
 	}
 	cg.Resp(http.StatusOK, controller.ErrnoSuccess, respUrl.Data)
-	tx.Commit()
 }
