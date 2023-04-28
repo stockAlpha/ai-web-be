@@ -6,6 +6,6 @@ type PreCreateRequest struct {
 }
 
 type PreCreateResponse struct {
-	OrderId string `json:"order_id"` // 订单id
-	QRCode  string `json:"qr_code"`  // 二维码串
+	OrderId string `json:"orderId"` // 订单id
+	QRCode  string `json:"qrCode"`  // 二维码串
 }

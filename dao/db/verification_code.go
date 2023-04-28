@@ -65,6 +65,7 @@ func (code *VerificationCode) UpdateByCode(db *gorm.DB) error {
 	if !code.ExpireTime.IsZero() {
 		updateMap["expire_time"] = code.ExpireTime
 	}
+	updateMap["update_time"] = time.Now()
 	return db.Table(code.TableName()).Where("send_subject_name = ?", code.SendSubjectName).
 		Where("send_subject_type = ?", code.SendSubjectType).
 		Where("code = ?", code.Code).

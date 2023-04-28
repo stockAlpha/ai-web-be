@@ -14,7 +14,7 @@ import (
 // @Tags	用户相关接口
 // @Summary	修改用户信息
 // @Router		/api/v1/user/profile [post]
-// @param		req	body		user.ProfileRequest	true	"用户信息"
+// @param		req	body		user.ProfileRequest	true	"用户信息和自定义配置"
 func UpdateProfile(c *gin.Context) {
 	cg := controller.Gin{Ctx: c}
 	req := user.ProfileRequest{}

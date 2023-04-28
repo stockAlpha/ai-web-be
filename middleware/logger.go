@@ -89,7 +89,7 @@ func GinLogger(config LoggerConfig) gin.HandlerFunc {
 		case "GET":
 			args = c.Request.URL.RawQuery
 		case "POST":
-			if len(string(body)) <= 1000 {
+			if len(string(body)) <= 10000 {
 				args = string(body)
 			}
 		}

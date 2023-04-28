@@ -87,6 +87,7 @@ const (
 	ErrNotExistToken            = 40123
 	ErrTokenNotExistTime        = 40124
 	ErrTokenAddBlackList        = 40125
+	ErrNotExistOrder            = 40126
 )
 
 var ErrMsg = map[int]string{
@@ -120,6 +121,7 @@ var ErrMsg = map[int]string{
 	ErrTokenNotExistTime:        "token解析后不存在失效时间",
 	ErrTokenAddBlackList:        "token加入黑名单失败",
 	ErrCreateOrder:              "创建订单失败",
+	ErrNotExistOrder:            "订单不存在",
 }
 
 // EchoJSON json格式输出

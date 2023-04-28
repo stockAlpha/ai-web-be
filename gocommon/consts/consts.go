@@ -50,6 +50,7 @@ var NotAuthApisMap = map[string]string{
 	"/public/*filepath":                          "/public/*filepath",
 	"/favicon.ico":                               "/favicon.ico",
 	"/swagger/*any":                              "/swagger/*any",
+	"/swagger/index.html":                        "/swagger/index.html",
 }
 
 var CanGenerateRechargeKeyUserMap = map[string]string{
@@ -67,12 +68,12 @@ const (
 	FeedbackApi                     = "/feedback"
 	ChangePasswordApi               = "/change_password"
 	SendPasswordVerificationCodeApi = "/change_password/verify/code"
+	MenuApi                         = "/menu"
 
 	IntegralPrefix         = "/api/v1/integral"
 	GenerateRechargeKeyApi = "/generate_key"
 	RechargeApi            = "/recharge"
 	ManualRechargeApi      = "/manual/recharge"
-	RecordApi              = "/record"
 
 	OpenaiPrefix         = "/api/v1/openai"
 	OpenaiCompletionsApi = "/v1/chat/completions"
@@ -84,6 +85,7 @@ const (
 
 	PayPrefix    = "/api/v1/pay"
 	PreCreateApi = "/pre_create"
+	StatusApi    = "/status"
 )
 
 // env

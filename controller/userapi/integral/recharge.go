@@ -62,12 +62,20 @@ func Recharge(c *gin.Context) {
 	}
 	// 修改状态
 	rechargeKey.Status = 1
-	rechargeKey.UseAccount = userId
+	rechargeKey.UserId = userId
 	err = rechargeKey.UpdateRechargeKey(tx)
 	if err != nil {
 		tx.Rollback()
 		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "use recharge key error, error: %s", err.Error())
 		cg.Res(http.StatusBadRequest, controller.ErrRechargeKeyUsed)
+		return
+	}
+	// 设置vip状态
+	err = userapi.SetVipUser(userId, tx)
+	if err != nil {
+		tx.Rollback()
+		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "set vip user error, error: %s", err.Error())
+		cg.Res(http.StatusBadRequest, controller.ErrServer)
 		return
 	}
 	tx.Commit()

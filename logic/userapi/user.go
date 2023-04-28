@@ -91,6 +91,17 @@ func AddUserIntegral(userId uint64, amount int, transaction *gorm.DB) error {
 	return nil
 }
 
+func SetVipUser(userId uint64, transaction *gorm.DB) error {
+	user := &db.User{
+		ID: userId,
+	}
+	err := user.SetVipUser(transaction)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func SubUserIntegral(userId uint64, amount int, transaction *gorm.DB) error {
 	integral, err := GetUserIntegralByUserId(userId, transaction)
 	if err != nil {
@@ -117,6 +128,7 @@ func AddUser(email, hashPassword string, transaction *gorm.DB) (uint64, error) {
 		Password:   hashPassword,
 		InviteCode: inviteCode,
 		Avatar:     avatar,
+		VipUser:    false,
 		CreateTime: time.Now(),
 		UpdateTime: time.Now(),
 	}
@@ -161,9 +173,9 @@ func AddInviteRelation(fromUserId uint64, toUserId uint64, inviteCode string, tr
 	return nil
 }
 
-func AddFeedback(fromUserId uint64, feedbackType int, content string) error {
+func AddFeedback(userId uint64, feedbackType int, content string) error {
 	feedback := &db.Feedback{
-		FromUserId:   fromUserId,
+		UserId:       userId,
 		FeedbackType: feedbackType,
 		Content:      content,
 		CreateTime:   time.Now(),
