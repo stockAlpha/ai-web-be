@@ -16,7 +16,6 @@ require (
 	github.com/shopspring/decimal v1.3.1
 	github.com/smartwalle/alipay/v3 v3.2.1
 	github.com/spf13/viper v1.15.0
-	github.com/stockAlpha/gopkg/common/safego v0.0.0-20230331033607-14017625792a
 	github.com/swaggo/gin-swagger v1.3.0
 	github.com/swaggo/swag v1.8.4
 	go.uber.org/zap v1.24.0
@@ -66,6 +65,7 @@ require (
 	github.com/spf13/cast v1.5.0 // indirect
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
+	github.com/stockAlpha/gopkg/common/safego v0.0.0-20230331033607-14017625792a // indirect
 	github.com/subosito/gotenv v1.4.2 // indirect
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	github.com/ugorji/go/codec v1.2.11 // indirect
