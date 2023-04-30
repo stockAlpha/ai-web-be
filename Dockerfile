@@ -1,5 +1,5 @@
 # 基础镜像，基于golang的alpine镜像构建--编译阶段
-FROM golang:1.9 AS builder
+FROM golang:1.19 AS builder
 # 作者
 MAINTAINER chatAlpha
 # 全局工作目录
