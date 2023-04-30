@@ -9,7 +9,7 @@ COPY . /go/stock-web-be
 # 环境变量
 #  用于代理下载go项目依赖的包
 RUN go env -w GOPRIVATE=github.com/stockAlpha
-RUN git config --global url."https://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@github.com/".insteadOf "https://github.com/"
+RUN git config --global url."https://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@github.com/".insteadOf "https://github.com/"
 # swagger重新生成
 RUN go install github.com/swaggo/swag/cmd/swag@v1.8.12
 RUN sh swag.gen
