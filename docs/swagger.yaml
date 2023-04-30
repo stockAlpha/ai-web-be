@@ -117,10 +117,10 @@ definitions:
     type: object
   payapi.PreCreateResponse:
     properties:
-      order_id:
+      orderId:
         description: 订单id
         type: string
-      qr_code:
+      qrCode:
         description: 二维码串
         type: string
     type: object
