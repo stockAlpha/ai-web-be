@@ -3,6 +3,7 @@ package aliyunapi
 import (
 	"bytes"
 	"fmt"
+	"github.com/aliyun/aliyun-oss-go-sdk/oss"
 	"github.com/google/uuid"
 	"io"
 	"net/http"
@@ -12,7 +13,7 @@ import (
 	"time"
 )
 
-func UploadFileByUrl(url string) string {
+func UploadFileByUrl(url, mimeType string) string {
 	bucket := ossclient.GetOssBucket()
 	resp, err := http.Get(url)
 	if err != nil {
@@ -23,7 +24,7 @@ func UploadFileByUrl(url string) string {
 
 	content, err := io.ReadAll(resp.Body)
 	fileName := fmt.Sprintf("image/img-%s-%s", uuid.New().String(), time.Now().Format("2006-01-02"))
-	err = bucket.PutObject(fileName, bytes.NewReader(content))
+	err = bucket.PutObject(fileName, bytes.NewReader(content), oss.ContentType(mimeType))
 	if err != nil {
 		tlog.Handler.Errorf(nil, consts.SLTagHTTPFailed, "put object error url=%s", url, err.Error())
 		return ""

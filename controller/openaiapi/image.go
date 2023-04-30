@@ -64,7 +64,7 @@ func Image(c *gin.Context) {
 	}
 	for i := range respUrl.Data {
 		imgUrl := respUrl.Data[i].URL
-		url := aliyunapi.UploadFileByUrl(imgUrl)
+		url := aliyunapi.UploadFileByUrl(imgUrl, "image/jpeg")
 		respUrl.Data[i].URL = url
 	}
 	cg.Resp(http.StatusOK, controller.ErrnoSuccess, respUrl.Data)
