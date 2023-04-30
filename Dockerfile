@@ -1,7 +1,7 @@
 # 基础镜像，基于golang的alpine镜像构建--编译阶段
-FROM golang AS builder
+FROM golang:1.9 AS builder
 # 作者
-MAINTAINER stock
+MAINTAINER chatAlpha
 # 全局工作目录
 WORKDIR /go/stock-web-be
 # 把运行Dockerfile文件的当前目录所有文件复制到目标目录
