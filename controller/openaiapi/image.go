@@ -40,13 +40,13 @@ func Image(c *gin.Context) {
 	amount := req.N
 	switch req.Size {
 	case "256x256":
-		amount = amount * 2
+		amount = amount * 7
 	case "512x512":
-		amount = amount * 3
+		amount = amount * 8
 	case "1024x1024":
-		amount = amount * 4
+		amount = amount * 9
 	default:
-		amount = amount * 2
+		amount = amount * 8
 	}
 	// 先扣减积分，后面失败了再补回来
 	err = userapi.SubUserIntegral(userId, amount, nil)
