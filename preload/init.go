@@ -9,6 +9,7 @@ import (
 	"runtime/debug"
 	"stock-web-be/async"
 	"stock-web-be/client/alipayclient"
+	"stock-web-be/client/ossclient"
 	"strconv"
 
 	"stock-web-be/dao/db"
@@ -38,6 +39,7 @@ func Init() {
 	db.InitDB()
 	redis.Init()
 	alipayclient.Init()
+	ossclient.Init()
 	//cronjob
 	async.StartCron()
 }

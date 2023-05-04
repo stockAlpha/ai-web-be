@@ -10,6 +10,7 @@ import (
 	"stock-web-be/gocommon/conf"
 	"stock-web-be/gocommon/consts"
 	"stock-web-be/gocommon/tlog"
+	"stock-web-be/logic/aliyunapi"
 	"stock-web-be/logic/userapi"
 	"strconv"
 )
@@ -60,6 +61,11 @@ func Image(c *gin.Context) {
 		// 补回积分
 		_ = userapi.AddUserIntegral(userId, amount, nil)
 		return
+	}
+	for i := range respUrl.Data {
+		imgUrl := respUrl.Data[i].URL
+		url := aliyunapi.UploadFileByUrl(imgUrl, "image/jpeg")
+		respUrl.Data[i].URL = url
 	}
 	cg.Resp(http.StatusOK, controller.ErrnoSuccess, respUrl.Data)
 }

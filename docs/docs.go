@@ -596,11 +596,11 @@ const docTemplate = `{
         "payapi.PreCreateResponse": {
             "type": "object",
             "properties": {
-                "order_id": {
+                "orderId": {
                     "description": "订单id",
                     "type": "string"
                 },
-                "qr_code": {
+                "qrCode": {
                     "description": "二维码串",
                     "type": "string"
                 }

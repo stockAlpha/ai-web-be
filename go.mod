@@ -3,6 +3,7 @@ module stock-web-be
 go 1.19
 
 require (
+	github.com/aliyun/aliyun-oss-go-sdk v0.0.0-20230323083302-77977ff44f38
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/gin-contrib/pprof v1.4.0
 	github.com/gin-gonic/gin v1.9.0
@@ -15,7 +16,6 @@ require (
 	github.com/shopspring/decimal v1.3.1
 	github.com/smartwalle/alipay/v3 v3.2.1
 	github.com/spf13/viper v1.15.0
-	github.com/stockAlpha/gopkg/common/safego v0.0.0-20230331033607-14017625792a
 	github.com/swaggo/gin-swagger v1.3.0
 	github.com/swaggo/swag v1.8.4
 	go.uber.org/zap v1.24.0
@@ -65,6 +65,7 @@ require (
 	github.com/spf13/cast v1.5.0 // indirect
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
+	github.com/stockAlpha/gopkg/common/safego v0.0.0-20230331033607-14017625792a // indirect
 	github.com/subosito/gotenv v1.4.2 // indirect
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	github.com/ugorji/go/codec v1.2.11 // indirect
@@ -74,6 +75,7 @@ require (
 	golang.org/x/net v0.9.0 // indirect
 	golang.org/x/sys v0.7.0 // indirect
 	golang.org/x/text v0.9.0 // indirect
+	golang.org/x/time v0.1.0 // indirect
 	golang.org/x/tools v0.8.0 // indirect
 	google.golang.org/protobuf v1.30.0 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
