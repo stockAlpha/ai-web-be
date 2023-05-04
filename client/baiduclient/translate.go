@@ -4,7 +4,7 @@ import (
 	"crypto/md5"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/url"
 	"stock-web-be/gocommon/conf"
@@ -100,7 +100,7 @@ func (BaiDu *BaiDu_translate) Run(text string, srcLang string, toLang string) (T
 	}
 	defer resp.Body.Close()
 
-	data, err := ioutil.ReadAll(resp.Body)
+	data, err := io.ReadAll(resp.Body)
 
 	err = json.Unmarshal(data, &respTran)
 	if respTran.Error_code != "" {
