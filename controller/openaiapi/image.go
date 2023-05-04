@@ -9,6 +9,7 @@ import (
 	"github.com/sashabaranov/go-openai"
 	"io"
 	"net/http"
+	"stock-web-be/client/baiduclient"
 	"stock-web-be/controller"
 	"stock-web-be/gocommon/conf"
 	"stock-web-be/gocommon/consts"
@@ -16,6 +17,7 @@ import (
 	"stock-web-be/idl/aiapi"
 	"stock-web-be/logic/aliyunapi"
 	"stock-web-be/logic/userapi"
+	"stock-web-be/utils"
 	"strconv"
 )
 
@@ -52,6 +54,14 @@ func Image(c *gin.Context) {
 
 	if req.Model == "stable-diffusion" {
 		token := "Token " + conf.Handler.GetString("replicate.key")
+		prompt := req.Prompt
+		trans, err := baiduclient.Run(prompt, "en")
+		if err != nil {
+			return
+		}
+		if utils.ContainsChinese(prompt) {
+			prompt = trans
+		}
 		reqValue := aiapi.ReplicateStableDiffusion{
 			Version: conf.Handler.GetString("replicate.stable_diffusion_version"),
 			Input: aiapi.ReplicateInput{
@@ -96,7 +106,7 @@ func Image(c *gin.Context) {
 		}
 
 		for i := range respUrl.Data {
-			res.Data = append(res.Data, aiapi.ImageResponseDataInner{URL: aliyunapi.UploadFileByUrl(respUrl.Data[i].URL, "image/jpeg")})
+			res.Data = append(res.Data, aiapi.ImageResponseDataInner{URL: aliyunapi.UploadFileByUrl(respUrl.Data[i].URL, "image/jpg")})
 		}
 	}
 	cg.Resp(http.StatusOK, controller.ErrnoSuccess, res)
@@ -130,9 +140,8 @@ func replicateGet(url, auth string) (output aiapi.ImageResponse, err error) {
 			break
 		}
 		if response.Status == "succeeded" {
-			fmt.Println("output", response.Output)
 			for i := range response.Output {
-				res.Data = append(res.Data, aiapi.ImageResponseDataInner{URL: aliyunapi.UploadFileByUrl(response.Output[i], "image/jpeg")})
+				res.Data = append(res.Data, aiapi.ImageResponseDataInner{URL: aliyunapi.UploadFileByUrl(response.Output[i], "image/jpg")})
 			}
 			return res, nil
 		}

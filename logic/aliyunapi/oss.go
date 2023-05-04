@@ -29,5 +29,5 @@ func UploadFileByUrl(url, mimeType string) string {
 		tlog.Handler.Errorf(nil, consts.SLTagHTTPFailed, "put object error url=%s", url, err.Error())
 		return ""
 	}
-	return "https://chatalpha.oss-cn-beijing.aliyuncs.com/" + fileName + "?x-oss-process=image/resize,w_500"
+	return "https://chatalpha.oss-cn-beijing.aliyuncs.com/" + fileName
 }

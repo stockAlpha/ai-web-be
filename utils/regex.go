@@ -47,3 +47,8 @@ func IsValidPasswordFormat(password string) bool {
 
 	return true
 }
+
+func ContainsChinese(s string) bool {
+	zhPattern := regexp.MustCompile("[\u4e00-\u9fa5]+")
+	return zhPattern.MatchString(s)
+}

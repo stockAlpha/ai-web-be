@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"stock-web-be/gocommon/conf"
 	"time"
 )
 
@@ -54,7 +55,6 @@ func (BaiDu *BaiDu_translate) setSign() {
 // set URL
 func (BaiDu *BaiDu_translate) setRequestUrl() {
 	fastUrl := BaiDu.BaiDuAPI
-	fmt.Println("fastUrl ", fastUrl)
 	if fastUrl == "" {
 		fastUrl = baiduUrl
 	}
@@ -63,8 +63,6 @@ func (BaiDu *BaiDu_translate) setRequestUrl() {
 	}
 	url := fastUrl + "?q=" + url.QueryEscape(BaiDu.Query) + "&from=" + BaiDu.srcLang + "&to=" + BaiDu.toLang + "&appid=" + BaiDu.appid + "&salt=" + BaiDu.rndNum + "&sign=" + BaiDu.sign
 
-	fmt.Println("准备请求的url ", url)
-
 	BaiDu.RequestUrl = url
 }
 
@@ -72,6 +70,15 @@ func New(appid string, secretKey string) BaiDu_translate {
 	//设置错误map
 	setErrorCodeInfo()
 	return BaiDu_translate{appid: appid, secretKey: secretKey}
+}
+
+func Run(text string, toLang string) (string, error) {
+	bdtran := New(conf.Handler.GetString("baidu.app_id"), conf.Handler.GetString("baidu.key"))
+	run, err := bdtran.Run(text, "auto", toLang)
+	if err != nil {
+		return "", err
+	}
+	return run.TransResults[0].Dst, nil
 }
 
 func (BaiDu *BaiDu_translate) Run(text string, srcLang string, toLang string) (Translate_obj, error) {
