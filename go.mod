@@ -13,6 +13,7 @@ require (
 	github.com/redis/go-redis/v9 v9.0.3
 	github.com/robfig/cron/v3 v3.0.1
 	github.com/sashabaranov/go-openai v1.7.0
+	github.com/sausheong/goreplicate v0.0.2-alpha
 	github.com/shopspring/decimal v1.3.1
 	github.com/smartwalle/alipay/v3 v3.2.1
 	github.com/spf13/viper v1.15.0

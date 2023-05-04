@@ -140,7 +140,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/openaiapi.ChatCompletionRequest"
+                            "$ref": "#/definitions/aiapi.ChatCompletionRequest"
                         }
                     }
                 ],
@@ -546,7 +546,7 @@ const docTemplate = `{
                 }
             }
         },
-        "openaiapi.ChatCompletionRequest": {
+        "aiapi.ChatCompletionRequest": {
             "type": "object",
             "properties": {
                 "frequency_penalty": {

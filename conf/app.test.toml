@@ -92,3 +92,11 @@ password = "esofkrcqmwmufvku"
 auth = ""
 smtpServer = "smtp.gmail.com"
 smtpPort = "25"
+
+[replicate]
+key = "r8_ADsck8NwzKDTqitqmgESIu4vN61gejr13VuZF"
+stable_diffusion_version = "db21e45d3f7023abc2a46ee38a23973f6dce16bb082a930b0c49861f96d1e5bf"
+
+[baidu]
+app_id = "20230504001666315"
+key = "KR5vjtqEm6w2C2foeG2A"

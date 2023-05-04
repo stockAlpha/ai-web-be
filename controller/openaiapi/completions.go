@@ -7,7 +7,7 @@ import (
 	"io"
 	"math"
 	"net/http"
-	"stock-web-be/idl/openaiapi"
+	"stock-web-be/idl/aiapi"
 	"strconv"
 
 	"stock-web-be/controller"
@@ -22,14 +22,14 @@ import (
 
 // @Tags	代理OpenAI相关接口
 // @Summary	对话
-// @param		req	body	openaiapi.ChatCompletionRequest	true	"openai请求参数"
+// @param		req	body	aiapi.ChatCompletionRequest	true	"openai请求参数"
 // @Router		/api/v1/openai/v1/chat/completions [post]
 func Completions(c *gin.Context) {
 	cg := controller.Gin{Ctx: c}
 	apiKey := conf.Handler.GetString(`openai.key`)
 	client := openai.NewClient(apiKey)
 	userId, _ := strconv.ParseUint(c.GetString("user_id"), 10, 64)
-	var req openaiapi.ChatCompletionRequest
+	var req aiapi.ChatCompletionRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "request params invalid, error: %s", err.Error())
 		cg.Res(http.StatusBadRequest, controller.ErrnoInvalidPrm)
@@ -147,13 +147,21 @@ func Completions(c *gin.Context) {
 			c.Writer.(http.Flusher).Flush()
 		}
 	} else {
+		//proxyUrl := "http://127.0.0.1:7890"
+		//proxyURL, err := url.Parse(proxyUrl)
+		//if err != nil {
+		//	panic(err)
+		//}
+		//http.DefaultTransport = &http.Transport{Proxy: http.ProxyURL(proxyURL)}
+		//os.Setenv("HTTP_PROXY", proxyUrl)
+		//os.Setenv("HTTPS_PROXY", proxyUrl)
 		resp, err := client.CreateChatCompletion(
 			ctx,
 			openaiReq,
 		)
 		if err != nil {
 			tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "request openai error: %s", err.Error())
-			cg.Res(http.StatusBadRequest, controller.ErrServer)
+			cg.Resp(http.StatusBadRequest, controller.ErrServer, err.Error())
 			// 补回积分
 			_ = userapi.AddUserIntegral(userId, amount, nil)
 			return
