@@ -50,7 +50,7 @@ func Image(c *gin.Context) {
 			cg.Res(http.StatusBadRequest, controller.ErrServer)
 		}
 	}
-	res := aiapi.ImageResponse{}
+	var res []aiapi.ImageResponseDataInner
 
 	if req.Model == "stable-diffusion" {
 		token := "Token " + conf.Handler.GetString("replicate.key")
@@ -106,7 +106,7 @@ func Image(c *gin.Context) {
 		}
 
 		for i := range respUrl.Data {
-			res.Data = append(res.Data, aiapi.ImageResponseDataInner{URL: aliyunapi.UploadFileByUrl(respUrl.Data[i].URL, "image/jpg")})
+			res = append(res, aiapi.ImageResponseDataInner{URL: aliyunapi.UploadFileByUrl(respUrl.Data[i].URL, "image/jpg")})
 		}
 	}
 	cg.Resp(http.StatusOK, controller.ErrnoSuccess, res)
@@ -115,14 +115,14 @@ func Image(c *gin.Context) {
 
 var httpClient = http.Client{}
 
-func replicateGet(url, auth string) (output aiapi.ImageResponse, err error) {
+func replicateGet(url, auth string) (output []aiapi.ImageResponseDataInner, err error) {
 	// create a HTTP GET request
 	req, err := http.NewRequest(http.MethodGet, url, nil)
 	req.Header.Add("Authorization", auth)
 	req.Header.Add("Content-Type", "application/json")
 
 	// create a HTTP client and use it to send the request
-	res := aiapi.ImageResponse{}
+	var res []aiapi.ImageResponseDataInner
 
 	for {
 		resp, err := httpClient.Do(req)
@@ -141,7 +141,7 @@ func replicateGet(url, auth string) (output aiapi.ImageResponse, err error) {
 		}
 		if response.Status == "succeeded" {
 			for i := range response.Output {
-				res.Data = append(res.Data, aiapi.ImageResponseDataInner{URL: aliyunapi.UploadFileByUrl(response.Output[i], "image/jpg")})
+				res = append(res, aiapi.ImageResponseDataInner{URL: aliyunapi.UploadFileByUrl(response.Output[i], "image/jpg")})
 			}
 			return res, nil
 		}

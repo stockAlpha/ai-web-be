@@ -8,10 +8,6 @@ type ImageRequest struct {
 	N      int    `json:"n,omitempty" default:"1"`
 }
 
-type ImageResponse struct {
-	Data []ImageResponseDataInner `json:"data,omitempty"`
-}
-
 type ImageResponseDataInner struct {
 	URL string `json:"url,omitempty"`
 }
