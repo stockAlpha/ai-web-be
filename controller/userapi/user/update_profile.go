@@ -24,6 +24,6 @@ func UpdateProfile(c *gin.Context) {
 		return
 	}
 	userId, _ := strconv.ParseUint(c.GetString("user_id"), 10, 64)
-	userapi.UpdateUser(userId, req.NickName, req.Avatar)
+	userapi.UpdateUser(userId, req.NickName, req.Avatar, req.CustomConfig)
 	cg.Res(http.StatusOK, controller.ErrnoSuccess)
 }

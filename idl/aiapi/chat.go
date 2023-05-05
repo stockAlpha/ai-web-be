@@ -1,4 +1,4 @@
-package openaiapi
+package aiapi
 
 import "github.com/sashabaranov/go-openai"
 

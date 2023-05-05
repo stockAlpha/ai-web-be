@@ -23,6 +23,7 @@ const (
 	SyncStop                 = " _async_ready_stop"
 	SLTagAlipaySuccess       = " _alipay_success"
 	MailSyncFailRetry        = " _mail_sync_fail_retry"
+	SLTagAliOssSuccess       = " _ali_oss_success"
 )
 
 // for middleware
@@ -79,6 +80,7 @@ const (
 	OpenaiCompletionsApi = "/v1/chat/completions"
 	ImageApi             = "/v1/image"
 	AudioApi             = "/v1/audio"
+	ModelApi             = "/v1/model"
 
 	AlipayPrefix = "/api/v1/alipay"
 	NotifyApi    = "/notify"

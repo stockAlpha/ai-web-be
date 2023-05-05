@@ -3,6 +3,7 @@ package notify
 import (
 	"errors"
 	"fmt"
+	"net/mail"
 	"net/smtp"
 	"strconv"
 	"sync"
@@ -133,24 +134,29 @@ func SendEmail(to, subject, body string) error {
 	return err
 }
 func sendEmails(mailType MailType, to, subject, body string) error {
-	mail := Mails.Maps[mailType]
+	curMail := Mails.Maps[mailType]
 	// outlook need use custom
-	auth := LoginAuth(mail.SendMail, mail.SendPassword)
-	msgStr := "To: " + to + "\r\n" +
+	auth := LoginAuth(curMail.SendMail, curMail.SendPassword)
+	from := mail.Address{Name: "ChatAlpha", Address: curMail.SendMail}
+	toAddress := mail.Address{Name: "", Address: to}
+	msgStr := "From: " + from.String() + "\r\n" +
+		"To: " + toAddress.String() + "\r\n" +
 		"Subject: " + subject + "\r\n" +
 		"\r\n" + body + "\r\n"
-	if mail.AppendMsg != "" {
-		msgStr = msgStr + mail.AppendMsg + " \r\n"
+	if curMail.AppendMsg != "" {
+		msgStr = msgStr + curMail.AppendMsg + " \r\n"
 	}
 	msg := []byte(msgStr)
-	err := smtp.SendMail(mail.SmtpServer+":"+mail.SmtpPort, auth, mail.SendMail, []string{to}, msg)
-	fmt.Println("send email success to: ", to, " subject: ", subject, " body: ", body, " message: ", msgStr)
+	err := smtp.SendMail(curMail.SmtpServer+":"+curMail.SmtpPort, auth, curMail.SendMail, []string{to}, msg)
 	if err != nil {
+		fmt.Println("send email failed from: ", curMail.SendMail, " to: ", to, " subject: ", subject, " error: ", err.Error())
 		Mails.mu.Lock()
-		mail.Life = 0
-		Mails.FailMaps[mailType] = mail
+		curMail.Life = 0
+		Mails.FailMaps[mailType] = curMail
 		delete(Mails.Maps, mailType)
 		Mails.mu.Unlock()
+	} else {
+		fmt.Println("send email success from: ", curMail.SendMail, " to: ", to, " subject: ", subject, " body: ", body)
 	}
 	return err
 }

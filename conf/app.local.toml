@@ -105,3 +105,11 @@ app_public_cert = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzZxzJ96oLYZoNWlHl
 alipay_public_key = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAoCc4rE2TC+wvqkHRn11WQmRnTJRgiP+WR7NmCH1vSuMlG1jyzVd3/bMBrGM1Q+gkJx0/1Qo2L5SpaVO9LHbKR2yOpUevhwRXzgTskMZAp4itedRmIVlJt5DoERmRYQeiI4gAiPfG8LowR1TuAWxoUcguW422zmlpuZbGEqhmzcPNuJ+ImtziefkEK5X4mOwkDfOslU/HGiPTn0EaRfZZOx0CJbHTFftcvJ/ibeg9jHV2x0Q+RVuxJGeOe8VYkoV24Jp7EvVQm4RQq922Ij0Y0JkXPSYMjavBU+Uc5fhvRndvbS+k70Pn0Xrz9cAtlarv/p23QeLNQeZ8gZbHyj23LwIDAQAB"
 encrypt_key = "ThlHClWx+ktjKHqG+fSMMg=="
 app_id = "2021003189689338"
+
+[replicate]
+key = "r8_ADsck8NwzKDTqitqmgESIu4vN61gejr13VuZF"
+stable_diffusion_version = "db21e45d3f7023abc2a46ee38a23973f6dce16bb082a930b0c49861f96d1e5bf"
+
+[baidu]
+app_id = "20230504001666315"
+key = "KR5vjtqEm6w2C2foeG2A"

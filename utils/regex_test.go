@@ -12,3 +12,9 @@ func TestIsEmailValid(t *testing.T) {
 	fmt.Println(IsEmailValid("stalary@qq.com"))
 	fmt.Println(IsEmailValid("stalary@chacuo.net"))
 }
+
+func TestContainsChinese(t *testing.T) {
+	fmt.Println(ContainsChinese("stalary"))
+	fmt.Println(ContainsChinese("stalary的博客"))
+	fmt.Println(ContainsChinese("你好，世界"))
+}
