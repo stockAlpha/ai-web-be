@@ -161,7 +161,7 @@ func Completions(c *gin.Context) {
 		)
 		if err != nil {
 			tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "request openai error: %s", err.Error())
-			cg.Resp(http.StatusBadRequest, controller.ErrServer, err.Error())
+			cg.Res(http.StatusBadRequest, controller.ErrServer)
 			// 补回积分
 			_ = userapi.AddUserIntegral(userId, amount, nil)
 			return
