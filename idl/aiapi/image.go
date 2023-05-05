@@ -4,9 +4,9 @@ import "time"
 
 type ImageRequest struct {
 	Model  string `json:"model" default:"dall-e2"` // dall-e2/stable-diffusion
-	Prompt string `json:"prompt,omitempty"`
-	N      int    `json:"n,omitempty" default:"1"`
-	Size   string `json:"size,omitempty"` // 256x256/512x512/1024x1024
+	Prompt string `json:"prompt"`
+	N      int    `json:"n" default:"1"`
+	Size   string `json:"size" default:"512x512"` // 256x256/512x512/1024x1024
 }
 
 type ImageResponseDataInner struct {

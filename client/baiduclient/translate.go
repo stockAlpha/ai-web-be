@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"net/url"
 	"stock-web-be/gocommon/conf"
+	"stock-web-be/gocommon/tlog"
 	"time"
 )
 
@@ -78,6 +79,7 @@ func Run(text string, toLang string) (string, error) {
 	if err != nil {
 		return "", err
 	}
+	tlog.Handler.Infof(nil, "baidu translate", "baidu translate from: %s to: %s lang: %s", text, run.TransResults[0].Dst, toLang)
 	return run.TransResults[0].Dst, nil
 }
 
