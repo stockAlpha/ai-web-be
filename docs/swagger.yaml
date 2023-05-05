@@ -1,4 +1,36 @@
 definitions:
+  aiapi.ChatCompletionRequest:
+    properties:
+      frequency_penalty:
+        type: number
+      max_tokens:
+        type: integer
+      messages:
+        items:
+          $ref: '#/definitions/openai.ChatCompletionMessage'
+        type: array
+      model:
+        type: string
+      role:
+        description: 角色
+        type: string
+      stream:
+        type: boolean
+      temperature:
+        type: number
+    type: object
+  aiapi.ImageRequest:
+    properties:
+      model:
+        default: dall-e2
+        description: dall-e2/stable-diffusion
+        type: string
+      "n":
+        default: 1
+        type: integer
+      prompt:
+        type: string
+    type: object
   integral.BatchGenerateKeyRequest:
     properties:
       count:
@@ -69,39 +101,6 @@ definitions:
         type: string
       role:
         type: string
-    type: object
-  openai.ImageRequest:
-    properties:
-      "n":
-        type: integer
-      prompt:
-        type: string
-      response_format:
-        type: string
-      size:
-        type: string
-      user:
-        type: string
-    type: object
-  openaiapi.ChatCompletionRequest:
-    properties:
-      frequency_penalty:
-        type: number
-      max_tokens:
-        type: integer
-      messages:
-        items:
-          $ref: '#/definitions/openai.ChatCompletionMessage'
-        type: array
-      model:
-        type: string
-      role:
-        description: 角色
-        type: string
-      stream:
-        type: boolean
-      temperature:
-        type: number
     type: object
   payapi.PreCreateRequest:
     properties:
@@ -180,6 +179,9 @@ definitions:
     type: object
   user.ImageConfig:
     properties:
+      model:
+        description: 模型
+        type: string
       "n":
         default: 1
         description: 返回几张图，默认1张
@@ -356,7 +358,7 @@ paths:
       responses: {}
       summary: 音频转文字
       tags:
-      - 代理OpenAI相关接口
+      - OpenAI相关接口
   /api/v1/openai/v1/chat/completions:
     post:
       parameters:
@@ -365,11 +367,11 @@ paths:
         name: req
         required: true
         schema:
-          $ref: '#/definitions/openaiapi.ChatCompletionRequest'
+          $ref: '#/definitions/aiapi.ChatCompletionRequest'
       responses: {}
       summary: 对话
       tags:
-      - 代理OpenAI相关接口
+      - OpenAI相关接口
   /api/v1/openai/v1/image:
     post:
       parameters:
@@ -378,11 +380,25 @@ paths:
         name: req
         required: true
         schema:
-          $ref: '#/definitions/openai.ImageRequest'
+          $ref: '#/definitions/aiapi.ImageRequest'
       responses: {}
       summary: 生成图片
       tags:
-      - 代理OpenAI相关接口
+      - OpenAI相关接口
+  /api/v1/openai/v1/model:
+    get:
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              items:
+                type: string
+              type: array
+            type: object
+      summary: 获取可用模型
+      tags:
+      - OpenAI相关接口
   /api/v1/pay/pre_create:
     post:
       parameters:

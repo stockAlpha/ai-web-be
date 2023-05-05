@@ -20,18 +20,19 @@ type LoginRequest struct {
 }
 
 type ProfileResponse struct {
-	Email      string `json:"email"`      // 邮箱
-	NickName   string `json:"nickName"`   // 昵称
-	Avatar     string `json:"avatar"`     // 头像
-	InviteCode string `json:"inviteCode"` // 邀请码
-	Integral   int    `json:"integral"`   // 用户当前积分
-	VipUser    bool   `json:"vipUser"`    // 是否是vip用户
+	Email        string       `json:"email"`        // 邮箱
+	NickName     string       `json:"nickName"`     // 昵称
+	Avatar       string       `json:"avatar"`       // 头像
+	InviteCode   string       `json:"inviteCode"`   // 邀请码
+	Integral     int          `json:"integral"`     // 用户当前积分
+	VipUser      bool         `json:"vipUser"`      // 是否是vip用户
+	CustomConfig CustomConfig `json:"customConfig"` // 自定义配置
 }
 
 type ProfileRequest struct {
-	NickName     string       `json:"nickName"`               // 昵称
-	Avatar       string       `json:"avatar"`                 // 头像
-	CustomConfig CustomConfig `json:"customConfig,omitempty"` // 自定义配置
+	NickName     string       `json:"nickName"`     // 昵称
+	Avatar       string       `json:"avatar"`       // 头像
+	CustomConfig CustomConfig `json:"customConfig"` // 自定义配置
 }
 
 type CustomConfig struct {
@@ -41,13 +42,14 @@ type CustomConfig struct {
 
 type ChatConfig struct {
 	Model            string  `json:"model,omitempty"`                        // 模型
-	Temperature      float32 `json:"temperature,omitempty" default:"1"`      // 随机性0-2,默认为1
+	Temperature      float32 `json:"temperature,omitempty"`                  // 随机性0-2,默认为1
 	FrequencyPenalty float32 `json:"frequencyPenalty,omitempty" default:"0"` // 话题新鲜度,-2.0-2.0,默认为0
 }
 
 type ImageConfig struct {
-	N    int    `json:"n,omitempty" default:"1"` // 返回几张图，默认1张
-	Size string `json:"size,omitempty"`          // 图片大小,256x256/512x512/1024x1024
+	Model string `json:"model,omitempty"` // 模型
+	N     int    `json:"n,omitempty"`     // 返回几张图，默认1张
+	Size  string `json:"size,omitempty"`  // 图片大小,256x256/512x512/1024x1024
 }
 
 type FeedbackRequest struct {

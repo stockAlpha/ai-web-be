@@ -1,6 +1,7 @@
 package db
 
 import (
+	"encoding/json"
 	"errors"
 	"time"
 
@@ -8,15 +9,16 @@ import (
 )
 
 type User struct {
-	ID         uint64    `gorm:"primary_key" json:"id"`
-	Email      string    `gorm:"column:email" json:"email"`
-	Password   string    `gorm:"column:password" json:"password"`
-	NickName   string    `gorm:"column:nick_name" json:"nick_name"`
-	Avatar     string    `gorm:"column:avatar" json:"avatar"`
-	InviteCode string    `gorm:"column:invite_code" json:"invite_code"`
-	VipUser    bool      `gorm:"column:vip_user" json:"vip_user"`
-	CreateTime time.Time `gorm:"column:create_time" json:"create_time"`
-	UpdateTime time.Time `gorm:"column:update_time" json:"update_time"`
+	ID           uint64          `gorm:"primary_key" json:"id"`
+	Email        string          `gorm:"column:email" json:"email"`
+	Password     string          `gorm:"column:password" json:"password"`
+	NickName     string          `gorm:"column:nick_name" json:"nick_name"`
+	Avatar       string          `gorm:"column:avatar" json:"avatar"`
+	InviteCode   string          `gorm:"column:invite_code" json:"invite_code"`
+	VipUser      bool            `gorm:"column:vip_user" json:"vip_user"`
+	CustomConfig json.RawMessage `gorm:"column:custom_config" json:"custom_config"`
+	CreateTime   time.Time       `gorm:"column:create_time" json:"create_time"`
+	UpdateTime   time.Time       `gorm:"column:update_time" json:"update_time"`
 }
 
 func (user *User) TableName() string {
@@ -46,6 +48,9 @@ func (user *User) UpdateUser() {
 	}
 	if user.Avatar != "" {
 		updateMap["avatar"] = user.Avatar
+	}
+	if user.CustomConfig != nil {
+		updateMap["custom_config"] = user.CustomConfig
 	}
 	updateMap["update_time"] = time.Now()
 	db.Table(user.TableName()).Updates(updateMap)

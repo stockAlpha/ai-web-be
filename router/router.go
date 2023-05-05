@@ -83,6 +83,7 @@ func registerOpenAI(group *gin.RouterGroup) {
 	group.POST(consts.OpenaiCompletionsApi, openaiapi.Completions)
 	group.POST(consts.ImageApi, openaiapi.Image)
 	group.POST(consts.AudioApi, openaiapi.Audio)
+	group.GET(consts.ModelApi, openaiapi.Model)
 }
 
 func registerAlipay(group *gin.RouterGroup) {

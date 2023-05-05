@@ -1,7 +1,9 @@
 package userapi
 
 import (
+	"encoding/json"
 	"math/rand"
+	"stock-web-be/idl/userapi/user"
 	"strconv"
 	"time"
 
@@ -122,7 +124,7 @@ func AddUser(email, hashPassword string, transaction *gorm.DB) (uint64, error) {
 	// 生成头像
 	avatar := utils.GetRandomAvatar()
 
-	user := &db.User{
+	addUser := &db.User{
 		NickName:   nickName,
 		Email:      email,
 		Password:   hashPassword,
@@ -133,28 +135,30 @@ func AddUser(email, hashPassword string, transaction *gorm.DB) (uint64, error) {
 		UpdateTime: time.Now(),
 	}
 
-	err := user.InsertUser(transaction)
+	err := addUser.InsertUser(transaction)
 	if err != nil {
 		return 0, err
 	}
-	return user.ID, nil
+	return addUser.ID, nil
 }
 
-func UpdateUser(userId uint64, nickName, avatar string) {
-	user := &db.User{
-		ID:       userId,
-		NickName: nickName,
-		Avatar:   avatar,
+func UpdateUser(userId uint64, nickName, avatar string, customConfig user.CustomConfig) {
+	marshal, _ := json.Marshal(customConfig)
+	updateUser := &db.User{
+		ID:           userId,
+		NickName:     nickName,
+		Avatar:       avatar,
+		CustomConfig: json.RawMessage(marshal),
 	}
-	user.UpdateUser()
+	updateUser.UpdateUser()
 }
 
 func UpdateUserPassword(userId uint64, password string, transaction *gorm.DB) error {
-	user := &db.User{
+	updateUser := &db.User{
 		ID:       userId,
 		Password: password,
 	}
-	return user.UpdateUserPassword(transaction)
+	return updateUser.UpdateUserPassword(transaction)
 }
 
 func AddInviteRelation(fromUserId uint64, toUserId uint64, inviteCode string, transaction *gorm.DB) error {

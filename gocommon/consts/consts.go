@@ -80,6 +80,7 @@ const (
 	OpenaiCompletionsApi = "/v1/chat/completions"
 	ImageApi             = "/v1/image"
 	AudioApi             = "/v1/audio"
+	ModelApi             = "/v1/model"
 
 	AlipayPrefix = "/api/v1/alipay"
 	NotifyApi    = "/notify"

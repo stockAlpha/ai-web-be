@@ -88,7 +88,7 @@ const docTemplate = `{
         "/api/v1/openai/v1/audio": {
             "post": {
                 "tags": [
-                    "代理OpenAI相关接口"
+                    "OpenAI相关接口"
                 ],
                 "summary": "音频转文字",
                 "parameters": [
@@ -130,7 +130,7 @@ const docTemplate = `{
         "/api/v1/openai/v1/chat/completions": {
             "post": {
                 "tags": [
-                    "代理OpenAI相关接口"
+                    "OpenAI相关接口"
                 ],
                 "summary": "对话",
                 "parameters": [
@@ -150,7 +150,7 @@ const docTemplate = `{
         "/api/v1/openai/v1/image": {
             "post": {
                 "tags": [
-                    "代理OpenAI相关接口"
+                    "OpenAI相关接口"
                 ],
                 "summary": "生成图片",
                 "parameters": [
@@ -160,11 +160,33 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/openai.ImageRequest"
+                            "$ref": "#/definitions/aiapi.ImageRequest"
                         }
                     }
                 ],
                 "responses": {}
+            }
+        },
+        "/api/v1/openai/v1/model": {
+            "get": {
+                "tags": [
+                    "OpenAI相关接口"
+                ],
+                "summary": "获取可用模型",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
             }
         },
         "/api/v1/pay/pre_create": {
@@ -427,6 +449,53 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "aiapi.ChatCompletionRequest": {
+            "type": "object",
+            "properties": {
+                "frequency_penalty": {
+                    "type": "number"
+                },
+                "max_tokens": {
+                    "type": "integer"
+                },
+                "messages": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/openai.ChatCompletionMessage"
+                    }
+                },
+                "model": {
+                    "type": "string"
+                },
+                "role": {
+                    "description": "角色",
+                    "type": "string"
+                },
+                "stream": {
+                    "type": "boolean"
+                },
+                "temperature": {
+                    "type": "number"
+                }
+            }
+        },
+        "aiapi.ImageRequest": {
+            "type": "object",
+            "properties": {
+                "model": {
+                    "description": "dall-e2/stable-diffusion",
+                    "type": "string",
+                    "default": "dall-e2"
+                },
+                "n": {
+                    "type": "integer",
+                    "default": 1
+                },
+                "prompt": {
+                    "type": "string"
+                }
+            }
+        },
         "integral.BatchGenerateKeyRequest": {
             "type": "object",
             "properties": {
@@ -523,56 +592,6 @@ const docTemplate = `{
                 },
                 "role": {
                     "type": "string"
-                }
-            }
-        },
-        "openai.ImageRequest": {
-            "type": "object",
-            "properties": {
-                "n": {
-                    "type": "integer"
-                },
-                "prompt": {
-                    "type": "string"
-                },
-                "response_format": {
-                    "type": "string"
-                },
-                "size": {
-                    "type": "string"
-                },
-                "user": {
-                    "type": "string"
-                }
-            }
-        },
-        "aiapi.ChatCompletionRequest": {
-            "type": "object",
-            "properties": {
-                "frequency_penalty": {
-                    "type": "number"
-                },
-                "max_tokens": {
-                    "type": "integer"
-                },
-                "messages": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/openai.ChatCompletionMessage"
-                    }
-                },
-                "model": {
-                    "type": "string"
-                },
-                "role": {
-                    "description": "角色",
-                    "type": "string"
-                },
-                "stream": {
-                    "type": "boolean"
-                },
-                "temperature": {
-                    "type": "number"
                 }
             }
         },
@@ -690,6 +709,10 @@ const docTemplate = `{
         "user.ImageConfig": {
             "type": "object",
             "properties": {
+                "model": {
+                    "description": "模型",
+                    "type": "string"
+                },
                 "n": {
                     "description": "返回几张图，默认1张",
                     "type": "integer",

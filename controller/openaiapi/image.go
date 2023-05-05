@@ -21,7 +21,7 @@ import (
 	"strconv"
 )
 
-// @Tags	代理OpenAI相关接口
+// @Tags	OpenAI相关接口
 // @Summary	生成图片
 // @param		req	body	aiapi.ImageRequest	true	"openai请求参数"
 // @Router		/api/v1/openai/v1/image [post]
@@ -38,8 +38,17 @@ func Image(c *gin.Context) {
 		return
 	}
 	// 计费
-	amount := req.N * 8
-	size := "512x512"
+	amount := req.N
+	switch req.Size {
+	case "256x256":
+		amount = amount * 7
+	case "512x512":
+		amount = amount * 8
+	case "1024x1024":
+		amount = amount * 9
+	default:
+		amount = amount * 8
+	}
 	// 先扣减积分，后面失败了再补回来
 	err := userapi.SubUserIntegral(userId, amount, nil)
 	if err != nil {
@@ -67,7 +76,7 @@ func Image(c *gin.Context) {
 			Input: aiapi.ReplicateInput{
 				Prompt:          req.Prompt,
 				NumOutputs:      req.N,
-				ImageDimensions: size,
+				ImageDimensions: req.Size,
 			},
 		}
 		j, _ := json.Marshal(reqValue)
@@ -97,7 +106,7 @@ func Image(c *gin.Context) {
 		respUrl, err := client.CreateImage(ctx, openai.ImageRequest{
 			Prompt: req.Prompt,
 			N:      req.N,
-			Size:   size,
+			Size:   req.Size,
 		})
 		if err != nil {
 			fmt.Printf("Image creation error: %v\n", err)
