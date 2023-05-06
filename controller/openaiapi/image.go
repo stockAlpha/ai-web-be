@@ -61,16 +61,18 @@ func Image(c *gin.Context) {
 	}
 	var res []aiapi.ImageResponseDataInner
 
+	prompt := req.Prompt
+	if err != nil {
+		return
+	}
+	if utils.ContainsChinese(prompt) {
+		trans, _ := baiduclient.Run(prompt, "en")
+		prompt = trans
+	}
+
 	if req.Model == "stable-diffusion" {
 		token := "Token " + conf.Handler.GetString("replicate.key")
-		prompt := req.Prompt
-		if err != nil {
-			return
-		}
-		if utils.ContainsChinese(prompt) {
-			trans, _ := baiduclient.Run(prompt, "en")
-			prompt = trans
-		}
+
 		reqValue := aiapi.ReplicateStableDiffusion{
 			Version: conf.Handler.GetString("replicate.stable_diffusion_version"),
 			Input: aiapi.ReplicateInput{
@@ -104,7 +106,7 @@ func Image(c *gin.Context) {
 		}
 	} else {
 		respUrl, err := client.CreateImage(ctx, openai.ImageRequest{
-			Prompt: req.Prompt,
+			Prompt: prompt,
 			N:      req.N,
 			Size:   req.Size,
 		})
