@@ -38,6 +38,15 @@ func LoadConfig(confPath string) *viper.Viper {
 			handler.SetConfigName("app." + confEnv)
 		} else {
 			handler.SetConfigName("app.local") // 默认文件配置文件为app.toml
+			// 配置本地代理
+			//proxyUrl := "http://127.0.0.1:7890"
+			//proxyURL, err := url.Parse(proxyUrl)
+			//if err != nil {
+			//	panic(err)
+			//}
+			//http.DefaultTransport = &http.Transport{Proxy: http.ProxyURL(proxyURL)}
+			//os.Setenv("HTTP_PROXY", proxyUrl)
+			//os.Setenv("HTTPS_PROXY", proxyUrl)
 		}
 		handler.AddConfigPath(Root + "/conf")
 	} else {
