@@ -24,6 +24,8 @@ const (
 	SLTagAlipaySuccess       = " _alipay_success"
 	MailSyncFailRetry        = " _mail_sync_fail_retry"
 	SLTagAliOssSuccess       = " _ali_oss_success"
+	SLTagXFSuccess           = "_xf_success"
+	SLTagXFError             = "_xf_error"
 )
 
 // for middleware

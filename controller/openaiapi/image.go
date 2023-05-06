@@ -9,7 +9,6 @@ import (
 	"github.com/sashabaranov/go-openai"
 	"io"
 	"net/http"
-	"stock-web-be/client/baiduclient"
 	"stock-web-be/controller"
 	"stock-web-be/gocommon/conf"
 	"stock-web-be/gocommon/consts"
@@ -17,6 +16,7 @@ import (
 	"stock-web-be/idl/aiapi"
 	"stock-web-be/logic/aliyunapi"
 	"stock-web-be/logic/userapi"
+	"stock-web-be/logic/xfapi"
 	"stock-web-be/utils"
 	"strconv"
 )
@@ -66,8 +66,7 @@ func Image(c *gin.Context) {
 		return
 	}
 	if utils.ContainsChinese(prompt) {
-		trans, _ := baiduclient.Run(prompt, "en")
-		prompt = trans
+		prompt = xfapi.Run(prompt, "cn", "en")
 	}
 
 	if req.Model == "stable-diffusion" {
