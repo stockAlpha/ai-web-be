@@ -103,7 +103,10 @@ func (user *User) SetVipUser(db *gorm.DB) error {
 	if db == nil {
 		db = DbIns.Table(user.TableName())
 	}
-	return db.Table(user.TableName()).Where("id = ?", user.ID).Update("vip_user", true).Error
+	updateMap := map[string]interface{}{}
+	updateMap["vip_user"] = true
+	updateMap["update_time"] = time.Now()
+	return db.Table(user.TableName()).Where("id = ?", user.ID).Updates(updateMap).Error
 }
 
 func (user *User) GetUserByInviteCode(inviteCode string, db *gorm.DB) error {

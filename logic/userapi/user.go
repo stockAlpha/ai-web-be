@@ -94,10 +94,10 @@ func AddUserIntegral(userId uint64, amount int, transaction *gorm.DB) error {
 }
 
 func SetVipUser(userId uint64, transaction *gorm.DB) error {
-	user := &db.User{
+	updateUser := &db.User{
 		ID: userId,
 	}
-	err := user.SetVipUser(transaction)
+	err := updateUser.SetVipUser(transaction)
 	if err != nil {
 		return err
 	}
