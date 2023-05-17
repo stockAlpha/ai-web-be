@@ -1,5 +1,21 @@
 package openai
 
+import (
+	public_openai "github.com/sashabaranov/go-openai"
+)
+
+type ImageRequest struct {
+	public_openai.ImageRequest
+	UserID    uint   `json:"user_id"`
+	UUID      int    `json:"uuid"`
+	MessageID string `json:"message_id"`
+}
+type ChatCompletionRequest struct {
+	public_openai.ChatCompletionRequest
+	UserID    uint   `json:"user_id"`
+	UUID      int    `json:"uuid"`
+	MessageID string `json:"message_id"`
+}
 type CompletionsRequest struct {
 	Model       string    `json:"model"`
 	Messages    []Message `json:"messages"`

@@ -82,8 +82,10 @@ const (
 	AlipayPrefix = "/api/v1/alipay"
 	NotifyApi    = "/notify"
 
-	PayPrefix    = "/api/v1/pay"
-	PreCreateApi = "/pre_create"
+	PayPrefix        = "/api/v1/pay"
+	PreCreateApi     = "/pre_create"
+	ChatRecordPrefix = "/api/v1/chat_record"
+	ChatRecordApi    = "/record"
 )
 
 // env

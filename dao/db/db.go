@@ -62,6 +62,7 @@ func InitDB() {
 	db.AutoMigrate(&InviteRelation{})
 	db.AutoMigrate(&Feedback{})
 	db.AutoMigrate(&Order{})
+	db.AutoMigrate(&ChatRecord{})
 	DbIns = &DB{
 		db,
 	}

@@ -12,13 +12,11 @@ import (
 )
 
 type ChatRecordChanType struct {
-	Record  []db.ChatRecord
-	History []db.ChatHistory
+	Record []db.ChatRecord
 }
 type AsyncToChatRecord struct {
 	mu      sync.Mutex
 	Records []db.ChatRecord
-	History []db.ChatHistory
 }
 
 // ChatRecordChan 异步接收统一用chan
@@ -40,31 +38,27 @@ func init() {
 				if !ok {
 					tlog.Handler.Infof(nil, consts.SyncStop, "ChatRecord ready stop")
 					asyncToChatRecord.mu.Lock()
-					_ = db.InsertRecordAndHistory(asyncToChatRecord.Records, asyncToChatRecord.History)
+					_ = db.InsertRecord(asyncToChatRecord.Records)
 					asyncToChatRecord.Records = []db.ChatRecord{}
-					asyncToChatRecord.History = []db.ChatHistory{}
 					asyncToChatRecord.mu.Unlock()
 					// 可能会有panic  ticker还没启动的话会有问题，不过会被safego兜住，同时落库也已经完成了
 					ticker.Stop()
-					break
+					return
 				}
 				var insertChatRecord AsyncToChatRecord
 				asyncToChatRecord.mu.Lock()
 				if len(chatRecord.Record) > 0 {
 					asyncToChatRecord.Records = append(asyncToChatRecord.Records, chatRecord.Record...)
 				}
-				if len(chatRecord.History) > 0 {
-					asyncToChatRecord.History = append(asyncToChatRecord.History, chatRecord.History...)
-				}
+
 				// 如果记录已经大于100条，直接准备同步落库
-				if len(chatRecord.Record) >= 100 || len(chatRecord.History) >= 100 {
+				if len(chatRecord.Record) >= 100 {
 					insertChatRecord = asyncToChatRecord
 					asyncToChatRecord.Records = []db.ChatRecord{}
-					asyncToChatRecord.History = []db.ChatHistory{}
 				}
 				asyncToChatRecord.mu.Unlock()
-				if len(insertChatRecord.Records) != 0 || len(insertChatRecord.History) != 0 {
-					_ = db.InsertRecordAndHistory(insertChatRecord.Records, insertChatRecord.History)
+				if len(insertChatRecord.Records) != 0 {
+					_ = db.InsertRecord(insertChatRecord.Records)
 				}
 			case <-ticker.C:
 				var insertChatRecord AsyncToChatRecord
@@ -72,10 +66,9 @@ func init() {
 				asyncToChatRecord.mu.Lock()
 				insertChatRecord = asyncToChatRecord
 				asyncToChatRecord.Records = []db.ChatRecord{}
-				asyncToChatRecord.History = []db.ChatHistory{}
 				asyncToChatRecord.mu.Unlock()
-				if len(insertChatRecord.Records) != 0 || len(insertChatRecord.History) != 0 {
-					_ = db.InsertRecordAndHistory(insertChatRecord.Records, insertChatRecord.History)
+				if len(insertChatRecord.Records) != 0 {
+					_ = db.InsertRecord(insertChatRecord.Records)
 				}
 			}
 

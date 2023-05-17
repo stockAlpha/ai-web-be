@@ -25,6 +25,31 @@ const docTemplate = `{
                 "responses": {}
             }
         },
+        "/api/v1/chat_record/record": {
+            "get": {
+                "tags": [
+                    "用户记录"
+                ],
+                "summary": "获取用户record",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "user_id",
+                        "name": "user_id",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/openai.ChatRecordResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/integral/generate_key": {
             "post": {
                 "tags": [
@@ -160,7 +185,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/openai.ChatCompletionRequest"
+                            "$ref": "#/definitions/stock-web-be_idl_openai.ChatCompletionRequest"
                         }
                     }
                 ],
@@ -180,7 +205,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/openai.ImageRequest"
+                            "$ref": "#/definitions/stock-web-be_idl_openai.ImageRequest"
                         }
                     }
                 ],
@@ -291,6 +316,22 @@ const docTemplate = `{
                         }
                     }
                 ],
+                "responses": {
+                    "200": {
+                        "description": "返回token",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/user/logout": {
+            "post": {
+                "tags": [
+                    "用户相关接口"
+                ],
+                "summary": "登出",
                 "responses": {
                     "200": {
                         "description": "返回token",
@@ -469,7 +510,98 @@ const docTemplate = `{
                 }
             }
         },
-        "openai.ChatCompletionRequest": {
+        "openai.ChatRecordChat": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/openai.ChatRecordChatData"
+                    }
+                },
+                "uuid": {
+                    "type": "integer"
+                }
+            }
+        },
+        "openai.ChatRecordChatData": {
+            "type": "object",
+            "properties": {
+                "dateTime": {
+                    "type": "string"
+                },
+                "inversion": {
+                    "type": "boolean"
+                },
+                "isImage": {
+                    "type": "boolean"
+                },
+                "requestOptions": {
+                    "type": "object",
+                    "properties": {
+                        "options": {
+                            "type": "object",
+                            "properties": {
+                                "isImage": {
+                                    "type": "boolean"
+                                }
+                            }
+                        },
+                        "prompt": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "text": {
+                    "type": "string"
+                }
+            }
+        },
+        "openai.ChatRecordResponse": {
+            "type": "object",
+            "properties": {
+                "active": {
+                    "type": "integer"
+                },
+                "chat": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/openai.ChatRecordChat"
+                    }
+                }
+            }
+        },
+        "payapi.PreCreateRequest": {
+            "type": "object",
+            "required": [
+                "productType"
+            ],
+            "properties": {
+                "payType": {
+                    "description": "支付类型，目前只支持alipay",
+                    "type": "string",
+                    "default": "alipay"
+                },
+                "productType": {
+                    "description": "商品类型，1-10元,2-30元,3-100元",
+                    "type": "integer"
+                }
+            }
+        },
+        "payapi.PreCreateResponse": {
+            "type": "object",
+            "properties": {
+                "order_id": {
+                    "description": "订单id",
+                    "type": "string"
+                },
+                "qr_code": {
+                    "description": "二维码串",
+                    "type": "string"
+                }
+            }
+        },
+        "stock-web-be_idl_openai.ChatCompletionRequest": {
             "type": "object",
             "properties": {
                 "frequency_penalty": {
@@ -483,6 +615,9 @@ const docTemplate = `{
                 },
                 "max_tokens": {
                     "type": "integer"
+                },
+                "message_id": {
+                    "type": "string"
                 },
                 "messages": {
                     "type": "array",
@@ -516,12 +651,21 @@ const docTemplate = `{
                 },
                 "user": {
                     "type": "string"
+                },
+                "user_id": {
+                    "type": "integer"
+                },
+                "uuid": {
+                    "type": "integer"
                 }
             }
         },
-        "openai.ImageRequest": {
+        "stock-web-be_idl_openai.ImageRequest": {
             "type": "object",
             "properties": {
+                "message_id": {
+                    "type": "string"
+                },
                 "n": {
                     "type": "integer"
                 },
@@ -536,36 +680,12 @@ const docTemplate = `{
                 },
                 "user": {
                     "type": "string"
-                }
-            }
-        },
-        "payapi.PreCreateRequest": {
-            "type": "object",
-            "required": [
-                "productType"
-            ],
-            "properties": {
-                "payType": {
-                    "description": "支付类型，目前只支持alipay",
-                    "type": "string",
-                    "default": "alipay"
                 },
-                "productType": {
-                    "description": "商品类型，1-10元,2-30元,3-100元",
+                "user_id": {
                     "type": "integer"
-                }
-            }
-        },
-        "payapi.PreCreateResponse": {
-            "type": "object",
-            "properties": {
-                "order_id": {
-                    "description": "订单id",
-                    "type": "string"
                 },
-                "qr_code": {
-                    "description": "二维码串",
-                    "type": "string"
+                "uuid": {
+                    "type": "integer"
                 }
             }
         },

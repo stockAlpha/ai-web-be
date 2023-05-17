@@ -57,7 +57,67 @@ definitions:
       role:
         type: string
     type: object
-  openai.ChatCompletionRequest:
+  openai.ChatRecordChat:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/openai.ChatRecordChatData'
+        type: array
+      uuid:
+        type: integer
+    type: object
+  openai.ChatRecordChatData:
+    properties:
+      dateTime:
+        type: string
+      inversion:
+        type: boolean
+      isImage:
+        type: boolean
+      requestOptions:
+        properties:
+          options:
+            properties:
+              isImage:
+                type: boolean
+            type: object
+          prompt:
+            type: string
+        type: object
+      text:
+        type: string
+    type: object
+  openai.ChatRecordResponse:
+    properties:
+      active:
+        type: integer
+      chat:
+        items:
+          $ref: '#/definitions/openai.ChatRecordChat'
+        type: array
+    type: object
+  payapi.PreCreateRequest:
+    properties:
+      payType:
+        default: alipay
+        description: 支付类型，目前只支持alipay
+        type: string
+      productType:
+        description: 商品类型，1-10元,2-30元,3-100元
+        type: integer
+    required:
+    - productType
+    type: object
+  payapi.PreCreateResponse:
+    properties:
+      order_id:
+        description: 订单id
+        type: string
+      qr_code:
+        description: 二维码串
+        type: string
+    type: object
+  stock-web-be_idl_openai.ChatCompletionRequest:
     properties:
       frequency_penalty:
         type: number
@@ -67,6 +127,8 @@ definitions:
         type: object
       max_tokens:
         type: integer
+      message_id:
+        type: string
       messages:
         items:
           $ref: '#/definitions/openai.ChatCompletionMessage'
@@ -89,9 +151,15 @@ definitions:
         type: number
       user:
         type: string
+      user_id:
+        type: integer
+      uuid:
+        type: integer
     type: object
-  openai.ImageRequest:
+  stock-web-be_idl_openai.ImageRequest:
     properties:
+      message_id:
+        type: string
       "n":
         type: integer
       prompt:
@@ -102,27 +170,10 @@ definitions:
         type: string
       user:
         type: string
-    type: object
-  payapi.PreCreateRequest:
-    properties:
-      payType:
-        default: alipay
-        description: 支付类型，目前只支持alipay
-        type: string
-      productType:
-        description: 商品类型，1-10元,2-30元,3-100元
+      user_id:
         type: integer
-    required:
-    - productType
-    type: object
-  payapi.PreCreateResponse:
-    properties:
-      order_id:
-        description: 订单id
-        type: string
-      qr_code:
-        description: 二维码串
-        type: string
+      uuid:
+        type: integer
     type: object
   user.ChangePasswordRequest:
     properties:
@@ -246,6 +297,22 @@ paths:
       summary: 异步通知
       tags:
       - alipay支付相关接口
+  /api/v1/chat_record/record:
+    get:
+      parameters:
+      - description: user_id
+        in: query
+        name: user_id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/openai.ChatRecordResponse'
+      summary: 获取用户record
+      tags:
+      - 用户记录
   /api/v1/integral/generate_key:
     post:
       parameters:
@@ -334,7 +401,7 @@ paths:
         name: req
         required: true
         schema:
-          $ref: '#/definitions/openai.ChatCompletionRequest'
+          $ref: '#/definitions/stock-web-be_idl_openai.ChatCompletionRequest'
       responses: {}
       summary: 对话
       tags:
@@ -347,7 +414,7 @@ paths:
         name: req
         required: true
         schema:
-          $ref: '#/definitions/openai.ImageRequest'
+          $ref: '#/definitions/stock-web-be_idl_openai.ImageRequest'
       responses: {}
       summary: 生成图片
       tags:
@@ -423,6 +490,16 @@ paths:
           schema:
             type: string
       summary: 登录
+      tags:
+      - 用户相关接口
+  /api/v1/user/logout:
+    post:
+      responses:
+        "200":
+          description: 返回token
+          schema:
+            type: string
+      summary: 登出
       tags:
       - 用户相关接口
   /api/v1/user/profile:
