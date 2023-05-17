@@ -5,6 +5,8 @@ definitions:
         type: number
       max_tokens:
         type: integer
+      message_id:
+        type: string
       messages:
         items:
           $ref: '#/definitions/openai.ChatCompletionMessage'
@@ -18,9 +20,15 @@ definitions:
         type: boolean
       temperature:
         type: number
+      user_id:
+        type: integer
+      uuid:
+        type: integer
     type: object
   aiapi.ImageRequest:
     properties:
+      message_id:
+        type: string
       model:
         default: dall-e2
         description: dall-e2/stable-diffusion
@@ -30,6 +38,14 @@ definitions:
         type: integer
       prompt:
         type: string
+      size:
+        default: 512x512
+        description: 256x256/512x512/1024x1024
+        type: string
+      user_id:
+        type: integer
+      uuid:
+        type: integer
     type: object
   integral.BatchGenerateKeyRequest:
     properties:
@@ -102,6 +118,45 @@ definitions:
       role:
         type: string
     type: object
+  openai.ChatRecordChat:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/openai.ChatRecordChatData'
+        type: array
+      uuid:
+        type: integer
+    type: object
+  openai.ChatRecordChatData:
+    properties:
+      dateTime:
+        type: string
+      inversion:
+        type: boolean
+      isImage:
+        type: boolean
+      requestOptions:
+        properties:
+          options:
+            properties:
+              isImage:
+                type: boolean
+            type: object
+          prompt:
+            type: string
+        type: object
+      text:
+        type: string
+    type: object
+  openai.ChatRecordResponse:
+    properties:
+      active:
+        type: integer
+      chat:
+        items:
+          $ref: '#/definitions/openai.ChatRecordChat'
+        type: array
+    type: object
   payapi.PreCreateRequest:
     properties:
       payType:
@@ -150,7 +205,6 @@ definitions:
         description: 模型
         type: string
       temperature:
-        default: 1
         description: 随机性0-2,默认为1
         type: number
     type: object
@@ -183,7 +237,6 @@ definitions:
         description: 模型
         type: string
       "n":
-        default: 1
         description: 返回几张图，默认1张
         type: integer
       size:
@@ -222,6 +275,10 @@ definitions:
       avatar:
         description: 头像
         type: string
+      customConfig:
+        allOf:
+        - $ref: '#/definitions/user.CustomConfig'
+        description: 自定义配置
       email:
         description: 邮箱
         type: string
@@ -292,6 +349,22 @@ paths:
       summary: 异步通知
       tags:
       - alipay支付相关接口
+  /api/v1/chat_record/record:
+    get:
+      parameters:
+      - description: user_id
+        in: query
+        name: user_id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/openai.ChatRecordResponse'
+      summary: 获取用户record
+      tags:
+      - 用户记录
   /api/v1/integral/generate_key:
     post:
       parameters:

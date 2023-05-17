@@ -3,13 +3,15 @@ package openaiapi
 import (
 	"context"
 	"errors"
-	"github.com/pkoukk/tiktoken-go"
 	"io"
 	"math"
 	"net/http"
-	"stock-web-be/idl/aiapi"
 	"strconv"
 	"time"
+
+	"stock-web-be/idl/aiapi"
+
+	"github.com/pkoukk/tiktoken-go"
 
 	"stock-web-be/async"
 	"stock-web-be/controller"
@@ -17,7 +19,7 @@ import (
 	"stock-web-be/gocommon/conf"
 	"stock-web-be/gocommon/consts"
 	"stock-web-be/gocommon/tlog"
-	"stock-web-be/idl/openai"
+
 	"stock-web-be/logic/userapi"
 
 	"github.com/gin-gonic/gin"
@@ -32,7 +34,7 @@ func Completions(c *gin.Context) {
 	prostartTime := time.Now()
 	cg := controller.Gin{Ctx: c}
 	apiKey := conf.Handler.GetString(`openai.key`)
-	client := public_openai.NewClient(apiKey)
+	client := openai.NewClient(apiKey)
 	userId, _ := strconv.ParseUint(c.GetString("user_id"), 10, 64)
 	var req aiapi.ChatCompletionRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -40,7 +42,8 @@ func Completions(c *gin.Context) {
 		cg.Res(http.StatusBadRequest, controller.ErrnoInvalidPrm)
 		return
 	}
-
+	uuID := req.UUID
+	messageID := req.MessageID
 	// 根据用户是否位vip来控制max_tokens
 	user, _ := userapi.GetUserById(userId)
 	// 普通用户只支持2k tokens

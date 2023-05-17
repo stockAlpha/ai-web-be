@@ -3,10 +3,13 @@ package aiapi
 import "time"
 
 type ImageRequest struct {
-	Model  string `json:"model" default:"dall-e2"` // dall-e2/stable-diffusion
-	Prompt string `json:"prompt"`
-	N      int    `json:"n" default:"1"`
-	Size   string `json:"size" default:"512x512"` // 256x256/512x512/1024x1024
+	Model     string `json:"model" default:"dall-e2"` // dall-e2/stable-diffusion
+	Prompt    string `json:"prompt"`
+	N         int    `json:"n" default:"1"`
+	Size      string `json:"size" default:"512x512"` // 256x256/512x512/1024x1024
+	UserID    uint   `json:"user_id"`
+	UUID      int    `json:"uuid"`
+	MessageID string `json:"message_id"`
 }
 
 type ImageResponseDataInner struct {

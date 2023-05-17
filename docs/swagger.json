@@ -13,6 +13,31 @@
                 "responses": {}
             }
         },
+        "/api/v1/chat_record/record": {
+            "get": {
+                "tags": [
+                    "用户记录"
+                ],
+                "summary": "获取用户record",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "user_id",
+                        "name": "user_id",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/openai.ChatRecordResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/integral/generate_key": {
             "post": {
                 "tags": [
@@ -446,6 +471,9 @@
                 "max_tokens": {
                     "type": "integer"
                 },
+                "message_id": {
+                    "type": "string"
+                },
                 "messages": {
                     "type": "array",
                     "items": {
@@ -464,12 +492,21 @@
                 },
                 "temperature": {
                     "type": "number"
+                },
+                "user_id": {
+                    "type": "integer"
+                },
+                "uuid": {
+                    "type": "integer"
                 }
             }
         },
         "aiapi.ImageRequest": {
             "type": "object",
             "properties": {
+                "message_id": {
+                    "type": "string"
+                },
                 "model": {
                     "description": "dall-e2/stable-diffusion",
                     "type": "string",
@@ -481,6 +518,17 @@
                 },
                 "prompt": {
                     "type": "string"
+                },
+                "size": {
+                    "description": "256x256/512x512/1024x1024",
+                    "type": "string",
+                    "default": "512x512"
+                },
+                "user_id": {
+                    "type": "integer"
+                },
+                "uuid": {
+                    "type": "integer"
                 }
             }
         },
@@ -583,6 +631,67 @@
                 }
             }
         },
+        "openai.ChatRecordChat": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/openai.ChatRecordChatData"
+                    }
+                },
+                "uuid": {
+                    "type": "integer"
+                }
+            }
+        },
+        "openai.ChatRecordChatData": {
+            "type": "object",
+            "properties": {
+                "dateTime": {
+                    "type": "string"
+                },
+                "inversion": {
+                    "type": "boolean"
+                },
+                "isImage": {
+                    "type": "boolean"
+                },
+                "requestOptions": {
+                    "type": "object",
+                    "properties": {
+                        "options": {
+                            "type": "object",
+                            "properties": {
+                                "isImage": {
+                                    "type": "boolean"
+                                }
+                            }
+                        },
+                        "prompt": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "text": {
+                    "type": "string"
+                }
+            }
+        },
+        "openai.ChatRecordResponse": {
+            "type": "object",
+            "properties": {
+                "active": {
+                    "type": "integer"
+                },
+                "chat": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/openai.ChatRecordChat"
+                    }
+                }
+            }
+        },
         "payapi.PreCreateRequest": {
             "type": "object",
             "required": [
@@ -651,8 +760,7 @@
                 },
                 "temperature": {
                     "description": "随机性0-2,默认为1",
-                    "type": "number",
-                    "default": 1
+                    "type": "number"
                 }
             }
         },
@@ -703,8 +811,7 @@
                 },
                 "n": {
                     "description": "返回几张图，默认1张",
-                    "type": "integer",
-                    "default": 1
+                    "type": "integer"
                 },
                 "size": {
                     "description": "图片大小,256x256/512x512/1024x1024",
@@ -759,6 +866,14 @@
                 "avatar": {
                     "description": "头像",
                     "type": "string"
+                },
+                "customConfig": {
+                    "description": "自定义配置",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/user.CustomConfig"
+                        }
+                    ]
                 },
                 "email": {
                     "description": "邮箱",

@@ -97,5 +97,5 @@ func registerPay(group *gin.RouterGroup) {
 	group.GET(consts.StatusApi, payapi.Status)
 }
 func registerRecord(group *gin.RouterGroup) {
-	group.GET(consts.ChatRecordApi, chat.GetChatRecord)
+	group.GET(consts.ChatRecordApi, openaiapi.GetChatRecord)
 }

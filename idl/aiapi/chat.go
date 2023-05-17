@@ -10,4 +10,7 @@ type ChatCompletionRequest struct {
 	Stream           bool                           `json:"stream,omitempty"`
 	FrequencyPenalty float32                        `json:"frequency_penalty,omitempty"`
 	Role             string                         `json:"role,omitempty"` // 角色
+	UserID           uint                           `json:"user_id"`
+	UUID             int                            `json:"uuid"`
+	MessageID        string                         `json:"message_id"`
 }

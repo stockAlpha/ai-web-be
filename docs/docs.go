@@ -369,22 +369,6 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/user/logout": {
-            "post": {
-                "tags": [
-                    "用户相关接口"
-                ],
-                "summary": "登出",
-                "responses": {
-                    "200": {
-                        "description": "返回token",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            }
-        },
         "/api/v1/user/menu": {
             "get": {
                 "tags": [
@@ -499,6 +483,9 @@ const docTemplate = `{
                 "max_tokens": {
                     "type": "integer"
                 },
+                "message_id": {
+                    "type": "string"
+                },
                 "messages": {
                     "type": "array",
                     "items": {
@@ -517,12 +504,21 @@ const docTemplate = `{
                 },
                 "temperature": {
                     "type": "number"
+                },
+                "user_id": {
+                    "type": "integer"
+                },
+                "uuid": {
+                    "type": "integer"
                 }
             }
         },
         "aiapi.ImageRequest": {
             "type": "object",
             "properties": {
+                "message_id": {
+                    "type": "string"
+                },
                 "model": {
                     "description": "dall-e2/stable-diffusion",
                     "type": "string",
@@ -534,6 +530,17 @@ const docTemplate = `{
                 },
                 "prompt": {
                     "type": "string"
+                },
+                "size": {
+                    "description": "256x256/512x512/1024x1024",
+                    "type": "string",
+                    "default": "512x512"
+                },
+                "user_id": {
+                    "type": "integer"
+                },
+                "uuid": {
+                    "type": "integer"
                 }
             }
         },
@@ -636,6 +643,67 @@ const docTemplate = `{
                 }
             }
         },
+        "openai.ChatRecordChat": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/openai.ChatRecordChatData"
+                    }
+                },
+                "uuid": {
+                    "type": "integer"
+                }
+            }
+        },
+        "openai.ChatRecordChatData": {
+            "type": "object",
+            "properties": {
+                "dateTime": {
+                    "type": "string"
+                },
+                "inversion": {
+                    "type": "boolean"
+                },
+                "isImage": {
+                    "type": "boolean"
+                },
+                "requestOptions": {
+                    "type": "object",
+                    "properties": {
+                        "options": {
+                            "type": "object",
+                            "properties": {
+                                "isImage": {
+                                    "type": "boolean"
+                                }
+                            }
+                        },
+                        "prompt": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "text": {
+                    "type": "string"
+                }
+            }
+        },
+        "openai.ChatRecordResponse": {
+            "type": "object",
+            "properties": {
+                "active": {
+                    "type": "integer"
+                },
+                "chat": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/openai.ChatRecordChat"
+                    }
+                }
+            }
+        },
         "payapi.PreCreateRequest": {
             "type": "object",
             "required": [
@@ -704,8 +772,7 @@ const docTemplate = `{
                 },
                 "temperature": {
                     "description": "随机性0-2,默认为1",
-                    "type": "number",
-                    "default": 1
+                    "type": "number"
                 }
             }
         },
@@ -756,8 +823,7 @@ const docTemplate = `{
                 },
                 "n": {
                     "description": "返回几张图，默认1张",
-                    "type": "integer",
-                    "default": 1
+                    "type": "integer"
                 },
                 "size": {
                     "description": "图片大小,256x256/512x512/1024x1024",
@@ -812,6 +878,14 @@ const docTemplate = `{
                 "avatar": {
                     "description": "头像",
                     "type": "string"
+                },
+                "customConfig": {
+                    "description": "自定义配置",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/user.CustomConfig"
+                        }
+                    ]
                 },
                 "email": {
                     "description": "邮箱",

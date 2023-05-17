@@ -5,11 +5,14 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/gin-gonic/gin"
-	"github.com/sashabaranov/go-openai"
 	"io"
 	"net/http"
+	"strconv"
+	"time"
+
+	"stock-web-be/async"
 	"stock-web-be/controller"
+	"stock-web-be/dao/db"
 	"stock-web-be/gocommon/conf"
 	"stock-web-be/gocommon/consts"
 	"stock-web-be/gocommon/tlog"
@@ -18,7 +21,9 @@ import (
 	"stock-web-be/logic/userapi"
 	"stock-web-be/logic/xfapi"
 	"stock-web-be/utils"
-	"strconv"
+
+	"github.com/gin-gonic/gin"
+	"github.com/sashabaranov/go-openai"
 )
 
 // @Tags	OpenAI相关接口
@@ -26,6 +31,7 @@ import (
 // @param		req	body	aiapi.ImageRequest	true	"openai请求参数"
 // @Router		/api/v1/openai/v1/image [post]
 func Image(c *gin.Context) {
+	prostartTime := time.Now()
 	cg := controller.Gin{Ctx: c}
 	ctx := context.Background()
 	apiKey := conf.Handler.GetString(`openai.key`)
@@ -37,6 +43,8 @@ func Image(c *gin.Context) {
 		cg.Res(http.StatusBadRequest, controller.ErrnoInvalidPrm)
 		return
 	}
+	uuID := req.UUID
+	messageID := req.MessageID
 	// 计费
 	amount := req.N
 	switch req.Size {
@@ -68,7 +76,10 @@ func Image(c *gin.Context) {
 	if utils.ContainsChinese(prompt) {
 		prompt = xfapi.Run(prompt, "cn", "en")
 	}
-
+	// prompt冗余存储，到时候查记录不用额外处理
+	//todo 还没加sd的
+	chatRecordPrompt := db.ChatRecord{UserID: userId, Data: req.Prompt, UUID: uuID, MessageID: messageID, DataType: 0, CreatedAt: prostartTime}
+	chatRecord := async.ChatRecordChanType{Record: []db.ChatRecord{chatRecordPrompt}}
 	if req.Model == "stable-diffusion" {
 		token := "Token " + conf.Handler.GetString("replicate.key")
 
@@ -117,8 +128,10 @@ func Image(c *gin.Context) {
 
 		for i := range respUrl.Data {
 			res = append(res, aiapi.ImageResponseDataInner{URL: aliyunapi.UploadFileByUrl(respUrl.Data[i].URL, "image/jpg")})
+			chatRecord.Record = append(chatRecord.Record, db.ChatRecord{UserID: userId, Prompt: req.Prompt, Data: respUrl.Data[i].URL, UUID: uuID, MessageID: messageID, DataType: 2, CreatedAt: time.Now()})
 		}
 	}
+	async.ChatRecordChan <- chatRecord
 	cg.Resp(http.StatusOK, controller.ErrnoSuccess, res)
 
 }
