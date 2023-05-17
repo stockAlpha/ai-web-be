@@ -7,7 +7,7 @@ import (
 
 type Feedback struct {
 	ID           uint64    `gorm:"primary_key" json:"id"`
-	FromUserId   uint64    `gorm:"column:from_user_id" json:"from_user_id"`
+	UserId       uint64    `gorm:"column:user_id" json:"user_id"`
 	FeedbackType int       `gorm:"column:feedback_type" json:"feedback_type"`
 	Content      string    `gorm:"column:content" json:"content"`
 	CreateTime   time.Time `gorm:"column:create_time" json:"create_time"`

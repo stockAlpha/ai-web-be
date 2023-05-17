@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"stock-web-be/controller/alipayapi"
-	"stock-web-be/controller/openaiapi/chat"
+	"stock-web-be/controller/openaiapi"
 	"stock-web-be/controller/payapi"
 	"stock-web-be/controller/userapi/integral"
 	"stock-web-be/controller/userapi/user"
@@ -57,7 +57,7 @@ func swagger(r *gin.Engine) {
 	docs.SwaggerInfo.Title = "Stock Web API"
 	docs.SwaggerInfo.Description = "This is stock web server api."
 	docs.SwaggerInfo.Version = "1.0"
-	docs.SwaggerInfo.Schemes = []string{"http", "https"}
+	docs.SwaggerInfo.Schemes = []string{"https"}
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 }
 
@@ -66,6 +66,7 @@ func registerUser(group *gin.RouterGroup) {
 	group.POST(consts.RegisterApi, user.Register)
 	group.POST(consts.LoginApi, user.Login)
 	group.POST(consts.LogoutApi, user.Logout)
+	group.GET(consts.MenuApi, user.Menu)
 
 	group.GET(consts.ProfileApi, user.Profile)
 	group.POST(consts.ProfileApi, user.UpdateProfile)
@@ -78,13 +79,13 @@ func registerIntegral(group *gin.RouterGroup) {
 	group.POST(consts.RechargeApi, integral.Recharge)
 	group.POST(consts.ManualRechargeApi, integral.ManualRecharge)
 	group.POST(consts.GenerateRechargeKeyApi, integral.GenerateKey)
-	group.POST(consts.RecordApi, integral.Record)
 }
 
 func registerOpenAI(group *gin.RouterGroup) {
-	group.POST(consts.OpenaiCompletionsApi, chat.Completions)
-	group.POST(consts.ImageApi, chat.Image)
-	group.POST(consts.AudioApi, chat.Audio)
+	group.POST(consts.OpenaiCompletionsApi, openaiapi.Completions)
+	group.POST(consts.ImageApi, openaiapi.Image)
+	group.POST(consts.AudioApi, openaiapi.Audio)
+	group.GET(consts.ModelApi, openaiapi.Model)
 }
 
 func registerAlipay(group *gin.RouterGroup) {
@@ -93,6 +94,7 @@ func registerAlipay(group *gin.RouterGroup) {
 
 func registerPay(group *gin.RouterGroup) {
 	group.POST(consts.PreCreateApi, payapi.PreCreate)
+	group.GET(consts.StatusApi, payapi.Status)
 }
 func registerRecord(group *gin.RouterGroup) {
 	group.GET(consts.ChatRecordApi, chat.GetChatRecord)

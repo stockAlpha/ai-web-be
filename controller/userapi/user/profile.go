@@ -1,6 +1,7 @@
 package user
 
 import (
+	"encoding/json"
 	"net/http"
 	"stock-web-be/gocommon/consts"
 	"stock-web-be/gocommon/tlog"
@@ -22,7 +23,7 @@ func Profile(c *gin.Context) {
 	res := user.ProfileResponse{}
 	email := c.GetString("email")
 	userId, _ := strconv.ParseUint(c.GetString("user_id"), 10, 64)
-	userProfile, err := userapi.GetUserByEmail(email)
+	userProfile, err := userapi.GetUserById(userId)
 	if err != nil {
 		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "get user email error", err.Error())
 		cg.Resp(http.StatusBadRequest, controller.ErrServer, res)
@@ -39,5 +40,7 @@ func Profile(c *gin.Context) {
 	res.Avatar = userProfile.Avatar
 	res.InviteCode = userProfile.InviteCode
 	res.Email = email
+	res.VipUser = userProfile.VipUser
+	json.Unmarshal(userProfile.CustomConfig, &res.CustomConfig)
 	cg.Resp(http.StatusOK, controller.ErrnoSuccess, res)
 }

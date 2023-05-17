@@ -110,30 +110,10 @@ const docTemplate = `{
                 "responses": {}
             }
         },
-        "/api/v1/integral/record": {
-            "post": {
-                "tags": [
-                    "积分相关接口"
-                ],
-                "summary": "记录",
-                "parameters": [
-                    {
-                        "description": "请求参数",
-                        "name": "req",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/integral.RecordRequest"
-                        }
-                    }
-                ],
-                "responses": {}
-            }
-        },
         "/api/v1/openai/v1/audio": {
             "post": {
                 "tags": [
-                    "代理OpenAI相关接口"
+                    "OpenAI相关接口"
                 ],
                 "summary": "音频转文字",
                 "parameters": [
@@ -175,7 +155,7 @@ const docTemplate = `{
         "/api/v1/openai/v1/chat/completions": {
             "post": {
                 "tags": [
-                    "代理OpenAI相关接口"
+                    "OpenAI相关接口"
                 ],
                 "summary": "对话",
                 "parameters": [
@@ -185,7 +165,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/stock-web-be_idl_openai.ChatCompletionRequest"
+                            "$ref": "#/definitions/aiapi.ChatCompletionRequest"
                         }
                     }
                 ],
@@ -195,7 +175,7 @@ const docTemplate = `{
         "/api/v1/openai/v1/image": {
             "post": {
                 "tags": [
-                    "代理OpenAI相关接口"
+                    "OpenAI相关接口"
                 ],
                 "summary": "生成图片",
                 "parameters": [
@@ -205,11 +185,33 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/stock-web-be_idl_openai.ImageRequest"
+                            "$ref": "#/definitions/aiapi.ImageRequest"
                         }
                     }
                 ],
                 "responses": {}
+            }
+        },
+        "/api/v1/openai/v1/model": {
+            "get": {
+                "tags": [
+                    "OpenAI相关接口"
+                ],
+                "summary": "获取可用模型",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
             }
         },
         "/api/v1/pay/pre_create": {
@@ -234,6 +236,31 @@ const docTemplate = `{
                         "description": "创建订单返回参数",
                         "schema": {
                             "$ref": "#/definitions/payapi.PreCreateResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/pay/status": {
+            "get": {
+                "tags": [
+                    "支付相关接口"
+                ],
+                "summary": "获取支付状态",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "订单id",
+                        "name": "orderId",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "支付状态：1-待支付,2-已支付,3-已取消",
+                        "schema": {
+                            "type": "int"
                         }
                     }
                 }
@@ -342,6 +369,38 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/v1/user/logout": {
+            "post": {
+                "tags": [
+                    "用户相关接口"
+                ],
+                "summary": "登出",
+                "responses": {
+                    "200": {
+                        "description": "返回token",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/user/menu": {
+            "get": {
+                "tags": [
+                    "用户相关接口"
+                ],
+                "summary": "获取主菜单信息",
+                "responses": {
+                    "200": {
+                        "description": "主菜单信息",
+                        "schema": {
+                            "$ref": "#/definitions/menu.Menu"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/user/profile": {
             "get": {
                 "tags": [
@@ -364,7 +423,7 @@ const docTemplate = `{
                 "summary": "修改用户信息",
                 "parameters": [
                     {
-                        "description": "用户信息",
+                        "description": "用户信息和自定义配置",
                         "name": "req",
                         "in": "body",
                         "required": true,
@@ -431,6 +490,53 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "aiapi.ChatCompletionRequest": {
+            "type": "object",
+            "properties": {
+                "frequency_penalty": {
+                    "type": "number"
+                },
+                "max_tokens": {
+                    "type": "integer"
+                },
+                "messages": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/openai.ChatCompletionMessage"
+                    }
+                },
+                "model": {
+                    "type": "string"
+                },
+                "role": {
+                    "description": "角色",
+                    "type": "string"
+                },
+                "stream": {
+                    "type": "boolean"
+                },
+                "temperature": {
+                    "type": "number"
+                }
+            }
+        },
+        "aiapi.ImageRequest": {
+            "type": "object",
+            "properties": {
+                "model": {
+                    "description": "dall-e2/stable-diffusion",
+                    "type": "string",
+                    "default": "dall-e2"
+                },
+                "n": {
+                    "type": "integer",
+                    "default": 1
+                },
+                "prompt": {
+                    "type": "string"
+                }
+            }
+        },
         "integral.BatchGenerateKeyRequest": {
             "type": "object",
             "properties": {
@@ -474,24 +580,44 @@ const docTemplate = `{
                 }
             }
         },
-        "integral.RecordRequest": {
+        "menu.Item": {
             "type": "object",
-            "required": [
-                "model",
-                "type"
-            ],
             "properties": {
-                "model": {
-                    "description": "使用模型",
+                "name": {
+                    "description": "名称",
                     "type": "string"
-                },
-                "size": {
-                    "description": "大小，chat为字数，image为尺寸，audio为时长(分钟)",
-                    "type": "integer"
                 },
                 "type": {
-                    "description": "计费类型，chat/image/audio",
+                    "description": "类型：chat/image/audio",
                     "type": "string"
+                }
+            }
+        },
+        "menu.Menu": {
+            "type": "object",
+            "properties": {
+                "tabs": {
+                    "description": "菜单tab",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/menu.Tab"
+                    }
+                }
+            }
+        },
+        "menu.Tab": {
+            "type": "object",
+            "properties": {
+                "category": {
+                    "description": "菜单分类：角色/工具",
+                    "type": "string"
+                },
+                "items": {
+                    "description": "菜单项",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/menu.Item"
+                    }
                 }
             }
         },
@@ -507,67 +633,6 @@ const docTemplate = `{
                 },
                 "role": {
                     "type": "string"
-                }
-            }
-        },
-        "openai.ChatRecordChat": {
-            "type": "object",
-            "properties": {
-                "data": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/openai.ChatRecordChatData"
-                    }
-                },
-                "uuid": {
-                    "type": "integer"
-                }
-            }
-        },
-        "openai.ChatRecordChatData": {
-            "type": "object",
-            "properties": {
-                "dateTime": {
-                    "type": "string"
-                },
-                "inversion": {
-                    "type": "boolean"
-                },
-                "isImage": {
-                    "type": "boolean"
-                },
-                "requestOptions": {
-                    "type": "object",
-                    "properties": {
-                        "options": {
-                            "type": "object",
-                            "properties": {
-                                "isImage": {
-                                    "type": "boolean"
-                                }
-                            }
-                        },
-                        "prompt": {
-                            "type": "string"
-                        }
-                    }
-                },
-                "text": {
-                    "type": "string"
-                }
-            }
-        },
-        "openai.ChatRecordResponse": {
-            "type": "object",
-            "properties": {
-                "active": {
-                    "type": "integer"
-                },
-                "chat": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/openai.ChatRecordChat"
-                    }
                 }
             }
         },
@@ -591,101 +656,13 @@ const docTemplate = `{
         "payapi.PreCreateResponse": {
             "type": "object",
             "properties": {
-                "order_id": {
+                "orderId": {
                     "description": "订单id",
                     "type": "string"
                 },
-                "qr_code": {
+                "qrCode": {
                     "description": "二维码串",
                     "type": "string"
-                }
-            }
-        },
-        "stock-web-be_idl_openai.ChatCompletionRequest": {
-            "type": "object",
-            "properties": {
-                "frequency_penalty": {
-                    "type": "number"
-                },
-                "logit_bias": {
-                    "type": "object",
-                    "additionalProperties": {
-                        "type": "integer"
-                    }
-                },
-                "max_tokens": {
-                    "type": "integer"
-                },
-                "message_id": {
-                    "type": "string"
-                },
-                "messages": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/openai.ChatCompletionMessage"
-                    }
-                },
-                "model": {
-                    "type": "string"
-                },
-                "n": {
-                    "type": "integer"
-                },
-                "presence_penalty": {
-                    "type": "number"
-                },
-                "stop": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
-                },
-                "stream": {
-                    "type": "boolean"
-                },
-                "temperature": {
-                    "type": "number"
-                },
-                "top_p": {
-                    "type": "number"
-                },
-                "user": {
-                    "type": "string"
-                },
-                "user_id": {
-                    "type": "integer"
-                },
-                "uuid": {
-                    "type": "integer"
-                }
-            }
-        },
-        "stock-web-be_idl_openai.ImageRequest": {
-            "type": "object",
-            "properties": {
-                "message_id": {
-                    "type": "string"
-                },
-                "n": {
-                    "type": "integer"
-                },
-                "prompt": {
-                    "type": "string"
-                },
-                "response_format": {
-                    "type": "string"
-                },
-                "size": {
-                    "type": "string"
-                },
-                "user": {
-                    "type": "string"
-                },
-                "user_id": {
-                    "type": "integer"
-                },
-                "uuid": {
-                    "type": "integer"
                 }
             }
         },
@@ -705,10 +682,51 @@ const docTemplate = `{
                 },
                 "subjectType": {
                     "description": "可选字段，默认为userapi.ChangePasswordMailCode",
-                    "type": "integer"
+                    "type": "integer",
+                    "default": 101
                 },
                 "verificationCode": {
                     "type": "string"
+                }
+            }
+        },
+        "user.ChatConfig": {
+            "type": "object",
+            "properties": {
+                "frequencyPenalty": {
+                    "description": "话题新鲜度,-2.0-2.0,默认为0",
+                    "type": "number",
+                    "default": 0
+                },
+                "model": {
+                    "description": "模型",
+                    "type": "string"
+                },
+                "temperature": {
+                    "description": "随机性0-2,默认为1",
+                    "type": "number",
+                    "default": 1
+                }
+            }
+        },
+        "user.CustomConfig": {
+            "type": "object",
+            "properties": {
+                "chatConfig": {
+                    "description": "聊天配置",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/user.ChatConfig"
+                        }
+                    ]
+                },
+                "imageConfig": {
+                    "description": "图片配置",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/user.ImageConfig"
+                        }
+                    ]
                 }
             }
         },
@@ -726,6 +744,24 @@ const docTemplate = `{
                 "feedbackType": {
                     "description": "反馈类型: 1-问题反馈 2-功能建议 3-咨询 4-其他",
                     "type": "integer"
+                }
+            }
+        },
+        "user.ImageConfig": {
+            "type": "object",
+            "properties": {
+                "model": {
+                    "description": "模型",
+                    "type": "string"
+                },
+                "n": {
+                    "description": "返回几张图，默认1张",
+                    "type": "integer",
+                    "default": 1
+                },
+                "size": {
+                    "description": "图片大小,256x256/512x512/1024x1024",
+                    "type": "string"
                 }
             }
         },
@@ -756,6 +792,14 @@ const docTemplate = `{
                     "description": "头像",
                     "type": "string"
                 },
+                "customConfig": {
+                    "description": "自定义配置",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/user.CustomConfig"
+                        }
+                    ]
+                },
                 "nickName": {
                     "description": "昵称",
                     "type": "string"
@@ -784,6 +828,10 @@ const docTemplate = `{
                 "nickName": {
                     "description": "昵称",
                     "type": "string"
+                },
+                "vipUser": {
+                    "description": "是否是vip用户",
+                    "type": "boolean"
                 }
             }
         },
@@ -829,7 +877,8 @@ const docTemplate = `{
                 },
                 "subjectType": {
                     "description": "可选字段，默认为userapi.ChangePasswordMailCode",
-                    "type": "integer"
+                    "type": "integer",
+                    "default": 101
                 }
             }
         },

@@ -1,7 +1,7 @@
 # 基础镜像，基于golang的alpine镜像构建--编译阶段
-FROM golang AS builder
+FROM golang:1.19 AS builder
 # 作者
-MAINTAINER stock
+MAINTAINER chatAlpha
 # 全局工作目录
 WORKDIR /go/stock-web-be
 # 把运行Dockerfile文件的当前目录所有文件复制到目标目录
@@ -9,7 +9,7 @@ COPY . /go/stock-web-be
 # 环境变量
 #  用于代理下载go项目依赖的包
 RUN go env -w GOPRIVATE=github.com/stockAlpha
-RUN git config --global url."https://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@github.com/".insteadOf "https://github.com/"
+RUN git config --global url."https://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@github.com/".insteadOf "https://github.com/"
 # swagger重新生成
 RUN go install github.com/swaggo/swag/cmd/swag@v1.8.12
 RUN sh swag.gen

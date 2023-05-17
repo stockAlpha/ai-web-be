@@ -23,6 +23,9 @@ const (
 	SyncStop                 = " _async_ready_stop"
 	SLTagAlipaySuccess       = " _alipay_success"
 	MailSyncFailRetry        = " _mail_sync_fail_retry"
+	SLTagAliOssSuccess       = " _ali_oss_success"
+	SLTagXFSuccess           = "_xf_success"
+	SLTagXFError             = "_xf_error"
 )
 
 // for middleware
@@ -50,6 +53,7 @@ var NotAuthApisMap = map[string]string{
 	"/public/*filepath":                          "/public/*filepath",
 	"/favicon.ico":                               "/favicon.ico",
 	"/swagger/*any":                              "/swagger/*any",
+	"/swagger/index.html":                        "/swagger/index.html",
 }
 
 var CanGenerateRechargeKeyUserMap = map[string]string{
@@ -67,23 +71,25 @@ const (
 	FeedbackApi                     = "/feedback"
 	ChangePasswordApi               = "/change_password"
 	SendPasswordVerificationCodeApi = "/change_password/verify/code"
+	MenuApi                         = "/menu"
 
 	IntegralPrefix         = "/api/v1/integral"
 	GenerateRechargeKeyApi = "/generate_key"
 	RechargeApi            = "/recharge"
 	ManualRechargeApi      = "/manual/recharge"
-	RecordApi              = "/record"
 
 	OpenaiPrefix         = "/api/v1/openai"
 	OpenaiCompletionsApi = "/v1/chat/completions"
 	ImageApi             = "/v1/image"
 	AudioApi             = "/v1/audio"
+	ModelApi             = "/v1/model"
 
 	AlipayPrefix = "/api/v1/alipay"
 	NotifyApi    = "/notify"
 
-	PayPrefix        = "/api/v1/pay"
-	PreCreateApi     = "/pre_create"
+	PayPrefix    = "/api/v1/pay"
+	PreCreateApi = "/pre_create"
+	StatusApi    = "/status"
 	ChatRecordPrefix = "/api/v1/chat_record"
 	ChatRecordApi    = "/record"
 )

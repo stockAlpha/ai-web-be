@@ -43,7 +43,7 @@ func PreCreate(c *gin.Context) {
 	default:
 		amount = 10
 	}
-	orderId, err := order.AddOrder(userId, decimal.NewFromInt(int64(amount)), strconv.Itoa(utils.GetAmount(req.ProductType)), nil)
+	id, err := order.AddOrder(userId, decimal.NewFromInt(int64(amount)), strconv.Itoa(utils.GetAmount(req.ProductType)), nil)
 	if err != nil {
 		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "add order error", err.Error())
 		cg.Resp(http.StatusBadRequest, controller.ErrCreateOrder, "创建订单失败，请重试或者联系客服")
@@ -54,11 +54,12 @@ func PreCreate(c *gin.Context) {
 		// 线上环境走真实金额
 		totalAmount = strconv.Itoa(amount)
 	}
+	orderId := strconv.FormatUint(id, 10)
 	res, err := client.TradePreCreate(alipay.TradePreCreate{
 		Trade: alipay.Trade{
 			Subject:     "ChatAlpha积分充值",
 			NotifyURL:   conf.Handler.GetString("alipay.notify_url"),
-			OutTradeNo:  strconv.FormatUint(orderId, 10),
+			OutTradeNo:  os.Getenv(consts.Env) + "_" + orderId,
 			TotalAmount: totalAmount,
 			ProductCode: "FACE_TO_FACE_PAYMENT",
 		},

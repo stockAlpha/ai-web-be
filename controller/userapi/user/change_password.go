@@ -90,22 +90,22 @@ func ChangePassword(c *gin.Context) {
 		return
 	}
 
-	user, err := userapi.GetUserByAuthType(req.SubjectName, authType)
+	oldUser, err := userapi.GetUserByAuthType(req.SubjectName, authType)
 	if err != nil {
-		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "query user is fail, error: %s", err.Error())
+		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "query oldUser is fail, error: %s", err.Error())
 		cg.Res(http.StatusBadRequest, controller.ErrnoError)
 		return
 	}
 	//判断最终的用户是否为空
-	if user == nil {
-		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "query user is fail, error: %s")
+	if oldUser == nil {
+		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "query oldUser is fail, error: %s")
 		cg.Res(http.StatusBadRequest, controller.ErrUserSubjectIdNotFound)
 		return
 	}
 
 	//判断用户旧密码是否和新密码一致
 	// 验证密码
-	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(req.NewPassword))
+	err = bcrypt.CompareHashAndPassword([]byte(oldUser.Password), []byte(req.NewPassword))
 	//代表计算hash值出现错误
 	if err != nil && err != bcrypt.ErrMismatchedHashAndPassword {
 		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "compute hash password error", err.Error())
@@ -143,7 +143,7 @@ func ChangePassword(c *gin.Context) {
 	}
 
 	//更新密码同时失效code
-	err = transactionChangePassword(c, user.ID, hashPassword, req)
+	err = transactionChangePassword(c, oldUser.ID, hashPassword, req)
 	if err != nil {
 		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "change password transaction err", err.Error())
 		cg.Res(http.StatusBadRequest, controller.ErrChangePassword)
@@ -155,22 +155,22 @@ func ChangePassword(c *gin.Context) {
 
 func transactionChangePassword(c *gin.Context, userId uint64, hashPassword string, req *user.ChangePasswordRequest) error {
 	// 声明个db，做事务回滚
-	curDb := db.DbIns.Begin()
+	tx := db.DbIns.Begin()
 
 	//更新用户密码
-	err := userapi.UpdateUserPassword(userId, hashPassword, curDb)
+	err := userapi.UpdateUserPassword(userId, hashPassword, tx)
 	if err != nil {
 		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "update user password err", err.Error())
-		curDb.Rollback()
+		tx.Rollback()
 		return err
 	}
 
 	//将code失效
-	err = userapi.ExpireCode(req.VerificationCode, req.SubjectName, req.SubjectType, curDb)
+	err = userapi.ExpireCode(req.VerificationCode, req.SubjectName, req.SubjectType, tx)
 	if err != nil {
 		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "expire code err", err.Error())
-		curDb.Rollback()
+		tx.Rollback()
 		return err
 	}
-	return curDb.Commit().Error
+	return tx.Commit().Error
 }

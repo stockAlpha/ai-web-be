@@ -11,7 +11,7 @@ type RechargeKey struct {
 	RechargeKey string    `gorm:"column:recharge_key" json:"recharge_key"`
 	Type        int       `gorm:"column:type" json:"type"`     // 1代表100积分，2代表500积分，3代表2000积分，4代表10000积分
 	Status      int       `gorm:"column:status" json:"status"` // 0代表未使用，1代表已使用，2代表已失效
-	UseAccount  uint64    `gorm:"column:use_account" json:"use_account"`
+	UserId      uint64    `gorm:"column:use_id" json:"use_id"` // 使用者的用户id
 	CreateTime  time.Time `gorm:"column:create_time" json:"create_time"`
 	UpdateTime  time.Time `gorm:"column:update_time" json:"update_time"`
 }

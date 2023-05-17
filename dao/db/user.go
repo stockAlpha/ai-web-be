@@ -1,6 +1,7 @@
 package db
 
 import (
+	"encoding/json"
 	"errors"
 	"time"
 
@@ -8,22 +9,17 @@ import (
 )
 
 type User struct {
-	ID         uint64    `gorm:"primary_key" json:"id"`
-	Email      string    `gorm:"column:email" json:"email"`
-	Password   string    `gorm:"column:password" json:"password"`
-	NickName   string    `gorm:"column:nick_name" json:"nick_name"`
-	Avatar     string    `gorm:"column:avatar" json:"avatar"`
-	UserType   int32     `gorm:"column:user_type" json:"user_type"` //普通用户0 付费用户1 vip2
-	InviteCode string    `gorm:"column:invite_code" json:"invite_code"`
-	CreateTime time.Time `gorm:"column:create_time" json:"create_time"`
-	UpdateTime time.Time `gorm:"column:update_time" json:"update_time"`
+	ID           uint64          `gorm:"primary_key" json:"id"`
+	Email        string          `gorm:"column:email" json:"email"`
+	Password     string          `gorm:"column:password" json:"password"`
+	NickName     string          `gorm:"column:nick_name" json:"nick_name"`
+	Avatar       string          `gorm:"column:avatar" json:"avatar"`
+	InviteCode   string          `gorm:"column:invite_code" json:"invite_code"`
+	VipUser      bool            `gorm:"column:vip_user" json:"vip_user"`
+	CustomConfig json.RawMessage `gorm:"column:custom_config" json:"custom_config"`
+	CreateTime   time.Time       `gorm:"column:create_time" json:"create_time"`
+	UpdateTime   time.Time       `gorm:"column:update_time" json:"update_time"`
 }
-
-const (
-	UserTypeCommon = int32(0)
-	UserTypePay    = int32(1)
-	UserTypeVip    = int32(2)
-)
 
 func (user *User) TableName() string {
 	return "users"
@@ -53,16 +49,22 @@ func (user *User) UpdateUser() {
 	if user.Avatar != "" {
 		updateMap["avatar"] = user.Avatar
 	}
-	db.Updates(updateMap)
+	if user.CustomConfig != nil {
+		updateMap["custom_config"] = user.CustomConfig
+	}
+	updateMap["update_time"] = time.Now()
+	db.Table(user.TableName()).Updates(updateMap)
 }
 
 func (user *User) UpdateUserPassword(db *gorm.DB) error {
 	if db == nil {
 		db = DbIns.Table(user.TableName())
 	}
-
+	updateMap := map[string]interface{}{}
+	updateMap["password"] = user.Password
+	updateMap["update_time"] = time.Now()
 	return db.Table(user.TableName()).Where("id = ?", user.ID).
-		Update("password", user.Password).Error
+		Updates(updateMap).Error
 }
 
 func (user *User) GetUserByEmail(email string) error {
@@ -97,13 +99,22 @@ func (user *User) GetUserById(id uint64) error {
 	return nil
 }
 
+func (user *User) SetVipUser(db *gorm.DB) error {
+	if db == nil {
+		db = DbIns.Table(user.TableName())
+	}
+	updateMap := map[string]interface{}{}
+	updateMap["vip_user"] = true
+	updateMap["update_time"] = time.Now()
+	return db.Table(user.TableName()).Where("id = ?", user.ID).Updates(updateMap).Error
+}
+
 func (user *User) GetUserByInviteCode(inviteCode string, db *gorm.DB) error {
 	if db == nil {
 		db = DbIns.Table(user.TableName())
 	}
 
-	err := db.Table(user.TableName()).
-		Where("invite_code = ?", inviteCode).
+	err := db.Table(user.TableName()).Where("invite_code = ?", inviteCode).
 		Find(user).Error
 
 	if err != nil {
