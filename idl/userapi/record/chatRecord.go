@@ -1,4 +1,4 @@
-package openai
+package record
 
 type ChatRecordRequest struct {
 	Limit  int    `json:"limit" form:"limit" `

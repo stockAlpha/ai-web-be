@@ -7,7 +7,7 @@ import (
 	"stock-web-be/dao/db"
 	"stock-web-be/gocommon/consts"
 	"stock-web-be/gocommon/tlog"
-	"stock-web-be/idl/openai"
+	"stock-web-be/idl/userapi/record"
 
 	"github.com/gin-gonic/gin"
 )
@@ -21,7 +21,7 @@ import (
 // @Router		/api/v1/chat_record/record [get]
 func GetChatRecord(c *gin.Context) {
 	cg := controller.Gin{Ctx: c}
-	var req openai.ChatRecordRequest
+	var req record.ChatRecordRequest
 	err := c.ShouldBindQuery(&req)
 	if err != nil {
 		tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "request params invalid, error: %s", err.Error())
@@ -37,14 +37,14 @@ func GetChatRecord(c *gin.Context) {
 	resp := fmtChatRecord(chats)
 	cg.Resp(http.StatusOK, controller.ErrnoSuccess, resp)
 }
-func fmtChatRecord(records []db.ChatRecord) (resp openai.ChatRecordResponse) {
-	chatCacheMap := make(map[int][]openai.ChatRecordChatData)
+func fmtChatRecord(records []db.ChatRecord) (resp record.ChatRecordResponse) {
+	chatCacheMap := make(map[int][]record.ChatRecordChatData)
 	for i := range records {
 		if _, ok := chatCacheMap[records[i].UUID]; ok {
 			//append 有序的
 			chatCacheMap[records[i].UUID] = append(chatCacheMap[records[i].UUID], records[i].DbToOpenAIData())
 		} else {
-			chatCacheMap[records[i].UUID] = make([]openai.ChatRecordChatData, 0)
+			chatCacheMap[records[i].UUID] = make([]record.ChatRecordChatData, 0)
 		}
 		//Active为最后一个
 		if i == len(records)-1 {
@@ -52,7 +52,7 @@ func fmtChatRecord(records []db.ChatRecord) (resp openai.ChatRecordResponse) {
 		}
 	}
 	for k, v := range chatCacheMap {
-		resp.Chat = append(resp.Chat, openai.ChatRecordChat{UUID: k, Data: v})
+		resp.Chat = append(resp.Chat, record.ChatRecordChat{UUID: k, Data: v})
 	}
 	return
 }

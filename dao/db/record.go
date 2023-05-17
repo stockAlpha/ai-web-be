@@ -4,7 +4,7 @@ import (
 	"errors"
 	"time"
 
-	"stock-web-be/idl/openai"
+	"stock-web-be/idl/userapi/record"
 
 	"gorm.io/gorm"
 )
@@ -23,7 +23,7 @@ type ChatRecord struct {
 	UpdatedAt     time.Time      `json:"updated_at" form:"created_at"`
 }
 
-func (c *ChatRecord) DbToOpenAIData() (data openai.ChatRecordChatData) {
+func (c *ChatRecord) DbToOpenAIData() (data record.ChatRecordChatData) {
 	if c.Prompt == "" {
 		data.RequestOptions.Prompt = c.Data
 		data.Inversion = true
@@ -56,7 +56,7 @@ func InsertRecord(records []ChatRecord) (err error) {
 	}
 	return
 }
-func FindRecord(req openai.ChatRecordRequest) (records []ChatRecord, err error) {
+func FindRecord(req record.ChatRecordRequest) (records []ChatRecord, err error) {
 	//todo 暂时不做分页
 	if req.UserID == 0 {
 		return nil, errors.New("need userid")
