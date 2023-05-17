@@ -1,4 +1,4 @@
-package openaiapi
+package chatapi
 
 import (
 	"net/http"
@@ -18,7 +18,7 @@ import (
 //
 //	@response		200		{object}	openai.ChatRecordResponse
 //
-// @Router		/api/v1/chat_record/record [get]
+// @Router		/api/v1/chat/record [get]
 func GetChatRecord(c *gin.Context) {
 	cg := controller.Gin{Ctx: c}
 	var req record.ChatRecordRequest
@@ -37,6 +37,7 @@ func GetChatRecord(c *gin.Context) {
 	resp := fmtChatRecord(chats)
 	cg.Resp(http.StatusOK, controller.ErrnoSuccess, resp)
 }
+
 func fmtChatRecord(records []db.ChatRecord) (resp record.ChatRecordResponse) {
 	chatCacheMap := make(map[int][]record.ChatRecordChatData)
 	for i := range records {

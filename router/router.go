@@ -2,6 +2,7 @@ package router
 
 import (
 	"net/http"
+	"stock-web-be/controller/chatapi"
 
 	"stock-web-be/controller/alipayapi"
 	"stock-web-be/controller/openaiapi"
@@ -97,5 +98,5 @@ func registerPay(group *gin.RouterGroup) {
 	group.GET(consts.StatusApi, payapi.Status)
 }
 func registerRecord(group *gin.RouterGroup) {
-	group.GET(consts.ChatRecordApi, openaiapi.GetChatRecord)
+	group.GET(consts.ChatRecordApi, chatapi.GetChatRecord)
 }
