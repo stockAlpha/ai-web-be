@@ -16,7 +16,7 @@ import (
 	"strconv"
 )
 
-// @Tags	OpenAI相关接口
+// @Tags	AI相关接口
 // @Summary	音频转文字
 // @Param audio formData file true "音频文件"
 // @Param model query string false "model"

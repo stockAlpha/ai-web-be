@@ -30,6 +30,22 @@ definitions:
         type: integer
       prompt:
         type: string
+      size:
+        default: 512x512
+        description: 256x256/512x512/1024x1024
+        type: string
+    type: object
+  aiapi.MjProxyOperate:
+    properties:
+      action:
+        description: IMAGINE:出图；UPSCALE:选中放大；VARIATION：选中其中的一张图，生成四张相似的,可用值:IMAGINE,UPSCALE,VARIATION,RESET,DESCRIBE
+        type: string
+      index:
+        description: '序号: action 为 UPSCALE,VARIATION 必传'
+        type: integer
+      taskId:
+        description: 返回的任务id
+        type: string
     type: object
   integral.BatchGenerateKeyRequest:
     properties:
@@ -150,7 +166,6 @@ definitions:
         description: 模型
         type: string
       temperature:
-        default: 1
         description: 随机性0-2,默认为1
         type: number
     type: object
@@ -183,7 +198,6 @@ definitions:
         description: 模型
         type: string
       "n":
-        default: 1
         description: 返回几张图，默认1张
         type: integer
       size:
@@ -222,6 +236,10 @@ definitions:
       avatar:
         description: 头像
         type: string
+      customConfig:
+        allOf:
+        - $ref: '#/definitions/user.CustomConfig'
+        description: 自定义配置
       email:
         description: 邮箱
         type: string
@@ -358,7 +376,7 @@ paths:
       responses: {}
       summary: 音频转文字
       tags:
-      - OpenAI相关接口
+      - AI相关接口
   /api/v1/openai/v1/chat/completions:
     post:
       parameters:
@@ -371,11 +389,11 @@ paths:
       responses: {}
       summary: 对话
       tags:
-      - OpenAI相关接口
+      - AI相关接口
   /api/v1/openai/v1/image:
     post:
       parameters:
-      - description: openai请求参数
+      - description: 生成图片请求参数
         in: body
         name: req
         required: true
@@ -384,7 +402,20 @@ paths:
       responses: {}
       summary: 生成图片
       tags:
-      - OpenAI相关接口
+      - AI相关接口
+  /api/v1/openai/v1/image/operate:
+    post:
+      parameters:
+      - description: openai请求参数
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/aiapi.MjProxyOperate'
+      responses: {}
+      summary: 操作图片
+      tags:
+      - AI相关接口
   /api/v1/openai/v1/model:
     get:
       responses:
@@ -398,7 +429,7 @@ paths:
             type: object
       summary: 获取可用模型
       tags:
-      - OpenAI相关接口
+      - AI相关接口
   /api/v1/pay/pre_create:
     post:
       parameters:

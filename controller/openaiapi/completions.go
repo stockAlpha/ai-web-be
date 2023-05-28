@@ -20,7 +20,7 @@ import (
 	"github.com/sashabaranov/go-openai"
 )
 
-// @Tags	OpenAI相关接口
+// @Tags	AI相关接口
 // @Summary	对话
 // @param		req	body	aiapi.ChatCompletionRequest	true	"openai请求参数"
 // @Router		/api/v1/openai/v1/chat/completions [post]
