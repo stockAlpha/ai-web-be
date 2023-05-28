@@ -188,6 +188,7 @@ func midjourneyRequest(prompt string, c *gin.Context) ([]aiapi.ImageResponseData
 		Prompt: prompt,
 	}
 	j, _ := json.Marshal(reqValue)
+	tlog.Handler.Infof(c, consts.SLTagHTTPSuccess, "midjourney request host: %s", conf.Handler.GetString("midjourney.proxy.host"))
 	postReq, _ := http.NewRequest(http.MethodPost, conf.Handler.GetString("midjourney.proxy.host")+"/mj/trigger/submit", bytes.NewReader(j))
 	postReq.Header.Add("Content-Type", "application/json")
 	postRes, err := httpClient.Do(postReq)
