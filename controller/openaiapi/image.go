@@ -129,7 +129,7 @@ func midjourneyGet(taskId string, c *gin.Context) ([]aiapi.ImageResponseDataInne
 	var res []aiapi.ImageResponseDataInner
 	host := conf.Handler.GetString("midjourney.proxy.host")
 	if !strings.HasPrefix(host, "http") {
-		host += "http://"
+		host = "http://" + host
 	}
 	req, err := http.NewRequest(http.MethodGet, host+"/mj/task/"+taskId+"/fetch", nil)
 	if err != nil {
@@ -173,7 +173,7 @@ func midjourneyOperate(operate aiapi.MjProxyOperate, c *gin.Context) ([]aiapi.Im
 	j, _ := json.Marshal(reqValue)
 	host := conf.Handler.GetString("midjourney.proxy.host")
 	if !strings.HasPrefix(host, "http") {
-		host += "http://"
+		host = "http://" + host
 	}
 	postReq, _ := http.NewRequest(http.MethodPost, host+"/mj/trigger/submit", bytes.NewReader(j))
 	postReq.Header.Add("Content-Type", "application/json")
@@ -199,7 +199,7 @@ func midjourneyRequest(prompt string, c *gin.Context) ([]aiapi.ImageResponseData
 	j, _ := json.Marshal(reqValue)
 	host := conf.Handler.GetString("midjourney.proxy.host")
 	if !strings.HasPrefix(host, "http") {
-		host += "http://"
+		host = "http://" + host
 	}
 	postReq, _ := http.NewRequest(http.MethodPost, host+"/mj/trigger/submit", bytes.NewReader(j))
 	postReq.Header.Add("Content-Type", "application/json")
