@@ -19,6 +19,7 @@ import (
 	"stock-web-be/logic/xfapi"
 	"stock-web-be/utils"
 	"strconv"
+	"time"
 )
 
 // @Tags	AI相关接口
@@ -156,6 +157,7 @@ func midjourneyGet(taskId string, c *gin.Context) ([]aiapi.ImageResponseDataInne
 			tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "midjourney get error: %s", err.Error())
 			return res, fmt.Errorf(response.FailReason)
 		}
+		time.Sleep(time.Second * 1)
 	}
 	return res, fmt.Errorf("midjourney get error")
 }
