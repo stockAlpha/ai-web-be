@@ -127,7 +127,7 @@ var httpClient = http.Client{}
 
 func midjourneyGet(taskId string, c *gin.Context) ([]aiapi.ImageResponseDataInner, error) {
 	var res []aiapi.ImageResponseDataInner
-	host := conf.Handler.GetString("midjourney.proxy.host")
+	host := conf.Handler.GetString("midjourney.host")
 	if !strings.HasPrefix(host, "http") {
 		host = "http://" + host
 	}
@@ -171,7 +171,7 @@ func midjourneyOperate(operate aiapi.MjProxyOperate, c *gin.Context) ([]aiapi.Im
 		TaskId: operate.TaskId,
 	}
 	j, _ := json.Marshal(reqValue)
-	host := conf.Handler.GetString("midjourney.proxy.host")
+	host := conf.Handler.GetString("midjourney.host")
 	if !strings.HasPrefix(host, "http") {
 		host = "http://" + host
 	}
@@ -197,7 +197,7 @@ func midjourneyRequest(prompt string, c *gin.Context) ([]aiapi.ImageResponseData
 		Prompt: prompt,
 	}
 	j, _ := json.Marshal(reqValue)
-	host := conf.Handler.GetString("midjourney.proxy.host")
+	host := conf.Handler.GetString("midjourney.host")
 	if !strings.HasPrefix(host, "http") {
 		host = "http://" + host
 	}
