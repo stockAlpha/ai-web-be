@@ -107,4 +107,4 @@ api_secret = "YjczZTM5NzgyZmM1YzVmY2Y4MjBlNzQ5"
 api_key = "f0965e53dea4d0c0c51761b29e516faf"
 
 [midjourney.proxy]
-host = "chatalpha-mj.zeabur.app"
+host = "https://chatalpha-mj.zeabur.app"

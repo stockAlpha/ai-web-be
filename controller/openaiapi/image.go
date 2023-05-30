@@ -19,6 +19,7 @@ import (
 	"stock-web-be/logic/xfapi"
 	"stock-web-be/utils"
 	"strconv"
+	"strings"
 )
 
 // @Tags	AI相关接口
@@ -126,7 +127,11 @@ var httpClient = http.Client{}
 
 func midjourneyGet(taskId string, c *gin.Context) ([]aiapi.ImageResponseDataInner, error) {
 	var res []aiapi.ImageResponseDataInner
-	req, err := http.NewRequest(http.MethodGet, "https://"+conf.Handler.GetString("midjourney.proxy.host")+"/mj/task/"+taskId+"/fetch", nil)
+	host := conf.Handler.GetString("midjourney.proxy.host")
+	if !strings.HasPrefix(host, "http") {
+		host += "http://"
+	}
+	req, err := http.NewRequest(http.MethodGet, host+"/mj/task/"+taskId+"/fetch", nil)
 	if err != nil {
 		return res, err
 	}
@@ -166,7 +171,11 @@ func midjourneyOperate(operate aiapi.MjProxyOperate, c *gin.Context) ([]aiapi.Im
 		TaskId: operate.TaskId,
 	}
 	j, _ := json.Marshal(reqValue)
-	postReq, _ := http.NewRequest(http.MethodPost, "https://"+conf.Handler.GetString("midjourney.proxy.host")+"/mj/trigger/submit", bytes.NewReader(j))
+	host := conf.Handler.GetString("midjourney.proxy.host")
+	if !strings.HasPrefix(host, "http") {
+		host += "http://"
+	}
+	postReq, _ := http.NewRequest(http.MethodPost, host+"/mj/trigger/submit", bytes.NewReader(j))
 	postReq.Header.Add("Content-Type", "application/json")
 	postRes, err := httpClient.Do(postReq)
 	var mjProxyRes aiapi.MjProxySubmitRes
@@ -188,7 +197,11 @@ func midjourneyRequest(prompt string, c *gin.Context) ([]aiapi.ImageResponseData
 		Prompt: prompt,
 	}
 	j, _ := json.Marshal(reqValue)
-	postReq, _ := http.NewRequest(http.MethodPost, "https://"+conf.Handler.GetString("midjourney.proxy.host")+"/mj/trigger/submit", bytes.NewReader(j))
+	host := conf.Handler.GetString("midjourney.proxy.host")
+	if !strings.HasPrefix(host, "http") {
+		host += "http://"
+	}
+	postReq, _ := http.NewRequest(http.MethodPost, host+"/mj/trigger/submit", bytes.NewReader(j))
 	postReq.Header.Add("Content-Type", "application/json")
 	postRes, err := httpClient.Do(postReq)
 	var mjProxyRes aiapi.MjProxySubmitRes
