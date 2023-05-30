@@ -104,7 +104,7 @@ func Image(c *gin.Context) {
 
 // @Tags	AI相关接口
 // @Summary	操作图片
-// @param		req	body	aiapi.MjProxyOperate	true	"openai请求参数"
+// @param		req	body	aiapi.MjProxyOperate	true	"图片操作请求参数"
 // @Router		/api/v1/openai/v1/image/operate [post]
 func ImageOperate(c *gin.Context) {
 	cg := controller.Gin{Ctx: c}
@@ -126,7 +126,7 @@ var httpClient = http.Client{}
 
 func midjourneyGet(taskId string, c *gin.Context) ([]aiapi.ImageResponseDataInner, error) {
 	var res []aiapi.ImageResponseDataInner
-	req, err := http.NewRequest(http.MethodGet, conf.Handler.GetString("midjourney.proxy.host")+"/mj/task/"+taskId+"/fetch", nil)
+	req, err := http.NewRequest(http.MethodGet, "https://"+conf.Handler.GetString("midjourney.proxy.host")+"/mj/task/"+taskId+"/fetch", nil)
 	if err != nil {
 		return res, err
 	}
@@ -166,7 +166,7 @@ func midjourneyOperate(operate aiapi.MjProxyOperate, c *gin.Context) ([]aiapi.Im
 		TaskId: operate.TaskId,
 	}
 	j, _ := json.Marshal(reqValue)
-	postReq, _ := http.NewRequest(http.MethodPost, conf.Handler.GetString("midjourney.proxy.host")+"/mj/trigger/submit", bytes.NewReader(j))
+	postReq, _ := http.NewRequest(http.MethodPost, "https://"+conf.Handler.GetString("midjourney.proxy.host")+"/mj/trigger/submit", bytes.NewReader(j))
 	postReq.Header.Add("Content-Type", "application/json")
 	postRes, err := httpClient.Do(postReq)
 	var mjProxyRes aiapi.MjProxySubmitRes
@@ -188,8 +188,7 @@ func midjourneyRequest(prompt string, c *gin.Context) ([]aiapi.ImageResponseData
 		Prompt: prompt,
 	}
 	j, _ := json.Marshal(reqValue)
-	tlog.Handler.Infof(c, consts.SLTagHTTPSuccess, "midjourney request host: %s", conf.Handler.GetString("midjourney.proxy.host"))
-	postReq, _ := http.NewRequest(http.MethodPost, conf.Handler.GetString("midjourney.proxy.host")+"/mj/trigger/submit", bytes.NewReader(j))
+	postReq, _ := http.NewRequest(http.MethodPost, "https://"+conf.Handler.GetString("midjourney.proxy.host")+"/mj/trigger/submit", bytes.NewReader(j))
 	postReq.Header.Add("Content-Type", "application/json")
 	postRes, err := httpClient.Do(postReq)
 	var mjProxyRes aiapi.MjProxySubmitRes
