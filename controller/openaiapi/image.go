@@ -145,7 +145,6 @@ func midjourneyGet(taskId string, c *gin.Context) ([]aiapi.ImageResponseDataInne
 		}
 		response := aiapi.MjProxyGetRes{}
 		err = json.Unmarshal(body, &response)
-		fmt.Println("midjourney get response: ", response)
 		if err != nil {
 			break
 		}
@@ -182,7 +181,6 @@ func midjourneyOperate(operate aiapi.MjProxyOperate, c *gin.Context) ([]aiapi.Im
 	defer postRes.Body.Close()
 	body, _ := io.ReadAll(postRes.Body)
 	_ = json.Unmarshal(body, &mjProxyRes)
-	fmt.Println("midjourney operate response: ", mjProxyRes)
 	return midjourneyGet(mjProxyRes.Result, c)
 }
 
@@ -206,7 +204,6 @@ func midjourneyRequest(prompt string, c *gin.Context) ([]aiapi.ImageResponseData
 	defer postRes.Body.Close()
 	body, _ := io.ReadAll(postRes.Body)
 	_ = json.Unmarshal(body, &mjProxyRes)
-	fmt.Println("midjourney request response: ", mjProxyRes)
 	return midjourneyGet(mjProxyRes.Result, c)
 }
 
