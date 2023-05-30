@@ -19,7 +19,6 @@ import (
 	"stock-web-be/logic/xfapi"
 	"stock-web-be/utils"
 	"strconv"
-	"strings"
 )
 
 // @Tags	AI相关接口
@@ -128,9 +127,6 @@ var httpClient = http.Client{}
 func midjourneyGet(taskId string, c *gin.Context) ([]aiapi.ImageResponseDataInner, error) {
 	var res []aiapi.ImageResponseDataInner
 	host := conf.Handler.GetString("midjourney.host")
-	if !strings.HasPrefix(host, "http") {
-		host = "http://" + host
-	}
 	req, err := http.NewRequest(http.MethodGet, host+"/mj/task/"+taskId+"/fetch", nil)
 	if err != nil {
 		return res, err
@@ -172,9 +168,6 @@ func midjourneyOperate(operate aiapi.MjProxyOperate, c *gin.Context) ([]aiapi.Im
 	}
 	j, _ := json.Marshal(reqValue)
 	host := conf.Handler.GetString("midjourney.host")
-	if !strings.HasPrefix(host, "http") {
-		host = "http://" + host
-	}
 	postReq, _ := http.NewRequest(http.MethodPost, host+"/mj/trigger/submit", bytes.NewReader(j))
 	postReq.Header.Add("Content-Type", "application/json")
 	postRes, err := httpClient.Do(postReq)
@@ -197,10 +190,8 @@ func midjourneyRequest(prompt string, c *gin.Context) ([]aiapi.ImageResponseData
 		Prompt: prompt,
 	}
 	j, _ := json.Marshal(reqValue)
+	// mj服务只部署一个，所以先用外网调用，
 	host := conf.Handler.GetString("midjourney.host")
-	if !strings.HasPrefix(host, "http") {
-		host = "http://" + host
-	}
 	postReq, _ := http.NewRequest(http.MethodPost, host+"/mj/trigger/submit", bytes.NewReader(j))
 	postReq.Header.Add("Content-Type", "application/json")
 	postRes, err := httpClient.Do(postReq)
