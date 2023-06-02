@@ -4,8 +4,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"stock-web-be/controller"
-	"stock-web-be/logic/userapi"
-	"strconv"
 )
 
 // @Tags	AI相关接口
@@ -14,13 +12,13 @@ import (
 // @Response 200 {object} map[string][]string 模型列表
 func Model(c *gin.Context) {
 	cg := controller.Gin{Ctx: c}
-	userId, _ := strconv.ParseUint(c.GetString("user_id"), 10, 64)
-	userProfile, _ := userapi.GetUserById(userId)
-	imageModel := []string{"dall-e2", "stable-diffusion"}
+	//userId, _ := strconv.ParseUint(c.GetString("user_id"), 10, 64)
+	//userProfile, _ := userapi.GetUserById(userId)
+	imageModel := []string{"midjourney", "dall-e2", "stable-diffusion"}
 	// vip用户可以优先体验sd
-	if userProfile.VipUser {
-		imageModel = []string{"midjourney", "dall-e2", "stable-diffusion"}
-	}
+	//if userProfile.VipUser {
+	//	imageModel = []string{"midjourney", "dall-e2", "stable-diffusion"}
+	//}
 	model := make(map[string][]string)
 	model["chat"] = []string{"gpt-3.5-turbo"}
 	model["image"] = imageModel
