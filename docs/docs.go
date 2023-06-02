@@ -88,7 +88,7 @@ const docTemplate = `{
         "/api/v1/openai/v1/audio": {
             "post": {
                 "tags": [
-                    "OpenAI相关接口"
+                    "AI相关接口"
                 ],
                 "summary": "音频转文字",
                 "parameters": [
@@ -130,7 +130,7 @@ const docTemplate = `{
         "/api/v1/openai/v1/chat/completions": {
             "post": {
                 "tags": [
-                    "OpenAI相关接口"
+                    "AI相关接口"
                 ],
                 "summary": "对话",
                 "parameters": [
@@ -150,12 +150,12 @@ const docTemplate = `{
         "/api/v1/openai/v1/image": {
             "post": {
                 "tags": [
-                    "OpenAI相关接口"
+                    "AI相关接口"
                 ],
                 "summary": "生成图片",
                 "parameters": [
                     {
-                        "description": "openai请求参数",
+                        "description": "生成图片请求参数",
                         "name": "req",
                         "in": "body",
                         "required": true,
@@ -167,10 +167,30 @@ const docTemplate = `{
                 "responses": {}
             }
         },
+        "/api/v1/openai/v1/image/operate": {
+            "post": {
+                "tags": [
+                    "AI相关接口"
+                ],
+                "summary": "操作图片",
+                "parameters": [
+                    {
+                        "description": "openai请求参数",
+                        "name": "req",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/aiapi.MjProxyOperate"
+                        }
+                    }
+                ],
+                "responses": {}
+            }
+        },
         "/api/v1/openai/v1/model": {
             "get": {
                 "tags": [
-                    "OpenAI相关接口"
+                    "AI相关接口"
                 ],
                 "summary": "获取可用模型",
                 "responses": {
@@ -493,6 +513,28 @@ const docTemplate = `{
                 },
                 "prompt": {
                     "type": "string"
+                },
+                "size": {
+                    "description": "256x256/512x512/1024x1024",
+                    "type": "string",
+                    "default": "512x512"
+                }
+            }
+        },
+        "aiapi.MjProxyOperate": {
+            "type": "object",
+            "properties": {
+                "action": {
+                    "description": "IMAGINE:出图；UPSCALE:选中放大；VARIATION：选中其中的一张图，生成四张相似的,可用值:IMAGINE,UPSCALE,VARIATION,RESET,DESCRIBE",
+                    "type": "string"
+                },
+                "index": {
+                    "description": "序号: action 为 UPSCALE,VARIATION 必传",
+                    "type": "integer"
+                },
+                "taskId": {
+                    "description": "返回的任务id",
+                    "type": "string"
                 }
             }
         },
@@ -663,8 +705,7 @@ const docTemplate = `{
                 },
                 "temperature": {
                     "description": "随机性0-2,默认为1",
-                    "type": "number",
-                    "default": 1
+                    "type": "number"
                 }
             }
         },
@@ -715,8 +756,7 @@ const docTemplate = `{
                 },
                 "n": {
                     "description": "返回几张图，默认1张",
-                    "type": "integer",
-                    "default": 1
+                    "type": "integer"
                 },
                 "size": {
                     "description": "图片大小,256x256/512x512/1024x1024",
@@ -771,6 +811,14 @@ const docTemplate = `{
                 "avatar": {
                     "description": "头像",
                     "type": "string"
+                },
+                "customConfig": {
+                    "description": "自定义配置",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/user.CustomConfig"
+                        }
+                    ]
                 },
                 "email": {
                     "description": "邮箱",

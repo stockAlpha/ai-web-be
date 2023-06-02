@@ -83,6 +83,7 @@ const (
 	ImageApi             = "/v1/image"
 	AudioApi             = "/v1/audio"
 	ModelApi             = "/v1/model"
+	ImageOperateApi      = "v1/image/operate"
 
 	AlipayPrefix = "/api/v1/alipay"
 	NotifyApi    = "/notify"

@@ -105,3 +105,6 @@ key = "KR5vjtqEm6w2C2foeG2A"
 app_id = "01eb250e"
 api_secret = "YjczZTM5NzgyZmM1YzVmY2Y4MjBlNzQ5"
 api_key = "f0965e53dea4d0c0c51761b29e516faf"
+
+[midjourney]
+host = "https://chatalpha-mj.zeabur.app"
