@@ -152,6 +152,7 @@ func midjourneyGet(taskId string, c *gin.Context) ([]aiapi.ImageResponseDataInne
 			res = append(res, aiapi.ImageResponseDataInner{URL: response.ImageUrl, TaskId: taskId})
 			return res, nil
 		}
+		fmt.Println("image res", response)
 		if response.Status == "FAILURE" {
 			tlog.Handler.Errorf(c, consts.SLTagHTTPFailed, "midjourney get error: %s", err.Error())
 			return res, fmt.Errorf(response.FailReason)
@@ -169,7 +170,7 @@ func midjourneyOperate(operate aiapi.MjProxyOperate, c *gin.Context) ([]aiapi.Im
 	}
 	j, _ := json.Marshal(reqValue)
 	host := conf.Handler.GetString("midjourney.host")
-	postReq, _ := http.NewRequest(http.MethodPost, host+"/mj/trigger/submit", bytes.NewReader(j))
+	postReq, _ := http.NewRequest(http.MethodPost, host+"/mj/submit/change", bytes.NewReader(j))
 	postReq.Header.Add("Content-Type", "application/json")
 	postRes, err := httpClient.Do(postReq)
 	var mjProxyRes aiapi.MjProxySubmitRes
@@ -186,13 +187,12 @@ func midjourneyOperate(operate aiapi.MjProxyOperate, c *gin.Context) ([]aiapi.Im
 
 func midjourneyRequest(prompt string, c *gin.Context) ([]aiapi.ImageResponseDataInner, error) {
 	reqValue := aiapi.MjProxySubmit{
-		Action: "IMAGINE",
 		Prompt: prompt,
 	}
 	j, _ := json.Marshal(reqValue)
 	// mj服务只部署一个，所以先用外网调用，
 	host := conf.Handler.GetString("midjourney.host")
-	postReq, _ := http.NewRequest(http.MethodPost, host+"/mj/trigger/submit", bytes.NewReader(j))
+	postReq, _ := http.NewRequest(http.MethodPost, host+"/mj/submit/imagine", bytes.NewReader(j))
 	postReq.Header.Add("Content-Type", "application/json")
 	postRes, err := httpClient.Do(postReq)
 	var mjProxyRes aiapi.MjProxySubmitRes
