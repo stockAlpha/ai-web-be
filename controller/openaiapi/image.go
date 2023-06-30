@@ -149,7 +149,7 @@ func midjourneyGet(taskId string, c *gin.Context) ([]aiapi.ImageResponseDataInne
 			break
 		}
 		if response.Status == "SUCCESS" {
-			res = append(res, aiapi.ImageResponseDataInner{URL: response.ImageUrl, TaskId: taskId})
+			res = append(res, aiapi.ImageResponseDataInner{URL: aliyunapi.UploadFileByUrl(response.ImageUrl, "image/png"), TaskId: taskId})
 			return res, nil
 		}
 		fmt.Println("image res", response)
