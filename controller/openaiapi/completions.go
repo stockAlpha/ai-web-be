@@ -38,12 +38,12 @@ func Completions(c *gin.Context) {
 
 	// 根据用户是否位vip来控制max_tokens
 	user, _ := userapi.GetUserById(userId)
-	// 普通用户只支持2k tokens
-	maxModelTokens := 2000
+	// 普通用户只支持4k tokens
+	maxModelTokens := 4000
 
 	// vip用户可以支持更多的数量
 	if user.VipUser {
-		maxModelTokens = 4000
+		maxModelTokens = 16000
 	}
 	// 模型最大tokens
 	userTokens := 0
@@ -82,7 +82,7 @@ func Completions(c *gin.Context) {
 	maxTokens := int(math.Max(1, math.Min(float64(maxModelTokens-userTokens), float64(maxModelTokens/2))))
 
 	openaiReq := openai.ChatCompletionRequest{
-		Model:            req.Model,
+		Model:            "gpt-3.5-turbo-16k",
 		Messages:         messages,
 		MaxTokens:        maxTokens,
 		Temperature:      req.Temperature,
